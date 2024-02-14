@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "adrmobile",
+    "slug": "adrmobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "adrmobile"
+}

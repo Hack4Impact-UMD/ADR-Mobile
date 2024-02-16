@@ -65,5 +65,5 @@ Starts the development server. You could also do `npm expo start` or `expo start
 
 ### Versions
 Make sure you're running the following versions of Node JS/npm or higher:\
-npm: v18.17.0 (check: `npm -v`)\
-Node JS: 10.4.0 (check: `node -v`)
+npm: 10.4.0 (check: `npm -v`)\
+Node JS: v18.17.0 (check: `node -v`)

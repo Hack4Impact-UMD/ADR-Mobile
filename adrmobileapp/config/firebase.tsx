@@ -1,6 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import * as firebase from "firebase/app";
+import { AppRegistry } from 'react-native';
+
 
 const firebaseConfig = {
   // Your Firebase configuration
@@ -15,4 +15,8 @@ const firebaseConfig = {
 
 export const initializeFirebase = () => {
   firebase.initializeApp(firebaseConfig);
+};
+
+export const registerApp = (appName: string, component: React.ComponentType<any>) => {
+  AppRegistry.registerComponent(appName, () => component);
 };

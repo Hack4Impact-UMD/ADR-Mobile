@@ -1,4 +1,8 @@
 {
   "name": "adrmobileapp",
-  "displayName": "adrmobileapp"
+  "displayName": "adrmobileapp",
+  "expo": {
+      "entryPoint": "./index.js"
+  }
+  
 }

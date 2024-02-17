@@ -1,18 +1,22 @@
 # Getting Started
 
 ### Weekly Sprints
+
 We have weekly sprints, so refer to this document for more information on the tasks for each week from the team meetings/Kanban boards.
 Document: [[ENG] Task Document](https://docs.google.com/document/d/1g5TbIgoe8DSwe-ge1hGJ00EVvwB7iH6icC0brqSoiNI/edit?usp=sharing)
 
 ### PR Notes
-For the PR descriptions, we encourage writing out a complete summary of the tasks finished within that PR and a list of 
+
+For the PR descriptions, we encourage writing out a complete summary of the tasks finished within that PR and a list of
 methods you tested the code with. The testing can be just one line just to inform the reviewer. Because this is a mobile app,
 there are multiple methods of testing, which is why we ask you to list methods of testing.
 
 If your PR is not reviewed within 24 hours, please let the tech leads know through a message on Slack.
 
 ### App Functionality
+
 The mobile app provides parents with these functions:
+
 - Can fill out surveys
 - Can add data such as - name, email, school system, # of kids in the school system, specific school within the district)
 - Can view reading assignments/schedule
@@ -24,7 +28,7 @@ Here's the link to the project description if needed: [Project Description](http
 
 ## Set up
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ### Step 1: Start the Metro Server
 
@@ -91,6 +95,7 @@ You've successfully run and modified your React Native App. :partying_face:
 If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
 # Learn More
+
 To learn more about React Native, take a look at the following resources:
 
 - [React Native Website](https://reactnative.dev) - learn more about React Native.
@@ -100,7 +105,7 @@ To learn more about React Native, take a look at the following resources:
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
 
 ### Versions
+
 Make sure you're running the following versions of Node JS/npm or higher:\
 npm: v18.17.0 (check: `npm -v`)\
 Node JS: 10.4.0 (check: `node -v`)
-

@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import type { PropsWithChildren } from 'react';
+import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
   SafeAreaView,
@@ -26,9 +26,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { initializeFirebase, registerApp } from './config/firebase';
-import { name as adrmobileapp } from './app.json'
-import { registerRootComponent } from 'expo';
+import {initializeFirebase, registerApp} from './config/firebase';
+import {name as adrmobileapp} from './app.json';
+import {registerRootComponent} from 'expo';
+import {FirebaseAuthPrototype} from './pages/firebaseAuthPrototype';
 
 // Initialize Firebase
 initializeFirebase();
@@ -84,6 +85,7 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          <FirebaseAuthPrototype />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
@@ -127,4 +129,3 @@ AppRegistry.registerComponent('adrmobileapp', () => App);
 registerRootComponent(App);
 
 export default App;
-

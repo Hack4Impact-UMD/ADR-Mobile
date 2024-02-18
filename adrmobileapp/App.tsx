@@ -29,6 +29,8 @@ import {
 import {initializeFirebase, registerApp} from './config/firebase';
 import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
+import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototype';
+import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
 
 // Initialize Firebase
 initializeFirebase();
@@ -84,6 +86,8 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          <FirebaseAuthRegisterPrototype />
+          <FirebaseAuthLoginPrototype />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.

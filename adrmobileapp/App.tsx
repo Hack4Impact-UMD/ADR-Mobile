@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import type { PropsWithChildren } from 'react';
+import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
   SafeAreaView,
@@ -26,9 +26,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { initializeFirebase, registerApp } from './config/firebase';
-import { name as adrmobileapp } from './app.json'
-import { registerRootComponent } from 'expo';
+import {initializeFirebase, registerApp} from './config/firebase';
+import {name as adrmobileapp} from './app.json';
+import {registerRootComponent} from 'expo';
 
 // Initialize Firebase
 initializeFirebase();
@@ -127,4 +127,3 @@ AppRegistry.registerComponent('adrmobileapp', () => App);
 registerRootComponent(App);
 
 export default App;
-

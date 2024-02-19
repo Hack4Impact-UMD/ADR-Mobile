@@ -32,8 +32,8 @@ import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
 import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototype';
 import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // Initialize Firebase
 initializeFirebase();

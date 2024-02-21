@@ -31,6 +31,8 @@ import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
 import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototype';
 import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
+import {PreSurvey} from './pages/presurveys';
+import {PostSurvey} from './pages/postsurveys';
 
 // Initialize Firebase
 initializeFirebase();
@@ -88,6 +90,8 @@ function App(): React.JSX.Element {
           }}>
           <FirebaseAuthRegisterPrototype />
           <FirebaseAuthLoginPrototype />
+          <PreSurvey />
+          <PostSurvey />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.

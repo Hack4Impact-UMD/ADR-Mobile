@@ -28,10 +28,15 @@ export function FirebaseAuthLoginPrototype(): React.JSX.Element {
     <View>
       <Text>Login Here</Text>
       <View>
-        <TextInput placeholder="Email" onChangeText={text => setEmail(text)} />
+        <TextInput
+          placeholder="Email"
+          autoCapitalize="none" // Prevents auto-capitalization of the first character
+          onChangeText={text => setEmail(text)}
+        />
         <TextInput
           secureTextEntry={true}
           placeholder="Password"
+          autoCapitalize="none" // Prevents auto-capitalization of the first character
           onChangeText={text => setPassword(text)}
         />
         <Button title="Submit" onPress={handleLogin} />

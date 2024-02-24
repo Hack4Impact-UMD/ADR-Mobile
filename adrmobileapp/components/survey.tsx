@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, useColorScheme } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 
 export const Survey = (props) => {
     const [selectedValue, setSelectedValue] = useState(props.value1);
+    const theme = useColorScheme();
+    const isDarkTheme = theme === 'dark';
+
     return (
         <View>
-            <Text>{props.question}</Text>
+            <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                {props.question}
+            </Text>
 
             <RadioButton.Group
                 onValueChange={(value) => setSelectedValue(value)}
@@ -14,23 +19,33 @@ export const Survey = (props) => {
             >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RadioButton value={props.value1}/>
-                    <Text>{props.value1}</Text>
+                    <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                        {props.value1}
+                    </Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RadioButton value={props.value2}/>
-                    <Text>{props.value2}</Text>
+                    <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                        {props.value2}
+                    </Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RadioButton value={props.value3}/>
-                    <Text>{props.value3}</Text>
+                    <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                        {props.value3}
+                    </Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RadioButton value={props.value4}/>
-                    <Text>{props.value4}</Text>
+                    <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                        {props.value4}
+                    </Text>
                 </View>
             </RadioButton.Group>
 
-            {/* <Text>Selected Value: {selectedValue}</Text> */}
+            {/* <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                Selected Value: {selectedValue}
+            </Text> */}
         </View>
     );
   };

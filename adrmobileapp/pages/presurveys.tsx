@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, useColorScheme } from 'react-native';
 import {Survey} from '../components/survey';
   
 export function PreSurvey(): React.JSX.Element {
+    const theme = useColorScheme();
+    const isDarkTheme = theme === 'dark';
+
     return (
         <View>
+            <Text style={[isDarkTheme ? { color: 'white', fontWeight: 'bold' } : { color: 'black', fontWeight: 'bold' }]}>
+                Pre-Survey
+            </Text>
+
             <Text style={{fontWeight: 'bold'}}>Pre-survey</Text>
             <Survey 
             question = "How often does our family read together?" 

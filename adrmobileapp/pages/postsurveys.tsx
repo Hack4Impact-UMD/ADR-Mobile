@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, useColorScheme } from 'react-native';
 import {Survey} from '../components/survey';
   
 export function PostSurvey(): React.JSX.Element {
+    const theme = useColorScheme();
+    const isDarkTheme = theme === 'dark';
+
     return (
         <View>
-            <Text style={{fontWeight: 'bold'}}>Post-survey</Text>
+            <Text style={[isDarkTheme ? { color: 'white', fontWeight: 'bold' } : { color: 'black', fontWeight: 'bold' }]}>
+                Post-Survey
+            </Text>
+
             <Survey 
             question = "How often does our family read together?" 
             value1 = "Daily"
             value2 = "Weekly"
-            value3 = "Mon thly"
+            value3 = "Monthly"
             value4 = "We don’t read together"
             />
 

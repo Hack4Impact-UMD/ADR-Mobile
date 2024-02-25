@@ -32,6 +32,8 @@ import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
 import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototype';
 import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
+import {PreSurvey} from './pages/presurveys';
+import {PostSurvey} from './pages/postsurveys';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -100,6 +102,8 @@ const HomeScreen = ({navigation}) => {
           }}>
           {/* <FirebaseAuthRegisterPrototype /> */}
           <FirebaseAuthLoginPrototype />
+          <PreSurvey />
+          <PostSurvey />
           <Button
             title="Register Here"
             onPress={() => navigation.navigate('Registration')}

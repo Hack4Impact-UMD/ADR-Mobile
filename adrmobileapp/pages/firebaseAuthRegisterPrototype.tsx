@@ -2,8 +2,14 @@ import React, {useState} from 'react';
 import {Text, TextInput, View, Button} from 'react-native';
 
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import { NavigationProp } from '@react-navigation/native';
+import {RootStackParamList} from '../App';
 
-export function FirebaseAuthRegisterPrototype(): React.JSX.Element {
+type FirebaseAuthRegisterPrototypeProps = {
+  navigation: NavigationProp<RootStackParamList>;
+}
+
+export function FirebaseAuthRegisterPrototype(props: FirebaseAuthRegisterPrototypeProps): React.JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');
@@ -28,13 +34,19 @@ export function FirebaseAuthRegisterPrototype(): React.JSX.Element {
     <View>
       <Text>Register Here</Text>
       <View>
-        <TextInput placeholder="Email" onChangeText={text => setEmail(text)} />
+        <TextInput
+          placeholder="Email"
+          autoCapitalize="none" // Prevents auto-capitalization of the first character
+          onChangeText={text => setEmail(text)}
+        />
         <TextInput
           secureTextEntry={true}
           placeholder="Password"
+          autoCapitalize="none" // Prevents auto-capitalization of the first character
           onChangeText={text => setPassword(text)}
         />
         <Button title="Submit" onPress={handleRegister} />
+        <Button title="Go Back" onPress={() => props.navigation.goBack()} />
       </View>
       <Text>{feedbacktext}</Text>
     </View>

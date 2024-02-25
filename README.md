@@ -24,6 +24,8 @@ The mobile app provides parents with these functions:
 
 Here's the link to the project description if needed: [Project Description](https://docs.google.com/document/d/1y50XRpccxLHVL44KJC0-1UytJAYSf8k1pp2nCGeGgBs/edit)
 
+Database plan - https://docs.google.com/document/d/1xxaeg50WpvHJY1tGQUxQrErSksQY34WdJGlrjivC8uI/edit?usp=sharing 
+
 ## Expo
 We are leaving this here for reference on running Expo.
 

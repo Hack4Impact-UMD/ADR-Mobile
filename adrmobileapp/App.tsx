@@ -9,6 +9,7 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -33,6 +34,8 @@ import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototy
 import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
 import {PreSurvey} from './pages/presurveys';
 import {PostSurvey} from './pages/postsurveys';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // Initialize Firebase
 initializeFirebase();
@@ -66,8 +69,17 @@ function Section({children, title}: SectionProps): React.JSX.Element {
     </View>
   );
 }
-// create app
-function App(): React.JSX.Element {
+
+// defining the screens and their corresponding parameters
+export type RootStackParamList = {
+  HomeScreen: undefined;
+  RegistrationScreen: undefined;
+};
+
+// used for page navigation
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const HomeScreen = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -88,10 +100,14 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <FirebaseAuthRegisterPrototype />
+          {/* <FirebaseAuthRegisterPrototype /> */}
           <FirebaseAuthLoginPrototype />
           <PreSurvey />
           <PostSurvey />
+          <Button
+            title="Register Here"
+            onPress={() => navigation.navigate('Registration')}
+          />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
@@ -109,6 +125,26 @@ function App(): React.JSX.Element {
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+};
+
+const RegistrationScreen = ({navigation}) => {
+  return <FirebaseAuthRegisterPrototype navigation={navigation}/>;
+};
+
+// create app
+function App(): React.JSX.Element {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{title: 'Welcome'}}
+        />
+        <Stack.Screen name="Registration" component={RegistrationScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

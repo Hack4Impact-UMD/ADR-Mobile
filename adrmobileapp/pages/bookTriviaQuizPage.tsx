@@ -1,16 +1,16 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  SafeAreaView,
-} from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
+import {StyleSheet, Text, View, Button, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../App';
 
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type routeProp = RouteProp<RootStackParamList, 'BookQuiz'>;
+type navProp = StackNavigationProp<RootStackParamList, 'BookQuiz'>;
+
 type BookTriviaQuizPageProps = {
-  navigation: NavigationProp<RootStackParamList>;
+  route: routeProp;
+  navigation: navProp;
 };
 
 const styles = StyleSheet.create({
@@ -39,7 +39,7 @@ export function BookTriviaQuizPage(
   return (
     <SafeAreaView>
       <View style={styles.bookCover}>
-        <Text>Ready Player One Trivia Quiz</Text>
+        <Text>{props.route.params.book.title} Trivia Quiz</Text>
         <Button title="Begin Now >"></Button>
       </View>
       <Text>Questions Answered</Text>

@@ -6,11 +6,16 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type routeProp = RouteProp<RootStackParamList, 'BookMain'>;
+type navProp = StackNavigationProp<RootStackParamList, 'BookMain'>;
 
 type BookMainPageProps = {
-  navigation: NavigationProp<RootStackParamList>;
+  route: routeProp;
+  navigation: navProp;
 };
 
 const styles = StyleSheet.create({
@@ -37,7 +42,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
   return (
     <SafeAreaView>
       <View style={styles.bookCover}></View>
-      <Text>Ready Player One</Text>
+      <Text>{props.route.params.book.title}</Text>
 
       <View style={styles.container}>
         <TouchableOpacity style={styles.item}>
@@ -46,14 +51,18 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
         <TouchableOpacity
           style={styles.item}
           onPress={() => {
-            props.navigation.navigate('BookQuiz');
+            props.navigation.navigate('BookQuiz', {
+              book: props.route.params.book,
+            });
           }}>
           <Text>Trivia Quiz</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.item}
           onPress={() => {
-            props.navigation.navigate('BookInfo');
+            props.navigation.navigate('BookInfo', {
+              book: props.route.params.book,
+            });
           }}>
           <Text>Info</Text>
         </TouchableOpacity>

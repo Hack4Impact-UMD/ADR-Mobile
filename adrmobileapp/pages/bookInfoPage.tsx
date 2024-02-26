@@ -1,10 +1,15 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type routeProp = RouteProp<RootStackParamList, 'BookInfo'>;
+type navProp = StackNavigationProp<RootStackParamList, 'BookInfo'>;
 
 type BookInfoPageProps = {
-  navigation: NavigationProp<RootStackParamList>;
+  route: routeProp;
+  navigation: navProp;
 };
 
 const styles = StyleSheet.create({
@@ -25,22 +30,14 @@ export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
   return (
     <SafeAreaView>
       <View style={styles.bookCover}></View>
-      <Text>Ready Player One</Text>
-      <Text>Ernest Cline</Text>
-      <Text>386 pages</Text>
+      <Text>{props.route.params.book.title}</Text>
+      <Text>{props.route.params.book.author}</Text>
+      <Text>{props.route.params.book.page_number} pages</Text>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
-        <Text style={styles.text}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Text>
+        <Text style={styles.text}>{props.route.params.book.info}</Text>
       </ScrollView>
     </SafeAreaView>
   );

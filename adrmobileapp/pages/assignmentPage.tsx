@@ -33,24 +33,28 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
       author: 'Ernest Cline',
       page_number: 368,
       info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
     },
     {
       title: 'Dune',
       author: 'Author 2',
       page_number: 200,
       info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
     },
     {
       title: 'Alice in Wonderland',
       author: 'Author 3',
       page_number: 300,
       info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
     },
     {
       title: 'Romeo and Juliet',
       author: 'William Shakespeare',
       page_number: 400,
       info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
     },
   ];
 
@@ -64,7 +68,9 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
             <TouchableOpacity
               style={styles.book}
               onPress={() => {
-                props.navigation.navigate('BookMain');
+                props.navigation.navigate('BookMain', {
+                  book: book,
+                });
               }}>
               <Text>{book.title}</Text>
             </TouchableOpacity>

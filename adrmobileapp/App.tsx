@@ -40,6 +40,7 @@ import {PreSurvey} from './pages/presurveys';
 import {PostSurvey} from './pages/postsurveys';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Book} from './customTypes';
 
 // Initialize Firebase
 initializeFirebase();
@@ -78,6 +79,9 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 export type RootStackParamList = {
   HomeScreen: undefined;
   RegistrationScreen: undefined;
+  BookMain: {book: Book};
+  BookQuiz: {book: Book};
+  BookInfo: {book: Book};
 };
 
 // used for page navigation
@@ -142,20 +146,20 @@ const RegistrationScreen = ({navigation}) => {
   return <FirebaseAuthRegisterPrototype navigation={navigation} />;
 };
 
-const AssignmentScreen = ({navigation}) => {
-  return <AssignmentPage navigation={navigation} />;
+const AssignmentScreen = ({route, navigation}) => {
+  return <AssignmentPage navigation={navigation} route={route} />;
 };
 
-const BookMainScreen = ({navigation}) => {
-  return <BookMainPage navigation={navigation} />;
+const BookMainScreen = ({route, navigation}) => {
+  return <BookMainPage navigation={navigation} route={route} />;
 };
 
-const BookInfoScreen = ({navigation}) => {
-  return <BookInfoPage navigation={navigation} />;
+const BookInfoScreen = ({route, navigation}) => {
+  return <BookInfoPage navigation={navigation} route={route} />;
 };
 
-const BookQuizScreen = ({navigation}) => {
-  return <BookTriviaQuizPage navigation={navigation} />;
+const BookQuizScreen = ({route, navigation}) => {
+  return <BookTriviaQuizPage navigation={navigation} route={route} />;
 };
 
 // create app

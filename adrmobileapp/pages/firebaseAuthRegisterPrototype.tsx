@@ -2,14 +2,16 @@ import React, {useState} from 'react';
 import {Text, TextInput, View, Button} from 'react-native';
 
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
-import { NavigationProp } from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 
 type FirebaseAuthRegisterPrototypeProps = {
   navigation: NavigationProp<RootStackParamList>;
-}
+};
 
-export function FirebaseAuthRegisterPrototype(props: FirebaseAuthRegisterPrototypeProps): React.JSX.Element {
+export function FirebaseAuthRegisterPrototype(
+  props: FirebaseAuthRegisterPrototypeProps,
+): React.JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');

@@ -129,7 +129,7 @@ const HomeScreen = ({navigation}) => {
 };
 
 const RegistrationScreen = ({navigation}) => {
-  return <FirebaseAuthRegisterPrototype navigation={navigation}/>;
+  return <FirebaseAuthRegisterPrototype navigation={navigation} />;
 };
 
 // create app

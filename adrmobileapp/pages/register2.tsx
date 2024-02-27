@@ -26,7 +26,7 @@ export function SecondRegistrationScreen(
 
   // Checking if num children input is an integer >= 0
   const handleNumChildrenChange = (text: string) => {
-    if (/^\ffd+$/.test(text) || text === '') {
+    if (/^\d+$/.test(text) || text === '') {
       setNumChildren(text);
     }
   };

@@ -101,11 +101,7 @@ const HomeScreen = ({navigation}) => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           {/* <FirebaseAuthRegisterPrototype /> */}
-          <FirebaseAuthLoginPrototype />
-          <Button
-            title="Register Here"
-            onPress={() => navigation.navigate('Registration')}
-          />
+          <FirebaseAuthLoginPrototype navigation={navigation} />
           <PreSurvey />
           <PostSurvey />
           <Section title="Step One">
@@ -142,7 +138,10 @@ function App(): React.JSX.Element {
           component={HomeScreen}
           options={{title: 'Welcome'}}
         />
-        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen
+          name="RegistrationScreen"
+          component={RegistrationScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

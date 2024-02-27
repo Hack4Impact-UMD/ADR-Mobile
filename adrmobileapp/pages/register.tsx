@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   View,
-  Button,
   TouchableOpacity,
   Dimensions,
   StyleSheet,
@@ -17,7 +16,7 @@ type RegisterProps = {
   navigation: NavigationProp<RootStackParamList>;
 };
 
-export function Register(_props: RegisterProps): React.JSX.Element {
+export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');
@@ -67,7 +66,11 @@ export function Register(_props: RegisterProps): React.JSX.Element {
           />
         </View>
         {/* Login Button */}
-        <TouchableOpacity style={styles.signUpButtonContainer}>
+        <TouchableOpacity
+          style={styles.signUpButtonContainer}
+          onPress={() =>
+            _props.navigation.navigate('SecondRegistrationScreen')
+          }>
           <Text style={styles.signUpButtonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -115,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default RegistrationScreen;

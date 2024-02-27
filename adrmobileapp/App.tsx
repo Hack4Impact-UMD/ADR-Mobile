@@ -9,7 +9,6 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -36,6 +35,8 @@ import {PreSurvey} from './pages/presurveys';
 import {PostSurvey} from './pages/postsurveys';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import RegistrationScreen from './pages/register.tsx';
+import SecondRegistrationScreen from './pages/register2.tsx';
 
 // Initialize Firebase
 initializeFirebase();
@@ -74,6 +75,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 export type RootStackParamList = {
   HomeScreen: undefined;
   RegistrationScreen: undefined;
+  SecondRegistrationScreen: undefined;
 };
 
 // used for page navigation
@@ -124,23 +126,25 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-const RegistrationScreen = ({navigation}) => {
-  return <Register navigation={navigation} />;
-};
-
 // create app
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
+          name="HomeScreen"
           component={HomeScreen}
           options={{title: 'Welcome'}}
         />
         <Stack.Screen
           name="RegistrationScreen"
           component={RegistrationScreen}
+          options={{title: 'Register Here'}}
+        />
+        <Stack.Screen
+          name="SecondRegistrationScreen"
+          component={SecondRegistrationScreen}
+          options={{title: 'Continue Registration'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

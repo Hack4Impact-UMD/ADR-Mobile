@@ -102,12 +102,12 @@ const HomeScreen = ({navigation}) => {
           }}>
           {/* <FirebaseAuthRegisterPrototype /> */}
           <FirebaseAuthLoginPrototype />
-          <PreSurvey />
-          <PostSurvey />
           <Button
             title="Register Here"
             onPress={() => navigation.navigate('Registration')}
           />
+          <PreSurvey />
+          <PostSurvey />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.

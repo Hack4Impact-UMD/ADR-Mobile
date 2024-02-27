@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, TextInput, View, Button} from 'react-native';
+import {Text, TextInput, View, Button, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 
@@ -25,25 +25,66 @@ export function FirebaseAuthLoginPrototype(): React.JSX.Element {
   };
 
   return (
-    <View>
-      <Text>Login Here</Text>
-      <View>
+    <View style={styles.container}>
+      {/* <Text>Login Here</Text> */}
+      <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Email"
+          style={styles.input}
+          placeholder="Email Address"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
           onChangeText={text => setEmail(text)}
         />
         <TextInput
+          style={styles.input}
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
           onChangeText={text => setPassword(text)}
         />
-        <Button title="Submit" onPress={handleLogin} />
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
       </View>
       <Text>{feedbacktext}</Text>
     </View>
   );
 }
+
+const windowWidth = Dimensions.get('window').width; // Get the width of the device's screen
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  inputContainer: {
+    backgroundColor: '#F5F5F5',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  input: {
+    backgroundColor: '#D9D9D9',
+    padding: 15,
+    paddingLeft: 20,
+    borderRadius: 10,
+    marginBottom: 10,
+    width: windowWidth * 0.6,
+  },
+  loginButton: {
+    backgroundColor: '#000000',
+    padding: 15,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
 
 export default FirebaseAuthLoginPrototype;

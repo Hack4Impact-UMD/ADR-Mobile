@@ -30,8 +30,8 @@ import {
 import {initializeFirebase, registerApp} from './config/firebase';
 import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
-import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototype';
-import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
+import {Register} from './pages/register';
+import {Login} from './pages/login';
 import {PreSurvey} from './pages/presurveys';
 import {PostSurvey} from './pages/postsurveys';
 import {NavigationContainer} from '@react-navigation/native';
@@ -101,7 +101,7 @@ const HomeScreen = ({navigation}) => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           {/* <FirebaseAuthRegisterPrototype /> */}
-          <FirebaseAuthLoginPrototype navigation={navigation} />
+          <Login navigation={navigation} />
           <PreSurvey />
           <PostSurvey />
           <Section title="Step One">
@@ -125,7 +125,7 @@ const HomeScreen = ({navigation}) => {
 };
 
 const RegistrationScreen = ({navigation}) => {
-  return <FirebaseAuthRegisterPrototype navigation={navigation} />;
+  return <Register navigation={navigation} />;
 };
 
 // create app

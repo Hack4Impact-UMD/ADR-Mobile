@@ -24,17 +24,21 @@ export function Login(_props: LoginProps): React.JSX.Element {
   const auth = getAuth();
 
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed in
-        const user = userCredential.user;
-        setFeedbackText('Logged in successfully');
-      })
-      .catch(error => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setFeedbackText(errorMessage);
-      });
+    return new Promise<void>((resolve, reject) => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          // Signed in
+          const user = userCredential.user;
+          setFeedbackText('');
+          resolve(); // Resolve the promise
+        })
+        .catch(error => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setFeedbackText(errorMessage);
+          reject(error); // Reject the promise with the error
+        });
+    });
   };
 
   return (
@@ -67,7 +71,16 @@ export function Login(_props: LoginProps): React.JSX.Element {
         {/* Login Button */}
         <TouchableOpacity
           style={styles.loginButtonContainer}
-          onPress={handleLogin}>
+          onPress={async () => {
+            try {
+              await handleLogin();
+              // Iif handleRegister doesn't throw error, navigate to next screen
+              _props.navigation.navigate('Assignments');
+            } catch (error) {
+              const errorMessage = error.message;
+              setFeedbackText(errorMessage);
+            }
+          }}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
         {/* New user registration */}
@@ -79,7 +92,7 @@ export function Login(_props: LoginProps): React.JSX.Element {
           </TouchableOpacity>
         </View>
       </View>
-      <Text>{feedbacktext}</Text>
+      {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
     </View>
   );
 }

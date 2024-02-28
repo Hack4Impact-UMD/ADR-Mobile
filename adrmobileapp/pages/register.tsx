@@ -23,20 +23,24 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
 
   const auth = getAuth();
 
-  // TODO: use this!!
   const handleRegister = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed up
-        const user = userCredential.user;
-        setFeedbackText('Registered successfully');
-      })
-      .catch(error => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setFeedbackText(errorMessage);
-      });
+    return new Promise<void>((resolve, reject) => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          // Signed up successfully
+          const user = userCredential.user;
+          setFeedbackText('');
+          resolve(); // Resolve the promise
+        })
+        .catch(error => {
+          // Error during registration
+          const errorMessage = error.message;
+          setFeedbackText(errorMessage);
+          reject(error); // Reject the promise with the error
+        });
+    });
   };
+
 
   return (
     <View style={styles.container}>
@@ -68,12 +72,21 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
         {/* Login Button */}
         <TouchableOpacity
           style={styles.signUpButtonContainer}
-          onPress={() =>
-            _props.navigation.navigate('SecondRegistrationScreen')
-          }>
+          onPress={async () => {
+            try {
+              await handleRegister();
+              // Iif handleRegister doesn't throw error, navigate to next screen
+              _props.navigation.navigate('SecondRegistrationScreen');
+            } catch (error) {
+              const errorMessage = error.message;
+              setFeedbackText(errorMessage);
+            }
+          }}>
           <Text style={styles.signUpButtonText}>Sign Up</Text>
+          {/* Display feedbacktext only if it's not empty */}
         </TouchableOpacity>
       </View>
+      {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
     </View>
   );
 }
@@ -119,3 +132,4 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationScreen;
+

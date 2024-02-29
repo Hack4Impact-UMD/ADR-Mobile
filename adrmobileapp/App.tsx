@@ -9,7 +9,6 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,

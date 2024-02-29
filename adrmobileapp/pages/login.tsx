@@ -12,7 +12,7 @@ import {
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 type LoginProps = {
   navigation: NavigationProp<RootStackParamList>;

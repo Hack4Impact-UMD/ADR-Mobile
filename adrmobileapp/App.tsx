@@ -84,6 +84,7 @@ export type RootStackParamList = {
   BookMain: {book: Book};
   BookQuiz: {book: Book};
   BookInfo: {book: Book};
+  Assignments: undefined;
 };
 
 // used for page navigation

@@ -6,11 +6,13 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  useColorScheme,
 } from 'react-native';
 
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 type LoginProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -22,6 +24,8 @@ export function Login(_props: LoginProps): React.JSX.Element {
   const [feedbacktext, setFeedbackText] = useState('');
 
   const auth = getAuth();
+
+  const isDarkMode = useColorScheme() === 'dark';
 
   const handleLogin = () => {
     return new Promise<void>((resolve, reject) => {
@@ -48,7 +52,9 @@ export function Login(_props: LoginProps): React.JSX.Element {
         <TextInput
           style={styles.input}
           placeholder="Email Address"
+          placeholderTextColor="gray"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
+          returnKeyType="done"
           onChangeText={text => setEmail(text)}
         />
         {/* Password */}
@@ -58,7 +64,9 @@ export function Login(_props: LoginProps): React.JSX.Element {
             style={styles.input}
             secureTextEntry={true}
             placeholder="Password"
+            placeholderTextColor="gray"
             autoCapitalize="none"
+            returnKeyType="done"
             onChangeText={text => setPassword(text)}
           />
           {/* Forgot Password */}
@@ -81,14 +89,30 @@ export function Login(_props: LoginProps): React.JSX.Element {
               setFeedbackText(errorMessage);
             }
           }}>
-          <Text style={styles.loginButtonText}>Login</Text>
+          <Text
+            style={[
+              styles.loginButtonText,
+              {
+                color: isDarkMode ? Colors.white : Colors.black,
+              },
+            ]}>
+            Login
+          </Text>
         </TouchableOpacity>
         {/* New user registration */}
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Don't have an account yet? </Text>
           <TouchableOpacity
             onPress={() => _props.navigation.navigate('RegistrationScreen')}>
-            <Text style={styles.signupLink}>Sign Up</Text>
+            <Text
+              style={[
+                styles.signupLink,
+                {
+                  color: isDarkMode ? Colors.white : Colors.black,
+                },
+              ]}>
+              Sign Up
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -138,7 +162,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   loginButtonText: {
-    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
@@ -43,19 +44,23 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder="Name"
+          placeholderTextColor="gray"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
+          returnKeyType="done"
           //onChangeText={text => setEmail(text)}
         />
         {/* Email Input */}
         <TextInput
           style={styles.input}
           placeholder="Email Address"
+          placeholderTextColor="gray"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
+          returnKeyType="done"
           onChangeText={text => setEmail(text)}
         />
         {/* Password */}
@@ -65,7 +70,9 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
             style={styles.input}
             secureTextEntry={true}
             placeholder="Password"
+            placeholderTextColor="gray"
             autoCapitalize="none"
+            returnKeyType="done"
             onChangeText={text => setPassword(text)}
           />
         </View>
@@ -87,7 +94,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
         </TouchableOpacity>
       </View>
       {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
-    </View>
+    </ScrollView>
   );
 }
 

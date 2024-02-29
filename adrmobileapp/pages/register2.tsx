@@ -6,6 +6,7 @@ import {
   Dimensions,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
@@ -32,7 +33,7 @@ export function SecondRegistrationScreen(
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
         {/* District Input */}
         <View style={styles.input}>
@@ -92,6 +93,7 @@ export function SecondRegistrationScreen(
             keyboardType="numeric"
             placeholder="#"
             autoCapitalize="none"
+            returnKeyType="done"
           />
         </View>
         <View>
@@ -103,7 +105,7 @@ export function SecondRegistrationScreen(
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

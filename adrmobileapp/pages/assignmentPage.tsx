@@ -16,10 +16,47 @@ type AssignmentProps = {
 };
 
 const styles = StyleSheet.create({
+  view: {
+    backgroundColor: 'white',
+  },
+  scrollView: {
+    margin: '5%',
+  },
+  welcomeBack: {
+    fontFamily: 'Inter',
+    fontSize: 40,
+    marginBottom: '4%',
+    color: '#726E6E',
+  },
+  date: {
+    fontFamily: 'Inter',
+    fontSize: 20,
+    marginBottom: '4%',
+    color: 'black',
+    fontWeight: 'bold',
+  },
+
   book: {
     height: 300,
-    backgroundColor: 'white',
-    margin: '5%',
+    width: '70%',
+    backgroundColor: '#D9D9D9',
+    marginBottom: '5%',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 50,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 50,
+  },
+  shadowProp: {
+    shadowColor: '#000000',
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+  bookTitle: {
+    color: '#726E6E',
+    fontFamily: 'Inter',
+    fontSize: 25,
+    padding: '5%',
   },
 });
 
@@ -59,20 +96,22 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
   ];
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <Text>Welcome Back!</Text>
-        <Text>{Moment(today).format('MMMM Do, YYYY')}</Text>
+    <SafeAreaView style={styles.view}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}>
+        <Text style={styles.welcomeBack}>Welcome Back!</Text>
+        <Text style={styles.date}>{Moment(today).format('MMMM Do, YYYY')}</Text>
         {books.map(book => {
           return (
             <TouchableOpacity
-              style={styles.book}
+              style={[styles.book, styles.shadowProp]}
               onPress={() => {
                 props.navigation.navigate('BookMain', {
                   book: book,
                 });
               }}>
-              <Text>{book.title}</Text>
+              <Text style={styles.bookTitle}>{book.title}</Text>
             </TouchableOpacity>
           );
         })}

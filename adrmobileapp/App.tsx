@@ -9,7 +9,6 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -30,12 +29,18 @@ import {
 import {initializeFirebase, registerApp} from './config/firebase';
 import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
-import {FirebaseAuthRegisterPrototype} from './pages/firebaseAuthRegisterPrototype';
-import {FirebaseAuthLoginPrototype} from './pages/firebaseAuthLoginPrototype';
+import {Login} from './pages/login';
+import {AssignmentPage} from './pages/assignmentPage';
+import {BookMainPage} from './pages/bookMainPage';
+import {BookInfoPage} from './pages/bookInfoPage';
+import {BookTriviaQuizPage} from './pages/bookTriviaQuizPage';
 import {PreSurvey} from './pages/presurveys';
 import {PostSurvey} from './pages/postsurveys';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import RegistrationScreen from './pages/register.tsx';
+import SecondRegistrationScreen from './pages/register2.tsx';
+import {Book} from './customTypes';
 
 // Initialize Firebase
 initializeFirebase();
@@ -74,6 +79,11 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 export type RootStackParamList = {
   HomeScreen: undefined;
   RegistrationScreen: undefined;
+  SecondRegistrationScreen: undefined;
+  BookMain: {book: Book};
+  BookQuiz: {book: Book};
+  BookInfo: {book: Book};
+  Assignments: undefined;
 };
 
 // used for page navigation
@@ -101,13 +111,15 @@ const HomeScreen = ({navigation}) => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           {/* <FirebaseAuthRegisterPrototype /> */}
-          <FirebaseAuthLoginPrototype />
+          <Login navigation={navigation} />
+
+          {/* Delete once login and registration screens are completed */}
+          {/* <Button
+            title="Go To Assignments Prototype"
+            onPress={() => navigation.navigate('Assignments')}
+          /> */}
           <PreSurvey />
           <PostSurvey />
-          <Button
-            title="Register Here"
-            onPress={() => navigation.navigate('Registration')}
-          />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
@@ -128,8 +140,20 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-const RegistrationScreen = ({navigation}) => {
-  return <FirebaseAuthRegisterPrototype navigation={navigation}/>;
+const AssignmentScreen = ({route, navigation}) => {
+  return <AssignmentPage navigation={navigation} route={route} />;
+};
+
+const BookMainScreen = ({route, navigation}) => {
+  return <BookMainPage navigation={navigation} route={route} />;
+};
+
+const BookInfoScreen = ({route, navigation}) => {
+  return <BookInfoPage navigation={navigation} route={route} />;
+};
+
+const BookQuizScreen = ({route, navigation}) => {
+  return <BookTriviaQuizPage navigation={navigation} route={route} />;
 };
 
 // create app
@@ -138,11 +162,24 @@ function App(): React.JSX.Element {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
+          name="HomeScreen"
           component={HomeScreen}
           options={{title: 'Welcome'}}
         />
-        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen
+          name="RegistrationScreen"
+          component={RegistrationScreen}
+          options={{title: 'Register Here'}}
+        />
+        <Stack.Screen
+          name="SecondRegistrationScreen"
+          component={SecondRegistrationScreen}
+          options={{title: 'Continue Registration'}}
+        />
+        <Stack.Screen name="Assignments" component={AssignmentScreen} />
+        <Stack.Screen name="BookMain" component={BookMainScreen} />
+        <Stack.Screen name="BookInfo" component={BookInfoScreen} />
+        <Stack.Screen name="BookQuiz" component={BookQuizScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,52 +1,45 @@
-import React, {useState} from 'react';
-import {View, Text, useColorScheme} from 'react-native';
-import {RadioButton} from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, Text, useColorScheme, Button } from 'react-native';
+import { RadioButton } from 'react-native-paper';
+import {initializeFirebase} from '../config/firebase';
+import { getFirestore } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
 
-export const Survey = props => {
-  const [selectedValue, setSelectedValue] = useState(props.value1);
-  const theme = useColorScheme();
-  const isDarkTheme = theme === 'dark';
+initializeFirebase();
+const firestore = getFirestore();
 
-  return (
-    <View>
-      <Text style={[isDarkTheme ? {color: 'white'} : {color: 'black'}]}>
-        {props.question}
-      </Text>
+export const Survey = (props: {question: string; options: string[]; onResponse: (response: string) => void;}) => {
+    const [selectedValue, setSelectedValue] = useState(props.options[0]);
+    const theme = useColorScheme();
+    const isDarkTheme = theme === 'dark';
 
-      <RadioButton.Group
-        onValueChange={value => setSelectedValue(value)}
-        value={selectedValue}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <RadioButton value={props.value1} />
-          <Text style={[isDarkTheme ? {color: 'white'} : {color: 'black'}]}>
-            {props.value1}
-          </Text>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <RadioButton value={props.value2} />
-          <Text style={[isDarkTheme ? {color: 'white'} : {color: 'black'}]}>
-            {props.value2}
-          </Text>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <RadioButton value={props.value3} />
-          <Text style={[isDarkTheme ? {color: 'white'} : {color: 'black'}]}>
-            {props.value3}
-          </Text>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <RadioButton value={props.value4} />
-          <Text style={[isDarkTheme ? {color: 'white'} : {color: 'black'}]}>
-            {props.value4}
-          </Text>
-        </View>
-      </RadioButton.Group>
+    // Getter method to get the selected value
+    const getResponse = () => selectedValue;
+    
+    return (
+        <View>
+            <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                {props.question}
+            </Text>
 
-      {/* <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
-                Selected Value: {selectedValue}
-            </Text> */}
-    </View>
-  );
-};
+            <RadioButton.Group
+                onValueChange={(value) => {
+                    setSelectedValue(value);
+                    props.onResponse(value);
+                }}
+                value={selectedValue}
+            >
+                {props.options.map((option, index) => (
+                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <RadioButton value={option}/>
+                        <Text style={[isDarkTheme ? { color: 'white' } : { color: 'black' }]}>
+                            {option}
+                        </Text>
+                    </View>
+                ))}
+            </RadioButton.Group>
+        </View>
+    );
+  };
 
 export default Survey;

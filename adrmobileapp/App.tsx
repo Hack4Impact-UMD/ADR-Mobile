@@ -30,7 +30,7 @@ import {initializeFirebase, registerApp} from './config/firebase';
 import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
 import {Login} from './pages/login';
-import {AssignmentPage} from './pages/assignmentPage';
+import HomePage from './pages/NavigatorOnceLoggedIn';
 import {BookMainPage} from './pages/bookMainPage';
 import {BookInfoPage} from './pages/bookInfoPage';
 import {BookTriviaQuizPage} from './pages/bookTriviaQuizPage';
@@ -105,7 +105,6 @@ const HomeScreen = ({navigation}) => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -120,20 +119,6 @@ const HomeScreen = ({navigation}) => {
           /> */}
           <PreSurvey />
           <PostSurvey />
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -176,7 +161,7 @@ function App(): React.JSX.Element {
           component={SecondRegistrationScreen}
           options={{title: 'Continue Registration'}}
         />
-        <Stack.Screen name="Assignments" component={AssignmentScreen} />
+        <Stack.Screen name="Assignments" component={HomePage} />
         <Stack.Screen name="BookMain" component={BookMainScreen} />
         <Stack.Screen name="BookInfo" component={BookInfoScreen} />
         <Stack.Screen name="BookQuiz" component={BookQuizScreen} />

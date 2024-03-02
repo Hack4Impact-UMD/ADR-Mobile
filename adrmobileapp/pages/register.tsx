@@ -42,7 +42,6 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
     });
   };
 
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
@@ -139,4 +138,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationScreen;
-

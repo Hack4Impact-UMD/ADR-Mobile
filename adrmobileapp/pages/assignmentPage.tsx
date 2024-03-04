@@ -11,6 +11,12 @@ import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {Book} from '../customTypes';
 
+import {CommonActions} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {BottomNavigation} from 'react-native-paper';
+
+const Tab = createBottomTabNavigator();
+
 type AssignmentProps = {
   navigation: NavigationProp<RootStackParamList>;
 };
@@ -23,13 +29,11 @@ const styles = StyleSheet.create({
     margin: '5%',
   },
   welcomeBack: {
-    fontFamily: 'Inter',
     fontSize: 40,
     marginBottom: '4%',
     color: '#726E6E',
   },
   date: {
-    fontFamily: 'Inter',
     fontSize: 20,
     marginBottom: '4%',
     color: 'black',
@@ -54,7 +58,6 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     color: '#726E6E',
-    fontFamily: 'Inter',
     fontSize: 25,
     padding: '5%',
   },
@@ -94,6 +97,8 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
       isbn: 'none',
     },
   ];
+
+  const [value, setValue] = React.useState(0);
 
   return (
     <SafeAreaView style={styles.view}>

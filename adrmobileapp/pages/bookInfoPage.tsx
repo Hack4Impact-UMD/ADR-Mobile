@@ -14,29 +14,59 @@ type BookInfoPageProps = {
 
 const styles = StyleSheet.create({
   bookCover: {
-    height: 200,
-    backgroundColor: 'white',
+    height: 250,
+    backgroundColor: '#D9D9D9',
     marginBottom: '5%',
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
+  },
+  shadowProp: {
+    shadowColor: '#000000',
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+  bookTitle: {
+    fontSize: 40,
+    marginBottom: '4%',
+    color: '#726E6E',
+  },
+  bookSubtitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: '2%',
+    color: '#000000',
   },
   scrollView: {
-    margin: '2%',
+    marginLeft: '4%',
+    marginRight: '4%',
+    height: '100%',
+    backgroundColor: 'white',
+  },
+  bkg: {
+    backgroundColor: 'white',
   },
   text: {
-    fontSize: 42,
+    marginTop: '2%',
+    fontSize: 20,
   },
 });
 
 export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
   return (
-    <SafeAreaView>
-      <View style={styles.bookCover}></View>
-      <Text>{props.route.params.book.title}</Text>
-      <Text>{props.route.params.book.author}</Text>
-      <Text>{props.route.params.book.page_number} pages</Text>
+    <SafeAreaView style={styles.bkg}>
+      <View style={[styles.bookCover, styles.shadowProp]}></View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
+        <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
+        <Text style={styles.bookSubtitle}>
+          {props.route.params.book.author}
+        </Text>
+        <Text style={styles.bookSubtitle}>
+          {props.route.params.book.page_number} pages
+        </Text>
         <Text style={styles.text}>{props.route.params.book.info}</Text>
       </ScrollView>
     </SafeAreaView>

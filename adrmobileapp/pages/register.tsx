@@ -12,17 +12,36 @@ import {
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
+import {initializeFirebase} from '../config/firebase';
+import {collection, getFirestore} from 'firebase/firestore';
 
 type RegisterProps = {
   navigation: NavigationProp<RootStackParamList>;
 };
 
 export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');
 
   const auth = getAuth();
+
+  initializeFirebase();
+  const firestore = getFirestore();
+
+  function writeUser() {
+    const usersCollection = collection(firestore, 'users');
+    // User data object with the provided fields
+    const userData = {
+      name: name,
+      email: email,
+      userType: 'Parent',
+      schoolId: schoolId,
+      schoolDistrictId: schoolDistrictId
+    };
+
+  }
 
   const handleRegister = () => {
     return new Promise<void>((resolve, reject) => {
@@ -51,7 +70,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
           placeholderTextColor="gray"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
           returnKeyType="done"
-          //onChangeText={text => setEmail(text)}
+          onChangeText={text => setName(text)}
         />
         {/* Email Input */}
         <TextInput

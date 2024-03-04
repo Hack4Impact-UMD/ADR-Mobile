@@ -78,7 +78,12 @@ export function Login(_props: LoginProps): React.JSX.Element {
         </View>
         {/* Login Button */}
         <TouchableOpacity
-          style={styles.loginButtonContainer}
+          style={[
+            styles.loginButtonContainer,
+            {
+              backgroundColor: isDarkMode ? Colors.white : Colors.black,
+            },
+          ]}
           onPress={async () => {
             try {
               await handleLogin();
@@ -93,7 +98,7 @@ export function Login(_props: LoginProps): React.JSX.Element {
             style={[
               styles.loginButtonText,
               {
-                color: isDarkMode ? Colors.white : Colors.black,
+                color: isDarkMode ? Colors.black : Colors.white,
               },
             ]}>
             Login
@@ -155,7 +160,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   loginButtonContainer: {
-    backgroundColor: '#000000',
     padding: 15,
     borderRadius: 15,
     alignItems: 'center',

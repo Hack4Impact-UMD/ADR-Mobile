@@ -12,8 +12,6 @@ import {
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
-import {initializeFirebase} from '../config/firebase';
-import {collection, getFirestore} from 'firebase/firestore';
 
 type RegisterProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -26,22 +24,6 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   const [feedbacktext, setFeedbackText] = useState('');
 
   const auth = getAuth();
-
-  initializeFirebase();
-  const firestore = getFirestore();
-
-  function writeUser() {
-    const usersCollection = collection(firestore, 'users');
-    // User data object with the provided fields
-    const userData = {
-      name: name,
-      email: email,
-      userType: 'Parent',
-      schoolId: schoolId,
-      schoolDistrictId: schoolDistrictId
-    };
-
-  }
 
   const handleRegister = () => {
     return new Promise<void>((resolve, reject) => {
@@ -101,7 +83,10 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
             try {
               await handleRegister();
               // Iif handleRegister doesn't throw error, navigate to next screen
-              _props.navigation.navigate('SecondRegistrationScreen');
+              _props.navigation.navigate('SecondRegistrationScreen', {
+                name: name,
+                email: email,
+              });
             } catch (error) {
               const errorMessage = error.message;
               setFeedbackText(errorMessage);

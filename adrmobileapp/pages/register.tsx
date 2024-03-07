@@ -18,6 +18,7 @@ type RegisterProps = {
 };
 
 export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');
@@ -51,7 +52,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
           placeholderTextColor="gray"
           autoCapitalize="none" // Prevents auto-capitalization of the first character
           returnKeyType="done"
-          //onChangeText={text => setEmail(text)}
+          onChangeText={text => setName(text)}
         />
         {/* Email Input */}
         <TextInput
@@ -82,7 +83,10 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
             try {
               await handleRegister();
               // Iif handleRegister doesn't throw error, navigate to next screen
-              _props.navigation.navigate('SecondRegistrationScreen');
+              _props.navigation.navigate('SecondRegistrationScreen', {
+                name: name,
+                email: email,
+              });
             } catch (error) {
               const errorMessage = error.message;
               setFeedbackText(errorMessage);

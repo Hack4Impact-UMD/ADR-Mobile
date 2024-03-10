@@ -1,15 +1,18 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, FlatList, SectionList} from 'react-native';
 
 import {CommonActions} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text, BottomNavigation} from 'react-native-paper';
+import {Text, BottomNavigation, List, Checkbox} from 'react-native-paper';
 
 import {AssignmentPage} from './assignmentPage';
 
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {Ionicons} from '@expo/vector-icons';
+import ScheduleItem from '../components/ScheduleItem';
+import moment from 'moment';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,6 +23,7 @@ export default function HomePage() {
       screenOptions={{
         headerShown: false,
       }}
+      // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={({navigation, state, descriptors, insets}) => (
         <BottomNavigation.Bar
           navigationState={state}
@@ -94,6 +98,7 @@ export default function HomePage() {
         name="Bookmarks"
         component={BookmarksScreen}
         options={{
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           tabBarIcon: ({color, size}) => {
             return (
               <Ionicons
@@ -125,9 +130,64 @@ function BookmarksScreen() {
   );
 }
 function ScheduleScreen() {
+  const tasks = [
+    {
+      id: '1',
+      bookTitle: 'Ready Player One',
+      task: 'Read Chapter 1',
+      dueDate: '3/9',
+      completed: false,
+    },
+    {
+      id: '2',
+      bookTitle: 'Ready Player One',
+      task: 'Chapter 1 Quiz',
+      dueDate: '3/10',
+      completed: true,
+    },
+    {
+      id: '3',
+      bookTitle: 'Ready Player One',
+      task: 'Chapter 1 Quiz',
+      dueDate: '3/11',
+      completed: false,
+    }
+    // Add more tasks
+  ];
+  const sections = tasks.reduce((acc, task) => {
+    const dueDate = moment(task.dueDate, 'M/D').format('MMMM D');
+    const category = task.completed ? 'Completed' : dueDate;
+
+    if (!acc[category]) {
+      acc[category] = {title: category, data: []};
+    }
+    acc[category].data.push(task);
+    return acc;
+  }, {});
+
+  const sortedSections = Object.keys(sections)
+    .sort((a, b) => moment(a, 'MMMM D').diff(moment(b, 'MMMM D')))
+    .map(key => ({
+      title: key,
+      data: sections[key].data,
+    }));
   return (
     <View style={styles.container}>
-      <Text variant="headlineMedium">Schedule</Text>
+      <SectionList
+        sections={sortedSections}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <ScheduleItem
+            bookTitle={item.bookTitle}
+            task={item.task}
+            dueDate={item.dueDate}
+            completed={item.completed}
+          />
+        )}
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={styles.header}>{title}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -137,5 +197,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  header: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    backgroundColor: '#f0f0f0',
+    padding: 8,
   },
 });

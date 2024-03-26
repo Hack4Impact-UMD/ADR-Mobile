@@ -34,6 +34,7 @@ import HomePage from './pages/NavigatorOnceLoggedIn';
 import {BookMainPage} from './pages/bookMainPage';
 import {BookInfoPage} from './pages/bookInfoPage';
 import {BookTriviaQuizPage} from './pages/bookTriviaQuizPage';
+import {BookTriviaQuizQuestions} from './pages/bookTriviaQuizQuestions.tsx';
 import {PreSurvey} from './pages/presurveys';
 import {PostSurvey} from './pages/postsurveys';
 import {NavigationContainer} from '@react-navigation/native';
@@ -82,6 +83,7 @@ export type RootStackParamList = {
   SecondRegistrationScreen: undefined;
   BookMain: {book: Book};
   BookQuiz: {book: Book};
+  BookQuizQuestions: {book: Book};
   BookInfo: {book: Book};
   Assignments: undefined;
 };
@@ -141,6 +143,10 @@ const BookQuizScreen = ({route, navigation}) => {
   return <BookTriviaQuizPage navigation={navigation} route={route} />;
 };
 
+const BookQuizQuestionsScreen = ({route, navigation}) => {
+  return <BookTriviaQuizQuestions navigation={navigation} route={route} />;
+};
+
 // create app
 function App(): React.JSX.Element {
   return (
@@ -165,6 +171,7 @@ function App(): React.JSX.Element {
         <Stack.Screen name="BookMain" component={BookMainScreen} />
         <Stack.Screen name="BookInfo" component={BookInfoScreen} />
         <Stack.Screen name="BookQuiz" component={BookQuizScreen} />
+        <Stack.Screen name="BookQuizQuestions" component={BookQuizQuestionsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

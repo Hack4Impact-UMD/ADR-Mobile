@@ -82,8 +82,8 @@ export type RootStackParamList = {
   RegistrationScreen: undefined;
   SecondRegistrationScreen: undefined;
   BookMain: {book: Book};
-  BookQuiz: {book: Book};
-  BookQuizQuestions: {book: Book};
+  BookQuiz: {book: Book; question: number; maxQuestions: number};
+  BookQuizQuestions: {book: Book; question: number};
   BookInfo: {book: Book};
   Assignments: undefined;
 };
@@ -171,7 +171,10 @@ function App(): React.JSX.Element {
         <Stack.Screen name="BookMain" component={BookMainScreen} />
         <Stack.Screen name="BookInfo" component={BookInfoScreen} />
         <Stack.Screen name="BookQuiz" component={BookQuizScreen} />
-        <Stack.Screen name="BookQuizQuestions" component={BookQuizQuestionsScreen} />
+        <Stack.Screen
+          name="BookQuizQuestions"
+          component={BookQuizQuestionsScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

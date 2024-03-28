@@ -30,7 +30,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
     : isDueSoon
     ? styles.highlight
     : {};
-  const textColor = isDueSoon || isPastDue ? '#FFFFFF' : theme.colors.text;
+  const textColor = isDueSoon ? '#FFFFFF' : theme.colors.text;
 
   return (
     <Card style={[styles.card, cardStyle]}>

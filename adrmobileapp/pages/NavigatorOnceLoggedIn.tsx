@@ -151,7 +151,7 @@ function ScheduleScreen() {
       task: 'Chapter 1 Quiz',
       dueDate: '3/11',
       completed: false,
-    }
+    },
     // Add more tasks
   ];
   const sections = tasks.reduce((acc, task) => {
@@ -166,11 +166,18 @@ function ScheduleScreen() {
   }, {});
 
   const sortedSections = Object.keys(sections)
-    .sort((a, b) => moment(a, 'MMMM D').diff(moment(b, 'MMMM D')))
+    .sort((a, b) => {
+      // Explicitly check if one of the sections is "Completed" and sort it to the end
+      if (a === 'Completed') return 1; // Ensure "Completed" comes after everything else
+      if (b === 'Completed') return -1; // Ensure "Completed" comes after everything else
+
+      return moment(a, 'MMMM D').diff(moment(b, 'MMMM D'));
+    })
     .map(key => ({
       title: key,
       data: sections[key].data,
     }));
+
   return (
     <View style={styles.container}>
       <SectionList

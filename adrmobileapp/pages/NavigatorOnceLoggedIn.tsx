@@ -167,9 +167,8 @@ function ScheduleScreen() {
 
   const sortedSections = Object.keys(sections)
     .sort((a, b) => {
-      // Explicitly check if one of the sections is "Completed" and sort it to the end
-      if (a === 'Completed') return 1; // Ensure "Completed" comes after everything else
-      if (b === 'Completed') return -1; // Ensure "Completed" comes after everything else
+      if (a === 'Completed') return 1;
+      if (b === 'Completed') return -1;
 
       return moment(a, 'MMMM D').diff(moment(b, 'MMMM D'));
     })

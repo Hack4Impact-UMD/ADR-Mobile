@@ -20,6 +20,7 @@ export default function HomePage() {
       screenOptions={{
         headerShown: false,
       }}
+      // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={({navigation, state, descriptors, insets}) => (
         <BottomNavigation.Bar
           navigationState={state}

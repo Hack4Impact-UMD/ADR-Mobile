@@ -1,47 +1,70 @@
 "use strict";
 
 // Dependencies for callable functions.
-const {onCall, HttpsError} = require("firebase-functions/v2/https");
-const {logger} = require("firebase-functions/v2");
- 
- // The Firebase Admin SDK to access Firestore.
- const {initializeApp} = require("firebase-admin/app");
- const {getFirestore} = require("firebase-admin/firestore");
- 
- initializeApp();
- // [END import]
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { logger } = require("firebase-functions/v2");
 
- exports.createAdminUser = onCall(async (request) => {
+// The Firebase Admin SDK to access Firestore.
+const { initializeApp } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
 
-    const email = request.data.email;
-    const name = request.data.name;
+initializeApp();
+// [END import]
 
-    const writeResult = await getFirestore()
-        .collection("messages")
-        .add({original: email});
-    res.json({result: `User with ID: ${writeResult.id} added.`});
+exports.createUser = onCall(async (request) => {
+  const email = request.data.email;
+  const name = request.data.name;
+  const schoolId = request.data.schoolId;
+  const schoolDistrictId = request.data.schoolDistrictId;
+  const numChildren = request.data.numChildren;
+
+  return new Promise(async (resolve, reject) => {
+    await getFirestore()
+      .collection("users")
+      .add({
+        name: name,
+        email: email,
+        userType: "admin",
+        schoolId: schoolId,
+        schoolDistrictId: schoolDistrictId,
+        numChildren: numChildren,
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject({
+          text: error.message,
+        });
+      });
   });
+});
 
- exports.createUser = onCall(async (request) => {
+exports.createUser = onCall(async (request) => {
+  const email = request.data.email;
+  const name = request.data.name;
+  const schoolId = request.data.schoolId;
+  const schoolDistrictId = request.data.schoolDistrictId;
+  const numChildren = request.data.numChildren;
 
-    const email = request.data.email;
-    const name = request.data.name;
-    const schoolId = request.data.schoolId;
-    const schoolDistrictId = request.data.schoolDistrictId;
-    const numChildren = request.data.numChildren;
-
-    const userData = {
+  return new Promise(async (resolve, reject) => {
+    await getFirestore()
+      .collection("users")
+      .add({
         name: name,
         email: email,
         userType: "parent",
         schoolId: schoolId,
         schoolDistrictId: schoolDistrictId,
         numChildren: numChildren,
-    };
-
-    const writeResult = await getFirestore()
-        .collection("users")
-        .add(userData);
-
-    res.json({result: `User with ID: ${writeResult.id} added.`});
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject({
+          text: error.message,
+        });
+      });
   });
+});

@@ -11,7 +11,7 @@ const { getFirestore } = require("firebase-admin/firestore");
 initializeApp();
 // [END import]
 
-exports.createUser = onCall(async (request) => {
+exports.createAdminUser = onCall(async (request) => {
   const email = request.data.email;
   const name = request.data.name;
   const schoolId = request.data.schoolId;

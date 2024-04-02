@@ -81,6 +81,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
           onPress={() => {
             props.navigation.navigate('BookQuiz', {
               book: props.route.params.book,
+              prevScreen: 'BookMain',
             });
           }}>
           <MaterialIcons name="quiz" size={iconSize} color="#222222" />

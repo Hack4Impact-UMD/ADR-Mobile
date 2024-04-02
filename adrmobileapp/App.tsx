@@ -82,7 +82,7 @@ export type RootStackParamList = {
   RegistrationScreen: undefined;
   SecondRegistrationScreen: undefined;
   BookMain: {book: Book};
-  BookQuiz: {book: Book; question: number; maxQuestions: number};
+  BookQuiz: {book: Book; question?: number; prevScreen?: string};
   BookQuizQuestions: {book: Book; question: number};
   BookInfo: {book: Book};
   Assignments: undefined;

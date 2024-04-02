@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Pressable, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../App';
 
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Progress from 'react-native-progress';
 import questions from '../data/questions';
 import TextHighlight from 'react-native-text-highlighter';
+import {Ionicons} from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuiz'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookQuiz'>;
@@ -57,21 +59,104 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+
+  clearBtn: {
+    borderRadius: 33,
+    backgroundColor: '#D9D9D9',
+    paddingVertical: 15,
+    width: 120,
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.45,
+    shadowRadius: 4,
+    elevation: 5,
+    marginTop: '5%',
+  },
   buttonView: {
     flex: 1,
     justifyContent: 'flex-end', // Center vertically
     alignItems: 'center', // Center horizontally
     marginBottom: '8%',
   },
+  arrow: {
+    position: 'absolute',
+    left: 20,
+    top: 10,
+  },
 });
 
 export function BookTriviaQuizPage(
   props: BookTriviaQuizPageProps,
 ): React.JSX.Element {
+  let key = 'question';
+  const [question, setQuestion] = useState(0);
+
+  const saveData = async () => {
+    try {
+      await AsyncStorage.setItem(key, question.toString());
+      console.log('Question successfully saved to storage: ' + question);
+    } catch (e) {
+      console.log('Failed to save the question to the storage');
+    }
+  };
+
+  const readData = async () => {
+    try {
+      if (
+        props.route.params.prevScreen == 'BookQuizQuestions' &&
+        props.route.params.question != null
+      ) {
+        await AsyncStorage.setItem(key, props.route.params.question.toString());
+        console.log(
+          'Question in storage is set to: ' + props.route.params.question,
+        );
+
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+          setQuestion(parseInt(value));
+          console.log('Question state is set to ' + value);
+        }
+      } else if (props.route.params.prevScreen == 'BookMain') {
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+          setQuestion(parseInt(value));
+          console.log('Question state is set to ' + value);
+        } else {
+          console.log('Value was null');
+        }
+      }
+    } catch (e) {
+      console.log('Failed to read the async storage.');
+    }
+  };
+
+  const clearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      setQuestion(0);
+      console.log('Storage successfully cleared!');
+      props.navigation.navigate('BookMain', {
+        book: props.route.params.book,
+      });
+    } catch (e) {
+      console.log('Failed to clear the async storage.');
+    }
+  };
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    console.log('Called screen');
+    if (isFocused) {
+      readData();
+    }
+  }, [isFocused]);
+
+  const maxQuestions = Object.keys(questions).length;
+
   let progressPercentage = 0;
-  if (props.route.params.maxQuestions > 0) {
-    progressPercentage =
-      props.route.params.question / props.route.params.maxQuestions;
+  if (maxQuestions > 0) {
+    progressPercentage = question / maxQuestions;
   }
 
   if (
@@ -79,10 +164,8 @@ export function BookTriviaQuizPage(
     progressPercentage < 0 ||
     progressPercentage > 1
   ) {
-    progressPercentage = 0; // Set a default value or handle the case appropriately
+    progressPercentage = 0;
   }
-
-  const maxQuestions = Object.keys(questions).length;
 
   return (
     <SafeAreaView style={styles.bkg}>
@@ -91,19 +174,24 @@ export function BookTriviaQuizPage(
           {props.route.params.book.title} Trivia Quiz
         </Text>
       </View>
-
+      <Pressable
+        style={styles.arrow}
+        onPress={() => {
+          saveData();
+          props.navigation.navigate('BookMain', {
+            book: props.route.params.book,
+          });
+        }}>
+        <Ionicons name="arrow-back" size={30} color="black" />
+      </Pressable>
       <View style={styles.content}>
         <Text style={styles.subText}>Questions Answered</Text>
         <TextHighlight
           textStyle={styles.subText}
           textToHighlight={` ${
-            props.route.params.question ? props.route.params.question : '0'
+            question ? question : '0'
           }  out of  ${maxQuestions} `}
-          searchWords={[
-            ` ${props.route.params.question} `,
-            ` ${maxQuestions} `,
-            ' 0 ',
-          ]}
+          searchWords={[` ${question} `, ` ${maxQuestions} `, ' 0 ']}
           highlightTextStyle={{backgroundColor: '#D9D9D9'}}
         />
       </View>
@@ -133,16 +221,20 @@ export function BookTriviaQuizPage(
             {backgroundColor: progressPercentage === 1 ? '#33363F' : '#D9D9D9'},
           ]}
           onPress={() => {
-            if (props.route.params.question != undefined) {
-              props.navigation.navigate('BookQuizQuestions', {
-                book: props.route.params.book,
-                question: props.route.params.question,
-              });
+            if (progressPercentage < 1) {
+              if (question != undefined) {
+                props.navigation.navigate('BookQuizQuestions', {
+                  book: props.route.params.book,
+                  question: question,
+                });
+              } else {
+                props.navigation.navigate('BookQuizQuestions', {
+                  book: props.route.params.book,
+                  question: 1,
+                });
+              }
             } else {
-              props.navigation.navigate('BookQuizQuestions', {
-                book: props.route.params.book,
-                question: 1,
-              });
+              // Backend to submit the quiz
             }
           }}>
           <Text
@@ -157,6 +249,22 @@ export function BookTriviaQuizPage(
               : progressPercentage > 0
               ? 'Continue'
               : 'Begin Now'}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={[styles.clearBtn]}
+          onPress={() => {
+            clearStorage();
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 12,
+              color: '#726E6E',
+              fontWeight: 'bold',
+            }}>
+            Clear Storage
           </Text>
         </Pressable>
       </View>

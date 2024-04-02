@@ -81,18 +81,18 @@ export function BookTriviaQuizQuestions(
           props.navigation.navigate('BookQuiz', {
             book: props.route.params.book,
             question: questionNum,
-            maxQuestions: maxQuestions,
+            prevScreen: 'BookQuizQuestions',
           });
         }}>
         <Ionicons name="arrow-back" size={30} color="black" />
       </Pressable>
       <View style={styles.quizBkg}>
-        <Text style={styles.questionNum}>Q{questionNum}</Text>
+        <Text style={styles.questionNum}>Q{questionNum + 1}</Text>
         <Text style={styles.question}>
-          {questions[questionNum as keyof typeof questions]}
+          {questions[(questionNum + 1) as keyof typeof questions]}
         </Text>
         <Text style={styles.questionCount}>
-          {questionNum}/{maxQuestions}
+          {questionNum + 1}/{maxQuestions}
         </Text>
       </View>
 
@@ -102,15 +102,16 @@ export function BookTriviaQuizQuestions(
             styles.btn,
             {
               backgroundColor:
-                questionNum === maxQuestions ? '#33363F' : '#D9D9D9',
+                questionNum + 1 === maxQuestions ? '#33363F' : '#D9D9D9',
             },
           ]}
           onPress={() => {
-            if (questionNum === maxQuestions) {
+            if (questionNum + 1 === maxQuestions) {
+              console.log('Submit');
               props.navigation.navigate('BookQuiz', {
                 book: props.route.params.book,
                 question: maxQuestions,
-                maxQuestions: maxQuestions,
+                prevScreen: 'BookQuizQuestions',
               });
             } else {
               setQuestionNum(questionNum + 1);
@@ -120,10 +121,10 @@ export function BookTriviaQuizQuestions(
             style={{
               textAlign: 'center',
               fontSize: 23,
-              color: questionNum === maxQuestions ? '#D9D9D9' : '#726E6E',
+              color: questionNum + 1 === maxQuestions ? '#D9D9D9' : '#726E6E',
               fontWeight: 'bold',
             }}>
-            {questionNum === maxQuestions ? 'Submit' : 'Next'}
+            {questionNum + 1 === maxQuestions ? 'Submit' : 'Next'}
           </Text>
         </Pressable>
       </View>

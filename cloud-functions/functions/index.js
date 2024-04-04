@@ -24,7 +24,7 @@ exports.createAdminUser = onCall(async (request) => {
       .add({
         name: name,
         email: email,
-        userType: "admin",
+        userType: "ADRAdmin",
         schoolId: schoolId,
         schoolDistrictId: schoolDistrictId,
         numChildren: numChildren,
@@ -53,7 +53,65 @@ exports.createUser = onCall(async (request) => {
       .add({
         name: name,
         email: email,
-        userType: "parent",
+        userType: "Parent",
+        schoolId: schoolId,
+        schoolDistrictId: schoolDistrictId,
+        numChildren: numChildren,
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject({
+          text: error.message,
+        });
+      });
+  });
+});
+
+exports.createADRStaffUser = onCall(async (request) => {
+  const email = request.data.email;
+  const name = request.data.name;
+  const schoolId = request.data.schoolId;
+  const schoolDistrictId = request.data.schoolDistrictId;
+  const numChildren = request.data.numChildren;
+
+  return new Promise(async (resolve, reject) => {
+    await getFirestore()
+      .collection("users")
+      .add({
+        name: name,
+        email: email,
+        userType: "ADRStaff",
+        schoolId: schoolId,
+        schoolDistrictId: schoolDistrictId,
+        numChildren: numChildren,
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject({
+          text: error.message,
+        });
+      });
+  });
+});
+
+exports.createSchoolStaffUser = onCall(async (request) => {
+  const email = request.data.email;
+  const name = request.data.name;
+  const schoolId = request.data.schoolId;
+  const schoolDistrictId = request.data.schoolDistrictId;
+  const numChildren = request.data.numChildren;
+
+  return new Promise(async (resolve, reject) => {
+    await getFirestore()
+      .collection("users")
+      .add({
+        name: name,
+        email: email,
+        userType: "SchoolStaff",
         schoolId: schoolId,
         schoolDistrictId: schoolDistrictId,
         numChildren: numChildren,

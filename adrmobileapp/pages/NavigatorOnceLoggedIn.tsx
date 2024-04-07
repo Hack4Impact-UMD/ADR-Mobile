@@ -13,6 +13,7 @@ import {AntDesign} from '@expo/vector-icons';
 import {Ionicons} from '@expo/vector-icons';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
+import {ToDoScreen} from './toDoPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -85,7 +86,7 @@ export default function HomePage() {
       />
       <Tab.Screen
         name="Schedule"
-        component={ScheduleScreen}
+        component={ToDoScreen}
         options={{
           tabBarIcon: () => {
             return (
@@ -126,74 +127,6 @@ function BookmarksScreen() {
   return (
     <View style={styles.container}>
       <Text variant="headlineMedium">Bookmarks</Text>
-    </View>
-  );
-}
-function ScheduleScreen() {
-  const tasks = [
-    {
-      id: '1',
-      bookTitle: 'Ready Player One',
-      task: 'Read Chapter 1',
-      dueDate: '3/9',
-      completed: false,
-    },
-    {
-      id: '2',
-      bookTitle: 'Ready Player One',
-      task: 'Chapter 1 Quiz',
-      dueDate: '3/10',
-      completed: true,
-    },
-    {
-      id: '3',
-      bookTitle: 'Ready Player One',
-      task: 'Chapter 1 Quiz',
-      dueDate: '3/11',
-      completed: false,
-    },
-    // Add more tasks
-  ];
-  const sections = tasks.reduce((acc, task) => {
-    const dueDate = moment(task.dueDate, 'M/D').format('MMMM D');
-    const category = task.completed ? 'Completed' : dueDate;
-
-    if (!acc[category]) {
-      acc[category] = {title: category, data: []};
-    }
-    acc[category].data.push(task);
-    return acc;
-  }, {});
-
-  const sortedSections = Object.keys(sections)
-    .sort((a, b) => {
-      if (a === 'Completed') return 1;
-      if (b === 'Completed') return -1;
-
-      return moment(a, 'MMMM D').diff(moment(b, 'MMMM D'));
-    })
-    .map(key => ({
-      title: key,
-      data: sections[key].data,
-    }));
-
-  return (
-    <View style={styles.container}>
-      <SectionList
-        sections={sortedSections}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <ScheduleItem
-            bookTitle={item.bookTitle}
-            task={item.task}
-            dueDate={item.dueDate}
-            completed={item.completed}
-          />
-        )}
-        renderSectionHeader={({section: {title}}) => (
-          <Text style={styles.header}>{title}</Text>
-        )}
-      />
     </View>
   );
 }

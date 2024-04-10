@@ -124,6 +124,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
           onPress={() => {
             props.navigation.navigate('BookQuiz', {
               book: props.route.params.book,
+              prevScreen: 'BookMain',
             });
           }}>
           <View style={[styles.item, styles.shadowProp]}>

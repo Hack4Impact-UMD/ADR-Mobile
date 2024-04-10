@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   bookCover: {
     height: 250,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#C4DEEF',
     marginBottom: '5%',
     borderBottomRightRadius: 40,
     borderBottomLeftRadius: 40,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: 42,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#0071BA',
     marginLeft: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -67,10 +67,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   iconText: {
-    color: '#726E6E', // Color specified
+    color: '#0071BA', // Color specified
     fontFamily: 'Inter-SemiBold', // Inter font with Semibold weight
     fontSize: 28, // Font size specified
-    fontWeight: '600', // 600 is semibold
     paddingLeft: '5%',
   },
   triviaQuestions: {
@@ -78,17 +77,17 @@ const styles = StyleSheet.create({
   },
   chapterInfo: {
     height: 100,
-    width: '70%',
-    backgroundColor: '#D9D9D9',
+    width: '90%',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14, // Adjust as needed
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: '#0071BA',
+    borderWidth: 1.5,
     alignSelf: 'center',
     marginBottom: 30,
+    padding: '3%',
   },
   chapterText: {
-    color: '#333', // gray text color
-    fontWeight: 'bold', // bold font weight
+    color: '#000000', // gray text color
   },
 });
 
@@ -114,7 +113,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
       <View style={styles.container}>
         <TouchableOpacity style={styles.iconContainer}>
           <View style={[styles.item, styles.shadowProp]}>
-            <SoundIcon width={iconSize} height={iconSize} color="#222222" />
+            <SoundIcon width={iconSize} height={iconSize} color="#FFFFFF" />
           </View>
           <Text style={styles.iconText}>audio</Text>
         </TouchableOpacity>
@@ -128,7 +127,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
             });
           }}>
           <View style={[styles.item, styles.shadowProp]}>
-            <TriviaIcon width={iconSize} height={iconSize} color="#222222" />
+            <TriviaIcon width={iconSize} height={iconSize} color="#FFFFFF" />
           </View>
           <Text style={styles.iconText}>trivia questions</Text>
         </TouchableOpacity>

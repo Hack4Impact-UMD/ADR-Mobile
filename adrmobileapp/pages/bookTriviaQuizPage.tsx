@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   bookCover: {
     height: 250,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#0071BA',
     marginBottom: '5%',
   },
   bookTitle: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     marginTop: '20%',
     marginLeft: '4%',
     marginRight: '5%',
-    color: '#726E6E',
+    color: '#FFFFFF',
   },
   subText: {
     fontSize: 25,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
   clearBtn: {
     borderRadius: 33,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#C4DEEF',
     paddingVertical: 15,
     width: 120,
     shadowColor: 'black',
@@ -182,7 +182,7 @@ export function BookTriviaQuizPage(
             book: props.route.params.book,
           });
         }}>
-        <Ionicons name="arrow-back" size={30} color="black" />
+        <Ionicons name="arrow-back" size={30} color="white" />
       </Pressable>
       <View style={styles.content}>
         <Text style={styles.subText}>Questions Answered</Text>
@@ -192,7 +192,7 @@ export function BookTriviaQuizPage(
             question ? question : '0'
           }  out of  ${maxQuestions} `}
           searchWords={[` ${question} `, ` ${maxQuestions} `, ' 0 ']}
-          highlightTextStyle={{backgroundColor: '#D9D9D9'}}
+          highlightTextStyle={{backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#0071BA'}}
         />
       </View>
 
@@ -205,12 +205,13 @@ export function BookTriviaQuizPage(
         </Text>
         <Progress.Bar
           progress={progressPercentage}
-          borderColor={'white'}
-          borderRadius={22}
+          borderColor={'#0071BA'}
+          borderRadius={25}
+          borderWidth={2}
           height={50}
           width={395}
-          color={'#726E6E'}
-          unfilledColor={'#D9D9D9'}
+          color={'#0071BA'}
+          unfilledColor={'#FFFFFF'}
         />
       </View>
 
@@ -218,7 +219,7 @@ export function BookTriviaQuizPage(
         <Pressable
           style={[
             styles.btn,
-            {backgroundColor: progressPercentage === 1 ? '#33363F' : '#D9D9D9'},
+            {backgroundColor: progressPercentage === 1 ? '#0071BA' : '#C4DEEF'},
           ]}
           onPress={() => {
             if (progressPercentage < 1) {
@@ -241,7 +242,7 @@ export function BookTriviaQuizPage(
             style={{
               textAlign: 'center',
               fontSize: 23,
-              color: progressPercentage === 1 ? '#D9D9D9' : '#726E6E',
+              color: progressPercentage === 1 ? '#FFFFFF' : '#0071BA',
               fontWeight: 'bold',
             }}>
             {progressPercentage >= 1
@@ -261,7 +262,7 @@ export function BookTriviaQuizPage(
             style={{
               textAlign: 'center',
               fontSize: 12,
-              color: '#726E6E',
+              color: '#0071BA',
               fontWeight: 'bold',
             }}>
             Clear Storage

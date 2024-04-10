@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   quizBkg: {
     height: 550,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#0071BA',
     marginTop: '20%',
     width: '90%',
     borderRadius: 20,
@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
   questionNum: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#726E6E',
+    color: '#FFFFFF',
     marginBottom: '5%',
   },
   question: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#726E6E',
+    color: '#FFFFFF',
   },
   btn: {
     marginTop: '10%',
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   questionCount: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#726E6E',
+    color: '#FFFFFF',
     textAlign: 'center',
     position: 'absolute',
     bottom: 20,
@@ -102,7 +102,7 @@ export function BookTriviaQuizQuestions(
             styles.btn,
             {
               backgroundColor:
-                questionNum + 1 === maxQuestions ? '#33363F' : '#D9D9D9',
+                questionNum + 1 === maxQuestions ? '#0071BA' : '#C4DEEF',
             },
           ]}
           onPress={() => {
@@ -121,7 +121,7 @@ export function BookTriviaQuizQuestions(
             style={{
               textAlign: 'center',
               fontSize: 23,
-              color: questionNum + 1 === maxQuestions ? '#D9D9D9' : '#726E6E',
+              color: questionNum + 1 === maxQuestions ? '#FFFFFF' : '#0071BA',
               fontWeight: 'bold',
             }}>
             {questionNum + 1 === maxQuestions ? 'Submit' : 'Next'}

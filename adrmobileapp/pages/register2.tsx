@@ -8,22 +8,55 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import {RootStackParamList} from '../App';
+import {initializeFirebase} from '../config/firebase';
+import {addDoc, collection, getFirestore} from 'firebase/firestore';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {createUser} from '../backend/CloudFunctionsCalls';
+
+type routeProp = RouteProp<RootStackParamList, 'SecondRegistrationScreen'>;
+type navProp = StackNavigationProp<
+  RootStackParamList,
+  'SecondRegistrationScreen'
+>;
 
 type Register2Props = {
-  navigation: NavigationProp<RootStackParamList>;
+  navigation: navProp;
+  route: routeProp; // Route prop to access parameters
 };
 
 export function SecondRegistrationScreen(
-  _props: Register2Props,
+  props: Register2Props,
 ): React.JSX.Element {
+  const {name, email} = props.route.params; // Access name and email from route parameters
+
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [showDistrictPicker, setShowDistrictPicker] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState('');
   const [showSchoolPicker, setShowSchoolPicker] = useState(false);
   const [numChildren, setNumChildren] = useState('');
+
+  initializeFirebase();
+  const firestore = getFirestore();
+
+  // schoolId and schoolDistrictId are populated in the next page
+  async function writeUser() {
+    try {
+      // Adds a new document with an automatically generated ID
+      await createUser(
+        name,
+        email,
+        selectedSchool,
+        selectedDistrict,
+        numChildren,
+      );
+      console.log('Document written');
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
+  }
 
   // Checking if num children input is an integer >= 0
   const handleNumChildrenChange = (text: string) => {
@@ -100,7 +133,14 @@ export function SecondRegistrationScreen(
           {/* Login Button */}
           <TouchableOpacity
             style={styles.finishButtonContainer}
-            onPress={() => _props.navigation.navigate('HomeScreen')}>
+            onPress={async () => {
+              try {
+                await writeUser();
+                props.navigation.navigate('HomeScreen');
+              } catch (error) {
+                console.error('Error finishing registration: ', error);
+              }
+            }}>
             <Text style={styles.finishButtonText}>Finish</Text>
           </TouchableOpacity>
         </View>

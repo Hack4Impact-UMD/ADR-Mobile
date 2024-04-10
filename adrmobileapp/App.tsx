@@ -80,7 +80,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 export type RootStackParamList = {
   HomeScreen: undefined;
   RegistrationScreen: undefined;
-  SecondRegistrationScreen: undefined;
+  SecondRegistrationScreen: {name: string; email: string};
   BookMain: {book: Book};
   BookQuiz: {book: Book; question?: number; prevScreen?: string};
   BookQuizQuestions: {book: Book; question: number};

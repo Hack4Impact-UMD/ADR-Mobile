@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, Text, Pressable, SafeAreaView, StyleSheet} from 'react-native';
 
 import {RootStackParamList} from '../App';
@@ -6,6 +6,8 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Ionicons} from '@expo/vector-icons';
 import questions from '../data/questions';
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuizQuestions'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookQuizQuestions'>;
@@ -33,12 +35,14 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   questionNum: {
+    fontFamily: 'Karla-Bold',
     fontSize: 28,
     fontWeight: 'bold',
     color: '#FFFFFF',
     marginBottom: '5%',
   },
   question: {
+    fontFamily: 'Karla-Bold',
     fontSize: 28,
     fontWeight: 'bold',
     color: '#FFFFFF',
@@ -51,6 +55,7 @@ const styles = StyleSheet.create({
     width: 350,
   },
   questionCount: {
+    fontFamily: 'Karla-Bold',
     fontSize: 28,
     fontWeight: 'bold',
     color: '#FFFFFF',
@@ -64,6 +69,13 @@ const styles = StyleSheet.create({
     left: 20,
     top: 10,
   },
+  endAnswer: {
+    marginTop: '10%',
+    borderRadius: 15,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 15,
+    width: 350,
+  },
 });
 
 export function BookTriviaQuizQuestions(
@@ -72,12 +84,27 @@ export function BookTriviaQuizQuestions(
   const [questionNum, setQuestionNum] = useState(props.route.params.question);
   const maxQuestions = Object.keys(questions).length;
 
+  const [fontsLoaded, fontError] = useFonts({
+    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
+    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
+    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
+    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
   return (
     <SafeAreaView style={styles.bkg}>
       <Pressable
         style={styles.arrow}
         onPress={() => {
-          questionNum === maxQuestions ? null : setQuestionNum(questionNum + 1);
+          questionNum === maxQuestions
+            ? setQuestionNum(questionNum - 1)
+            : setQuestionNum(questionNum + 1);
           props.navigation.navigate('BookQuiz', {
             book: props.route.params.book,
             question: questionNum,
@@ -87,12 +114,64 @@ export function BookTriviaQuizQuestions(
         <Ionicons name="arrow-back" size={30} color="black" />
       </Pressable>
       <View style={styles.quizBkg}>
-        <Text style={styles.questionNum}>Q{questionNum + 1}</Text>
-        <Text style={styles.question}>
-          {questions[(questionNum + 1) as keyof typeof questions]}
+        <Text style={styles.questionNum}>
+          {questionNum + 1 <= maxQuestions ? `Q${questionNum + 1}` : null}
         </Text>
+        <Text style={styles.question}>
+          {questionNum + 1 <= maxQuestions
+            ? questions[(questionNum + 1) as keyof typeof questions]
+            : 'How long did it take to finish this quiz?'}
+        </Text>
+        {questionNum + 1 == maxQuestions + 1 && [
+          <Pressable style={styles.endAnswer}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 23,
+                color: '#0071BA',
+                fontFamily: 'Karla-Bold',
+              }}>
+              0-30 min
+            </Text>
+          </Pressable>,
+          <Pressable style={styles.endAnswer}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 23,
+                color: '#0071BA',
+                fontFamily: 'Karla-Bold',
+              }}>
+              31-60 min
+            </Text>
+          </Pressable>,
+          <Pressable style={styles.endAnswer}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 23,
+                color: '#0071BA',
+                fontFamily: 'Karla-Bold',
+              }}>
+              61-90 min
+            </Text>
+          </Pressable>,
+          <Pressable style={styles.endAnswer}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 23,
+                color: '#0071BA',
+                fontFamily: 'Karla-Bold',
+              }}>
+              91+ min
+            </Text>
+          </Pressable>,
+        ]}
         <Text style={styles.questionCount}>
-          {questionNum + 1}/{maxQuestions}
+          {questionNum + 1 <= maxQuestions
+            ? `${questionNum + 1}/${maxQuestions}`
+            : null}
         </Text>
       </View>
 
@@ -102,11 +181,11 @@ export function BookTriviaQuizQuestions(
             styles.btn,
             {
               backgroundColor:
-                questionNum + 1 === maxQuestions ? '#0071BA' : '#C4DEEF',
+                questionNum + 1 === maxQuestions + 1 ? '#0071BA' : '#C4DEEF',
             },
           ]}
           onPress={() => {
-            if (questionNum + 1 === maxQuestions) {
+            if (questionNum + 1 === maxQuestions + 1) {
               console.log('Submit');
               props.navigation.navigate('BookQuiz', {
                 book: props.route.params.book,
@@ -121,10 +200,11 @@ export function BookTriviaQuizQuestions(
             style={{
               textAlign: 'center',
               fontSize: 23,
-              color: questionNum + 1 === maxQuestions ? '#FFFFFF' : '#0071BA',
+              color:
+                questionNum + 1 === maxQuestions + 1 ? '#FFFFFF' : '#0071BA',
               fontWeight: 'bold',
             }}>
-            {questionNum + 1 === maxQuestions ? 'Submit' : 'Next'}
+            {questionNum + 1 === maxQuestions + 1 ? 'Submit' : 'Next'}
           </Text>
         </Pressable>
       </View>

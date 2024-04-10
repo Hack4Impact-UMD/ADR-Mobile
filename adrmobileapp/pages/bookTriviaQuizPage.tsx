@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Pressable, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../App';
 
@@ -9,6 +9,8 @@ import questions from '../data/questions';
 import TextHighlight from 'react-native-text-highlighter';
 import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuiz'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookQuiz'>;
@@ -29,17 +31,20 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
   },
   bookTitle: {
-    fontSize: 40,
+    fontFamily: 'CrimsonPro',
+    fontSize: 50,
+    fontWeight: 'bold',
+    width: '80%',
     marginTop: '20%',
     marginLeft: '4%',
     marginRight: '5%',
     color: '#FFFFFF',
   },
   subText: {
+    fontFamily: 'Karla-Bold',
     fontSize: 25,
-    fontWeight: 'bold',
     color: 'black',
-    lineHeight: 45,
+    lineHeight: 50,
   },
   content: {
     marginLeft: '4%',
@@ -167,8 +172,21 @@ export function BookTriviaQuizPage(
     progressPercentage = 0;
   }
 
+  const [fontsLoaded, fontError] = useFonts({
+    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
+    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
+    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
+    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
   return (
-    <SafeAreaView style={styles.bkg}>
+    <SafeAreaView style={styles.bkg} onLayout={onLayoutRootView}>
       <View style={styles.bookCover}>
         <Text style={styles.bookTitle}>
           {props.route.params.book.title} Trivia Quiz
@@ -187,17 +205,24 @@ export function BookTriviaQuizPage(
       <View style={styles.content}>
         <Text style={styles.subText}>Questions Answered</Text>
         <TextHighlight
-          textStyle={styles.subText}
+          textStyle={[styles.subText, {fontFamily: 'Karla-Medium'}]}
           textToHighlight={` ${
             question ? question : '0'
           }  out of  ${maxQuestions} `}
           searchWords={[` ${question} `, ` ${maxQuestions} `, ' 0 ']}
-          highlightTextStyle={{backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#0071BA'}}
+          highlightTextStyle={{
+            backgroundColor: '#C4DEEF',
+            fontFamily: 'Karla-Medium',
+          }}
         />
       </View>
 
       <View style={styles.progress}>
-        <Text style={styles.subText}>
+        <Text
+          style={[
+            styles.subText,
+            {color: progressPercentage === 1 ? '#0071BA' : '#000000'},
+          ]}>
           Progress{' '}
           {progressPercentage
             ? `${(progressPercentage * 100).toFixed(0)}%`
@@ -243,7 +268,7 @@ export function BookTriviaQuizPage(
               textAlign: 'center',
               fontSize: 23,
               color: progressPercentage === 1 ? '#FFFFFF' : '#0071BA',
-              fontWeight: 'bold',
+              fontFamily: 'Karla-Bold',
             }}>
             {progressPercentage >= 1
               ? 'Finish'
@@ -263,7 +288,7 @@ export function BookTriviaQuizPage(
               textAlign: 'center',
               fontSize: 12,
               color: '#0071BA',
-              fontWeight: 'bold',
+              fontFamily: 'Karla-Bold',
             }}>
             Clear Storage
           </Text>

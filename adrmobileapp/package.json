@@ -32,7 +32,9 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "^12.1.1",
     "react-native-text-highlighter": "^1.0.5",
-    "react-native-web": "^0.19.10"
+    "react-native-web": "^0.19.10",
+    "expo-font": "~11.10.3",
+    "expo-splash-screen": "~0.26.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

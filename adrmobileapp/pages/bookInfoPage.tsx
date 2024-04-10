@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 type routeProp = RouteProp<RootStackParamList, 'BookInfo'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookInfo'>;
@@ -15,7 +17,7 @@ type BookInfoPageProps = {
 const styles = StyleSheet.create({
   bookCover: {
     height: 250,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#C4DEEF',
     marginBottom: '5%',
     borderBottomRightRadius: 40,
     borderBottomLeftRadius: 40,
@@ -27,12 +29,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   bookTitle: {
-    fontSize: 40,
+    fontFamily: 'CrimsonPro',
+    fontSize: 50,
+    width: '70%',
     marginBottom: '4%',
-    color: '#726E6E',
+    color: '#000000',
   },
   bookSubtitle: {
-    fontSize: 25,
+    fontFamily: 'Karla',
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: '2%',
     color: '#000000',
@@ -47,12 +52,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   text: {
+    fontFamily: 'Karla-Medium',
     marginTop: '2%',
-    fontSize: 20,
+    fontSize: 25,
   },
 });
 
 export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
+  const [fontsLoaded, fontError] = useFonts({
+    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
+    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
+    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
+    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
   return (
     <SafeAreaView style={styles.bkg}>
       <View style={[styles.bookCover, styles.shadowProp]}></View>

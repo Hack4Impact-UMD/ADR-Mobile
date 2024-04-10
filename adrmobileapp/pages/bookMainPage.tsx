@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,8 @@ import {
 import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 import SoundIcon from '../assets/icons/SoundIcon.tsx';
 import TriviaIcon from '../assets/icons/TriviaIcon.tsx';
@@ -33,13 +35,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 40,
     borderBottomLeftRadius: 40,
   },
-
   bookTitle: {
-    fontSize: 40,
+    fontFamily: 'CrimsonPro',
+    fontSize: 50,
     marginLeft: '4%',
     marginBottom: '4%',
-    color: '#726E6E',
-    fontWeight: '600', // 600 is semibold
+    color: '#000000',
+    fontWeight: 'bold', // 600 is semibold
+    width: '70%',
   },
   container: {
     flexDirection: 'row',
@@ -68,7 +71,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     color: '#0071BA', // Color specified
-    fontFamily: 'Inter-SemiBold', // Inter font with Semibold weight
+    fontFamily: 'Karla-Medium', // Inter font with Semibold weight
     fontSize: 28, // Font size specified
     paddingLeft: '5%',
   },
@@ -87,14 +90,31 @@ const styles = StyleSheet.create({
     padding: '3%',
   },
   chapterText: {
+    fontFamily: 'Karla-Medium',
+    fontWeight: '800',
     color: '#000000', // gray text color
+    fontSize: 15,
   },
 });
 
 export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
   var iconSize = 70;
+
+  const [fontsLoaded, fontError] = useFonts({
+    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
+    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
+    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
+    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
   return (
-    <SafeAreaView style={styles.bkg}>
+    <SafeAreaView style={styles.bkg} onLayout={onLayoutRootView}>
       <View style={[styles.bookCover, styles.shadowProp]} />
       <TouchableOpacity
         onPress={() => {

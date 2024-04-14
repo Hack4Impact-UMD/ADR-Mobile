@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     fontFamily: 'CrimsonPro',
     fontSize: 50,
     fontWeight: 'bold',
-    width: '80%',
     marginTop: '20%',
     marginLeft: '4%',
     marginRight: '5%',

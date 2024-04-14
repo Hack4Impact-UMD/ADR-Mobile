@@ -7,6 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Text, BottomNavigation, List, Checkbox} from 'react-native-paper';
 
 import {AssignmentPage} from './assignmentPage';
+import DonatePage from './donatePage';
 
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
@@ -14,6 +15,7 @@ import {Ionicons} from '@expo/vector-icons';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
 import {ToDoScreen} from './toDoPage';
+import {FontAwesome} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -99,8 +101,7 @@ export default function HomePage() {
         name="Bookmarks"
         component={BookmarksScreen}
         options={{
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          tabBarIcon: ({color, size}) => {
+          tabBarIcon: () => {
             return (
               <Ionicons
                 name="bookmarks-outline"
@@ -109,6 +110,15 @@ export default function HomePage() {
               />
             );
           },
+        }}
+      />
+      <Tab.Screen
+        name="Donate"
+        component={DonatePage}
+        options={{
+          tabBarIcon: () => (
+            <FontAwesome name="dollar" size={iconSize} color="#222222" />
+          ),
         }}
       />
     </Tab.Navigator>

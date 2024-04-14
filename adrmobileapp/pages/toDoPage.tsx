@@ -62,25 +62,23 @@ export function ToDoScreen() {
     }));
 
   return (
-    <SafeAreaView style={styles.view}>
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}>
-        <Text style={styles.header}>To Do</Text>
-        <SectionList
-          sections={sortedSections}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => (
-            <ScheduleItem
-              bookTitle={item.bookTitle}
-              task={item.task}
-              dueDate={item.dueDate}
-              completed={item.completed}
-              taskType={item.taskType}
-            />
-          )}
-        />
-      </ScrollView>
+    <SafeAreaView
+      style={styles.scrollView}
+      showsVerticalScrollIndicator={false}>
+      <Text style={styles.header}>To Do</Text>
+      <SectionList
+        sections={sortedSections}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <ScheduleItem
+            bookTitle={item.bookTitle}
+            task={item.task}
+            dueDate={item.dueDate}
+            completed={item.completed}
+            taskType={item.taskType}
+          />
+        )}
+      />
     </SafeAreaView>
   );
 }

@@ -111,16 +111,7 @@ const HomeScreen = ({navigation}) => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          {/* <FirebaseAuthRegisterPrototype /> */}
           <Login navigation={navigation} />
-
-          {/* Delete once login and registration screens are completed */}
-          {/* <Button
-            title="Go To Assignments Prototype"
-            onPress={() => navigation.navigate('Assignments')}
-          /> */}
-          <PreSurvey />
-          <PostSurvey />
         </View>
       </ScrollView>
     </SafeAreaView>

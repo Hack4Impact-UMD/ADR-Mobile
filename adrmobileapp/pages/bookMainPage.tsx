@@ -108,7 +108,9 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
 
       {/* Need to replace text with Assignment Description (inputted from the school liaison website) */}
       <View style={[styles.chapterInfo, styles.shadowProp]}>
-        <Text style={styles.chapterText}>Assignment Description Goes Here</Text>
+        <Text style={styles.chapterText}>
+          {props.route.params.book.description}
+        </Text>
       </View>
 
       <View style={styles.container}>

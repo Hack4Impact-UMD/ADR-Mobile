@@ -16,7 +16,7 @@ export function ToDoScreen() {
       id: '1',
       bookTitle: 'Ready Player One',
       task: 'Read Chapter 1',
-      dueDate: '4/8',
+      dueDate: '4/18',
       taskType: 'read',
       completed: false,
     },
@@ -24,7 +24,7 @@ export function ToDoScreen() {
       id: '2',
       bookTitle: 'Ready Player One',
       task: 'Chapter 1 Quiz',
-      dueDate: '4/10',
+      dueDate: '4/19',
       taskType: 'quiz',
       completed: false,
     },
@@ -32,7 +32,7 @@ export function ToDoScreen() {
       id: '3',
       bookTitle: 'Ready Player One',
       task: 'Chapter 1 Quiz',
-      dueDate: '4/11',
+      dueDate: '4/20',
       taskType: 'survey',
       completed: false,
     },
@@ -100,7 +100,11 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 30,
     marginBottom: '4%',
-    color: '#726E6E',
+    color: 'black',
     textAlign: 'center',
+    fontFamily: 'Times New Roman',
+    fontWeight: 'bold',
+
+    
   },
 });

@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
   welcomeBack: {
     fontSize: 40,
     marginBottom: '4%',
-    color: '#726E6E',
+    color: 'black',
+    fontFamily: 'Times New Roman'
   },
   date: {
     fontSize: 20,
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   book: {
     height: 300,
     width: '70%',
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#ADD8E6',
     marginBottom: '5%',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 50,
@@ -57,9 +58,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   bookTitle: {
-    color: '#726E6E',
+    color: 'black',
     fontSize: 25,
     padding: '5%',
+    fontFamily:'Times New Roman',
   },
 });
 

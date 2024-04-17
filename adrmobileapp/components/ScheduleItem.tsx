@@ -1,12 +1,12 @@
-import React from 'react';
-import {View, StyleSheet, Text as RNText} from 'react-native';
-import {Card, IconButton, useTheme} from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
+import { Card, IconButton, useTheme } from 'react-native-paper';
 import moment from 'moment';
-import {Octicons} from '@expo/vector-icons';
-import {FontAwesome5} from '@expo/vector-icons';
-import {Feather} from '@expo/vector-icons';
-import {Ionicons} from '@expo/vector-icons';
-import {AntDesign} from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 interface ScheduleItemProps {
   bookTitle: string;
@@ -29,9 +29,17 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
     dueDateMoment.isBefore(moment().add(1, 'days')) &&
     dueDateMoment.isAfter(moment());
 
-  const cardStyle = isDueSoon ? styles.dueSoon : {};
+  const [isClicked, setIsClicked] = useState(false);
 
-  const textColor = isDueSoon ? '#FFFFFF' : '#757575';
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+  };
+
+  const cardStyle = isDueSoon ? { ...styles.card, backgroundColor: 'red' } : styles.card;
+
+
+  const textColor = isClicked ? 'white' : 'white';
+
   const iconSize = 40;
 
   const iconButton =
@@ -44,43 +52,48 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
     );
 
   return (
-    <Card style={[styles.card, cardStyle]}>
+    <TouchableOpacity
+      style={[styles.card, cardStyle]}
+      onPress={handleClick}
+    >
       <Card.Content style={styles.cardContent}>
-        <View style={[styles.textContainer, {width: '16%'}]}>{iconButton}</View>
-        <View style={[styles.textContainer, {width: '55%'}]}>
-          <RNText style={[styles.bookTitle, {color: textColor}]}>
-            {bookTitle}
-          </RNText>
-          <RNText style={[styles.task, {color: textColor}]}>{task}</RNText>
+        <View style={[styles.textContainer, { width: '16%' }]}>{iconButton}</View>
+        <View style={[styles.textContainer, { width: '55%' }]}>
+          <RNText style={[styles.bookTitle, { color: 'white' }]}>{bookTitle}</RNText>
+          <RNText style={[styles.task, { color: textColor }]}>{task}</RNText>
         </View>
-        <View style={[styles.textContainer, {width: '15%'}]}>
-          <RNText style={[styles.dueDate, {color: textColor}]}>{'Due'}</RNText>
-          <RNText style={[styles.dueDate, {color: textColor}]}>
+        <View style={[styles.textContainer, { width: '15%' }]}>
+          <RNText style={[styles.dueDate, { color: 'white' }]}>
+            {'Due'}
+          </RNText>
+          <RNText style={[styles.dueDate, { color: 'white' }]}>
             {dueDate}
           </RNText>
         </View>
-        <View style={[styles.cardContent, {width: '14%'}]}>
+        <View style={[styles.cardContent, { width: '20%' }]}>
           {isDueSoon && <Ionicons name="alarm" size={24} color="white" />}
           {isDueSoon ? (
             <AntDesign name="right" size={24} color={textColor} />
           ) : (
-            <View style={{marginHorizontal: '60%', width: '100%'}}>
+            <View style={{ marginHorizontal: '60%', width: '100%' }}>
               <AntDesign name="right" size={24} color={textColor} />
             </View>
           )}
         </View>
       </Card.Content>
-    </Card>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
     width: 350,
+    height:60,
     marginVertical: 4,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#d9d9d9', // Default background
+    backgroundColor: '#00BFFF', // Teal blue
+    borderRadius: 10, // Rounded corners
   },
   cardContent: {
     flexDirection: 'row',
@@ -90,6 +103,7 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: 'center', // Ensure the text is centered vertically
     marginHorizontal: 3, // Add some horizontal space
+
   },
   bookTitle: {
     fontSize: 18,
@@ -103,7 +117,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   dueSoon: {
-    backgroundColor: '#757575', // Dark for items due within 24 hours
+    backgroundColor: 'red', // Dark for items due within 24 hours
+    color: 'red',
+  },
+  clicked: {
+    
   },
 });
 

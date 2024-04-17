@@ -15,6 +15,7 @@ import {initializeFirebase} from '../config/firebase';
 import {addDoc, collection, getFirestore} from 'firebase/firestore';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {createUser} from '../backend/CloudFunctionsCalls';
+import { getAuth } from 'firebase/auth';
 
 type routeProp = RouteProp<RootStackParamList, 'SecondRegistrationScreen'>;
 type navProp = StackNavigationProp<
@@ -44,15 +45,22 @@ export function SecondRegistrationScreen(
   // schoolId and schoolDistrictId are populated in the next page
   async function writeUser() {
     try {
-      // Adds a new document with an automatically generated ID
-      await createUser(
-        name,
-        email,
-        selectedSchool,
-        selectedDistrict,
-        numChildren,
-      );
-      console.log('Document written');
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        const userId = user.uid;
+
+        await createUser(
+          userId,
+          name,
+          email,
+          selectedSchool,
+          selectedDistrict,
+          numChildren,
+        );
+        console.log('Document written and userID is', userId);
+      }
     } catch (e) {
       console.error('Error adding document: ', e);
     }

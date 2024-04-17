@@ -7,6 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Text, BottomNavigation, List, Checkbox} from 'react-native-paper';
 
 import {AssignmentPage} from './assignmentPage';
+import {AccountSettingsPage} from './accountSettingsPage';
 import DonatePage from './donatePage';
 
 import {Feather} from '@expo/vector-icons';
@@ -110,6 +111,15 @@ export default function HomePage() {
               />
             );
           },
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={AccountSettingsPage}
+        options={{
+          tabBarIcon: () => (
+            <Feather name="settings" size={iconSize} color="#222222" />
+          ),
         }}
       />
       <Tab.Screen

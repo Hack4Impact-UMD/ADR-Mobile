@@ -41,6 +41,7 @@ exports.createAdminUser = onCall(async (request) => {
 });
 
 exports.createUser = onCall(async (request) => {
+  const userId = request.data.userId;
   const email = request.data.email;
   const name = request.data.name;
   const schoolId = request.data.schoolId;
@@ -49,8 +50,10 @@ exports.createUser = onCall(async (request) => {
 
   return new Promise(async (resolve, reject) => {
     await getFirestore()
+      // Adds a new document with an the document ID being the userID
       .collection("users")
-      .add({
+      .doc(userId)
+      .set({
         name: name,
         email: email,
         userType: "Parent",
@@ -59,9 +62,11 @@ exports.createUser = onCall(async (request) => {
         numChildren: numChildren,
       })
       .then(() => {
+        console.log('DOCID: ', userId)
         resolve();
       })
       .catch((error) => {
+        console.log('ERROR HERE')
         reject({
           text: error.message,
         });

@@ -15,6 +15,7 @@ import {initializeFirebase} from '../config/firebase';
 import {addDoc, collection, getFirestore} from 'firebase/firestore';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {createUser} from '../backend/CloudFunctionsCalls';
+import FontLoader from '../components/FontLoader';
 
 type routeProp = RouteProp<RootStackParamList, 'SecondRegistrationScreen'>;
 type navProp = StackNavigationProp<
@@ -67,84 +68,88 @@ export function SecondRegistrationScreen(
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.inputContainer}>
-        {/* District Input */}
-        <View style={styles.input}>
-          <TouchableOpacity
-            style={styles.input}
-            onPress={() => setShowDistrictPicker(!showDistrictPicker)}>
-            <Text style={styles.inputTitle}>Choose a School District</Text>
-            <Text>{selectedDistrict || 'Select a district'}</Text>
-          </TouchableOpacity>
-          {showDistrictPicker && (
-            <Picker
+      <FontLoader>
+        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30}}>School Information</Text>
+        <View style={styles.inputContainer}>
+          {/* District Input */}
+          <View style={styles.input}>
+            <TouchableOpacity
               style={styles.input}
-              itemStyle={styles.pickerItems}
-              selectedValue={selectedDistrict}
-              onValueChange={(itemValue, itemIndex) => {
-                setSelectedDistrict(itemValue);
-                setShowDistrictPicker(false);
-              }}>
-              <Picker.Item label="Select a district" value="" />
-              <Picker.Item label="District 1" value="District 1" />
-              <Picker.Item label="District 2" value="District 2" />
-              <Picker.Item label="District 3" value="District 3" />
-            </Picker>
-          )}
-        </View>
-        {/* School Input */}
-        <View style={styles.input}>
-          <TouchableOpacity
-            style={styles.input}
-            onPress={() => setShowSchoolPicker(!showSchoolPicker)}>
-            <Text style={styles.inputTitle}>Choose a School</Text>
-            <Text>{selectedSchool || 'Select a School'}</Text>
-          </TouchableOpacity>
-          {showSchoolPicker && (
-            <Picker
+              onPress={() => setShowDistrictPicker(!showDistrictPicker)}>
+              <Text style={styles.inputTitle}>Choose a School District</Text>
+              <Text style = {styles.selector}>{selectedDistrict || 'Search for your district'}</Text>
+            </TouchableOpacity>
+            {showDistrictPicker && (
+              <Picker
+                style={styles.input}
+                itemStyle={styles.pickerItems}
+                selectedValue={selectedDistrict}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedDistrict(itemValue);
+                  setShowDistrictPicker(false);
+                }}>
+                <Picker.Item label="Select a district" value="" />
+                <Picker.Item label="District 1" value="District 1" />
+                <Picker.Item label="District 2" value="District 2" />
+                <Picker.Item label="District 3" value="District 3" />
+              </Picker>
+            )}
+          </View>
+          {/* School Input */}
+          <View style={styles.input}>
+            <TouchableOpacity
               style={styles.input}
-              itemStyle={styles.pickerItems}
-              selectedValue={selectedSchool}
-              onValueChange={(itemValue, itemIndex) => {
-                setSelectedSchool(itemValue);
-                setShowSchoolPicker(false);
+              onPress={() => setShowSchoolPicker(!showSchoolPicker)}>
+              <Text style={styles.inputTitle}>Choose a School</Text>
+              <Text style = {styles.selector} >{selectedSchool || 'Search for your school'}</Text>
+            </TouchableOpacity>
+            {showSchoolPicker && (
+              <Picker
+                style={styles.input}
+                itemStyle={styles.pickerItems}
+                selectedValue={selectedSchool}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedSchool(itemValue);
+                  setShowSchoolPicker(false);
+                }}>
+                <Picker.Item label="Select a school" value="" />
+                <Picker.Item label="School 1" value="School 1" />
+                <Picker.Item label="School 2" value="School 2" />
+                <Picker.Item label="School 3" value="School 3" />
+              </Picker>
+            )}
+          </View>
+          {/* Children Number Input */}
+          <View style={styles.input}>
+            <Text style={styles.inputTitle}>Number of Children Attending</Text>
+            <TextInput
+              style={styles.textInput}
+              value={numChildren}
+              onChangeText={handleNumChildrenChange}
+              keyboardType="numeric"
+              placeholder="#"
+              placeholderTextColor={'#C4DEEF'}
+              autoCapitalize="none"
+              returnKeyType="done"
+            />
+          </View>
+          <View>
+            {/* Login Button */}
+            <TouchableOpacity
+              style={styles.finishButtonContainer}
+              onPress={async () => {
+                try {
+                  await writeUser();
+                  props.navigation.navigate('HomeScreen');
+                } catch (error) {
+                  console.error('Error finishing registration: ', error);
+                }
               }}>
-              <Picker.Item label="Select a school" value="" />
-              <Picker.Item label="School 1" value="School 1" />
-              <Picker.Item label="School 2" value="School 2" />
-              <Picker.Item label="School 3" value="School 3" />
-            </Picker>
-          )}
+              <Text style={styles.finishButtonText}>Finish</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        {/* Children Number Input */}
-        <View style={styles.input}>
-          <Text style={styles.inputTitle}>Number of Children Attending</Text>
-          <TextInput
-            style={styles.textInput}
-            value={numChildren}
-            onChangeText={handleNumChildrenChange}
-            keyboardType="numeric"
-            placeholder="#"
-            autoCapitalize="none"
-            returnKeyType="done"
-          />
-        </View>
-        <View>
-          {/* Login Button */}
-          <TouchableOpacity
-            style={styles.finishButtonContainer}
-            onPress={async () => {
-              try {
-                await writeUser();
-                props.navigation.navigate('HomeScreen');
-              } catch (error) {
-                console.error('Error finishing registration: ', error);
-              }
-            }}>
-            <Text style={styles.finishButtonText}>Finish</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </FontLoader>
     </ScrollView>
   );
 }
@@ -156,47 +161,76 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
   },
   input: {
-    marginBottom: 50,
+    marginBottom: 40,
+    // maxHeight: '50%',
   },
   inputContainer: {
     padding: 10,
-    marginTop: 10,
+    marginTop: 50,
+  },
+  selector:{
+    padding: 15,
+    paddingLeft: 20,
+    borderRadius: 28,
+    overflow: 'hidden',
+    marginBottom: 10,
+    width: windowWidth * 0.8,
+    borderColor: '#0071BA',
+    borderWidth: 2,
+    fontFamily: 'KarlaMedium',
+    fontSize: 20,
+    color: '#C4DEEF',
   },
   textInput: {
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#FFFFFF',
     padding: 15,
     paddingLeft: 20,
     borderRadius: 50,
     marginBottom: 10,
     width: windowWidth * 0.6,
+    borderColor: '#0071BA',
+    borderWidth: 2,
+    shadowColor: '#000000',
+    fontFamily: 'KarlaMedium',
+    fontSize: 20,
   },
   inputTitle: {
     color: '#000000',
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
+    fontFamily: 'KarlaMedium',
+    marginBottom: 10,
   },
   picker: {
-    height: 50,
+    // height: 50,
     width: '100%',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#FFFFFF',
     borderRadius: 15,
+    marginTop: -10,
   },
   pickerItems: {
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
+    fontFamily: 'KarlaMedium',
   },
   finishButtonContainer: {
-    backgroundColor: '#000000',
-    padding: 15,
-    borderRadius: 15,
+    padding: 20,
+    borderRadius: 20,
     alignItems: 'center',
+    marginTop: 10,
+    backgroundColor: '#0071BA',
+    shadowColor: '#000000',
+    shadowOffset: {width: 3, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   finishButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#FFFFFF',
+    fontFamily: 'KarlaBold',
+    fontSize: 24,
   },
 });
 

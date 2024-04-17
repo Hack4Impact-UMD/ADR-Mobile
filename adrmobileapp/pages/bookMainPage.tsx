@@ -9,8 +9,7 @@ import {
 import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useFonts} from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import FontLoader from '../components/FontLoader';
 
 import SoundIcon from '../assets/icons/SoundIcon.tsx';
 import TriviaIcon from '../assets/icons/TriviaIcon.tsx';
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     color: '#0071BA', // Color specified
-    fontFamily: 'Karla-Medium', // Inter font with Semibold weight
+    fontFamily: 'KarlaMedium', // Inter font with Semibold weight
     fontSize: 28, // Font size specified
     paddingLeft: '5%',
   },
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     padding: '3%',
   },
   chapterText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'KarlaMedium',
     fontWeight: '800',
     color: '#000000', // gray text color
     fontSize: 15,
@@ -100,58 +99,47 @@ const styles = StyleSheet.create({
 export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
   var iconSize = 70;
 
-  const [fontsLoaded, fontError] = useFonts({
-    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
-    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
-    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
-    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
   return (
-    <SafeAreaView style={styles.bkg} onLayout={onLayoutRootView}>
-      <View style={[styles.bookCover, styles.shadowProp]} />
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate('BookInfo', {
-            book: props.route.params.book,
-          });
-        }}>
-        <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
-      </TouchableOpacity>
-
-      {/* Need to replace text with Assignment Description (inputted from the school liaison website) */}
-      <View style={[styles.chapterInfo, styles.shadowProp]}>
-        <Text style={styles.chapterText}>Assignment Description Goes Here</Text>
-      </View>
-
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.iconContainer}>
-          <View style={[styles.item, styles.shadowProp]}>
-            <SoundIcon width={iconSize} height={iconSize} color="#FFFFFF" />
-          </View>
-          <Text style={styles.iconText}>audio</Text>
-        </TouchableOpacity>
-
+    <SafeAreaView style={styles.bkg}>
+      <FontLoader>
+        <View style={[styles.bookCover, styles.shadowProp]} />
         <TouchableOpacity
-          style={[styles.iconContainer, styles.triviaQuestions]}
           onPress={() => {
-            props.navigation.navigate('BookQuiz', {
+            props.navigation.navigate('BookInfo', {
               book: props.route.params.book,
-              prevScreen: 'BookMain',
             });
           }}>
-          <View style={[styles.item, styles.shadowProp]}>
-            <TriviaIcon width={iconSize} height={iconSize} color="#FFFFFF" />
-          </View>
-          <Text style={styles.iconText}>trivia questions</Text>
+          <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
         </TouchableOpacity>
-      </View>
+
+        {/* Need to replace text with Assignment Description (inputted from the school liaison website) */}
+        <View style={[styles.chapterInfo, styles.shadowProp]}>
+          <Text style={styles.chapterText}>Assignment Description Goes Here</Text>
+        </View>
+
+        <View style={styles.container}>
+          <TouchableOpacity style={styles.iconContainer}>
+            <View style={[styles.item, styles.shadowProp]}>
+              <SoundIcon width={iconSize} height={iconSize} color="#FFFFFF" />
+            </View>
+            <Text style={styles.iconText}>audio</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.iconContainer, styles.triviaQuestions]}
+            onPress={() => {
+              props.navigation.navigate('BookQuiz', {
+                book: props.route.params.book,
+                prevScreen: 'BookMain',
+              });
+            }}>
+            <View style={[styles.item, styles.shadowProp]}>
+              <TriviaIcon width={iconSize} height={iconSize} color="#FFFFFF" />
+            </View>
+            <Text style={styles.iconText}>trivia questions</Text>
+          </TouchableOpacity>
+        </View>
+      </FontLoader>
     </SafeAreaView>
   );
 }

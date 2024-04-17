@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Text,
   TextInput,
@@ -7,12 +7,15 @@ import {
   Dimensions,
   TouchableOpacity,
   useColorScheme,
+  Image,
 } from 'react-native';
 
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import FontLoader from '../components/FontLoader';
+
 
 type LoginProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -47,81 +50,76 @@ export function Login(_props: LoginProps): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        {/* Login Input */}
-        <TextInput
-          style={styles.input}
-          placeholder="Email Address"
-          placeholderTextColor="gray"
-          autoCapitalize="none" // Prevents auto-capitalization of the first character
-          returnKeyType="done"
-          onChangeText={text => setEmail(text)}
-        />
-        {/* Password */}
-        <View>
-          {/* Password input */}
+      <FontLoader>
+        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30, marginTop: 50}}>Log in</Text>
+        <Image style = {styles.logo} source={require('../assets/images/adr_logo.png')} />
+        <View style={styles.inputContainer}>
+          {/* Login Input */}
           <TextInput
             style={styles.input}
-            secureTextEntry={true}
-            placeholder="Password"
-            placeholderTextColor="gray"
-            autoCapitalize="none"
+            placeholder="Email Address"
+            placeholderTextColor="#C4DEEF"
+            autoCapitalize="none" // Prevents auto-capitalization of the first character
             returnKeyType="done"
-            onChangeText={text => setPassword(text)}
+            onChangeText={text => setEmail(text)}
           />
-          {/* Forgot Password */}
-          <View style={styles.forgotPasswordButton}>
-            <TouchableOpacity>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          {/* Password */}
+          <View>
+            {/* Password input */}
+            <TextInput
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+              placeholderTextColor="#C4DEEF"
+              autoCapitalize="none"
+              returnKeyType="done"
+              onChangeText={text => setPassword(text)}
+            />
+            {/* Forgot Password */}
+            <View style={styles.forgotPasswordButton}>
+              <TouchableOpacity>
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          {/* Login Button */}
+          <TouchableOpacity
+            style={[
+              styles.loginButtonContainer
+            ]}
+            onPress={async () => {
+              try {
+                await handleLogin();
+                // Iif handleRegister doesn't throw error, navigate to next screen
+                _props.navigation.navigate('Assignments');
+              } catch (error) {
+                const errorMessage = error.message;
+                setFeedbackText(errorMessage);
+              }
+            }}>
+            <Text
+              style={[
+                styles.loginButtonText,
+              ]}>
+              Login
+            </Text>
+          </TouchableOpacity>
+          {/* New user registration */}
+          <View style={styles.signupContainer}>
+            <Text style={styles.signupText}>Don't have an account yet? </Text>
+            <TouchableOpacity
+              onPress={() => _props.navigation.navigate('RegistrationScreen')}>
+              <Text
+                style={[
+                  styles.signupLink,
+                ]}>
+                Sign Up
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
-        {/* Login Button */}
-        <TouchableOpacity
-          style={[
-            styles.loginButtonContainer,
-            {
-              backgroundColor: isDarkMode ? Colors.white : Colors.black,
-            },
-          ]}
-          onPress={async () => {
-            try {
-              await handleLogin();
-              // Iif handleRegister doesn't throw error, navigate to next screen
-              _props.navigation.navigate('Assignments');
-            } catch (error) {
-              const errorMessage = error.message;
-              setFeedbackText(errorMessage);
-            }
-          }}>
-          <Text
-            style={[
-              styles.loginButtonText,
-              {
-                color: isDarkMode ? Colors.black : Colors.white,
-              },
-            ]}>
-            Login
-          </Text>
-        </TouchableOpacity>
-        {/* New user registration */}
-        <View style={styles.signupContainer}>
-          <Text style={styles.signupText}>Don't have an account yet? </Text>
-          <TouchableOpacity
-            onPress={() => _props.navigation.navigate('RegistrationScreen')}>
-            <Text
-              style={[
-                styles.signupLink,
-                {
-                  color: isDarkMode ? Colors.white : Colors.black,
-                },
-              ]}>
-              Sign Up
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
+        {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
+      </FontLoader>
     </View>
   );
 }
@@ -131,21 +129,34 @@ const windowWidth = Dimensions.get('window').width; // Get the width of the devi
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
   },
   inputContainer: {
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
   },
+  logo: {
+    width: 250,
+    height: 250,
+    resizeMode: 'cover'
+  },
   input: {
-    backgroundColor: '#D9D9D9',
-    padding: 15,
+    backgroundColor: '#FFFFFF',
+    padding: 20,
     paddingLeft: 20,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 10,
-    width: windowWidth * 0.6,
+    width: windowWidth * 0.8,
+    borderColor: '#0071BA',
+    borderWidth: 2,
+    shadowColor: '#000000',
+    shadowOffset: {width: 3, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    fontFamily: 'Karla',
+    fontSize: 20,
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -153,21 +164,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotPasswordButton: {
-    alignItems: 'flex-end', // Align to the right
+    alignItems: 'flex-end',
   },
   forgotPasswordText: {
-    color: '#B8B8B8',
-    fontSize: 13,
+    color: '#C4DEEF',
+    fontSize: 14,
+    fontFamily: 'Karla',
   },
   loginButtonContainer: {
-    padding: 15,
-    borderRadius: 15,
+    padding: 20,
+    borderRadius: 20,
     alignItems: 'center',
     marginTop: 10,
+    backgroundColor: '#0071BA',
+    shadowColor: '#000000',
+    shadowOffset: {width: 3, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   loginButtonText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#FFFFFF',
+    fontFamily: 'KarlaBold',
   },
   signupContainer: {
     flexDirection: 'row',
@@ -175,13 +194,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signupText: {
-    color: '#B8B8B8',
-    fontSize: 13,
+    color: '#C4DEEF',
+    fontSize: 14,
+    fontFamily: 'Karla',
   },
   signupLink: {
     color: '#000000',
-    fontWeight: 'bold',
-    fontSize: 13,
+    fontFamily: 'Karla',
+    fontSize: 14,
   },
 });
 

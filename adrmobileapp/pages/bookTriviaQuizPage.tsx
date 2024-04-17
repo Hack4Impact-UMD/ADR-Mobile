@@ -9,8 +9,8 @@ import questions from '../data/questions';
 import TextHighlight from 'react-native-text-highlighter';
 import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFonts} from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import FontLoader from '../components/FontLoader';
+
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuiz'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookQuiz'>;
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   subText: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'KarlaBold',
     fontSize: 25,
     color: 'black',
     lineHeight: 50,
@@ -171,21 +171,9 @@ export function BookTriviaQuizPage(
     progressPercentage = 0;
   }
 
-  const [fontsLoaded, fontError] = useFonts({
-    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
-    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
-    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
-    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
   return (
-    <SafeAreaView style={styles.bkg} onLayout={onLayoutRootView}>
+    <SafeAreaView style={styles.bkg}>
+    <FontLoader>
       <View style={styles.bookCover}>
         <Text style={styles.bookTitle}>
           {props.route.params.book.title} Trivia Quiz
@@ -204,14 +192,14 @@ export function BookTriviaQuizPage(
       <View style={styles.content}>
         <Text style={styles.subText}>Questions Answered</Text>
         <TextHighlight
-          textStyle={[styles.subText, {fontFamily: 'Karla-Medium'}]}
+          textStyle={[styles.subText, {fontFamily: 'KarlaMedium'}]}
           textToHighlight={` ${
             question ? question : '0'
           }  out of  ${maxQuestions} `}
           searchWords={[` ${question} `, ` ${maxQuestions} `, ' 0 ']}
           highlightTextStyle={{
             backgroundColor: '#C4DEEF',
-            fontFamily: 'Karla-Medium',
+            fontFamily: 'KarlaMedium',
           }}
         />
       </View>
@@ -267,7 +255,7 @@ export function BookTriviaQuizPage(
               textAlign: 'center',
               fontSize: 23,
               color: progressPercentage === 1 ? '#FFFFFF' : '#0071BA',
-              fontFamily: 'Karla-Bold',
+              fontFamily: 'KarlaBold',
             }}>
             {progressPercentage >= 1
               ? 'Finish'
@@ -287,12 +275,13 @@ export function BookTriviaQuizPage(
               textAlign: 'center',
               fontSize: 12,
               color: '#0071BA',
-              fontFamily: 'Karla-Bold',
+              fontFamily: 'KarlaBold',
             }}>
             Clear Storage
           </Text>
         </Pressable>
       </View>
+      </FontLoader>
     </SafeAreaView>
   );
 }

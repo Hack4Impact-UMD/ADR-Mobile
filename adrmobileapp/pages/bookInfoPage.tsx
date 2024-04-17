@@ -3,8 +3,7 @@ import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useFonts} from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import FontLoader from '../components/FontLoader';
 
 type routeProp = RouteProp<RootStackParamList, 'BookInfo'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookInfo'>;
@@ -52,42 +51,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   text: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'KarlaMedium',
     marginTop: '2%',
     fontSize: 25,
   },
 });
 
 export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
-  const [fontsLoaded, fontError] = useFonts({
-    CrimsonPro: require('../assets/fonts/CrimsonPro-VariableFont_wght.ttf'),
-    Karla: require('../assets/fonts/Karla-VariableFont_wght.ttf'),
-    'Karla-Bold': require('../assets/fonts/Karla-Bold.ttf'),
-    'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
+  
   return (
     <SafeAreaView style={styles.bkg}>
-      <View style={[styles.bookCover, styles.shadowProp]}></View>
+      <FontLoader>
+        <View style={[styles.bookCover, styles.shadowProp]}></View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
-        <Text style={styles.bookSubtitle}>
-          {props.route.params.book.author}
-        </Text>
-        <Text style={styles.bookSubtitle}>
-          {props.route.params.book.page_number} pages
-        </Text>
-        <Text style={styles.text}>{props.route.params.book.info}</Text>
-      </ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}>
+          <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
+          <Text style={styles.bookSubtitle}>
+            {props.route.params.book.author}
+          </Text>
+          <Text style={styles.bookSubtitle}>
+            {props.route.params.book.page_number} pages
+          </Text>
+          <Text style={styles.text}>{props.route.params.book.info}</Text>
+        </ScrollView>
+      </FontLoader>
     </SafeAreaView>
   );
 }

@@ -95,11 +95,11 @@ const HomeScreen = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FFFFFF',
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
@@ -119,8 +119,6 @@ const HomeScreen = ({navigation}) => {
             title="Go To Assignments Prototype"
             onPress={() => navigation.navigate('Assignments')}
           /> */}
-          <PreSurvey />
-          <PostSurvey />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -155,12 +153,12 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{title: 'Welcome'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="RegistrationScreen"
           component={RegistrationScreen}
-          options={{title: 'Register Here'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="SecondRegistrationScreen"

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
+import {NavigationProp} from '@react-navigation/native';
 
 export function ToDoScreen() {
   const tasks = [
@@ -69,6 +70,7 @@ export function ToDoScreen() {
       <SectionList
         sections={sortedSections}
         keyExtractor={item => item.id}
+        
         renderItem={({item}) => (
           <ScheduleItem
             bookTitle={item.bookTitle}

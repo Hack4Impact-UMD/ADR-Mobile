@@ -65,7 +65,7 @@ export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
           {props.route.params.book.author}
         </Text>
         <Text style={styles.bookSubtitle}>
-          {props.route.params.book.page_number} pages
+          {props.route.params.book.pages} pages
         </Text>
         <Text style={styles.text}>{props.route.params.book.info}</Text>
       </ScrollView>

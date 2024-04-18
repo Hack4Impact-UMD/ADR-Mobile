@@ -70,7 +70,9 @@ export function BookTriviaQuizQuestions(
   props: BookTriviaQuizQuestionsProps,
 ): React.JSX.Element {
   const [questionNum, setQuestionNum] = useState(props.route.params.question);
-  const maxQuestions = Object.keys(questions).length;
+
+  const questionSet = props.route.params.questionSet;
+  const maxQuestions = Object.keys(questionSet).length;
 
   return (
     <SafeAreaView style={styles.bkg}>
@@ -89,7 +91,7 @@ export function BookTriviaQuizQuestions(
       <View style={styles.quizBkg}>
         <Text style={styles.questionNum}>Q{questionNum + 1}</Text>
         <Text style={styles.question}>
-          {questions[(questionNum + 1) as keyof typeof questions]}
+          {questionSet[(questionNum + 1) as keyof typeof questions]}
         </Text>
         <Text style={styles.questionCount}>
           {questionNum + 1}/{maxQuestions}

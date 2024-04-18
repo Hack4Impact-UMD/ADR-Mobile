@@ -34,6 +34,9 @@ export function AccountSettingsPage(): React.JSX.Element {
             const userData = userSnapshot.data();
             setName(userData.name || ''); // Assuming the field in Firestore is called "name"
             setEmail(userData.email || ''); // Assuming the field in Firestore is called "email"
+            setSelectedDistrict(userData.schoolDistrictId || '');
+            setSelectedSchool(userData.schoolId || '');
+            setNumChildren(userData.numChildren || ''); // Assuming the field in Firestore is called "name"
           } else {
             console.log('User document does not exist');
           }
@@ -52,7 +55,7 @@ export function AccountSettingsPage(): React.JSX.Element {
 
     if (user) {
       try {
-        await updateProfile(user, {displayName: name});
+        //await updateProfile(user, {displayName: name});
         setFeedbackText('Profile updated successfully.');
       } catch (error: any) {
         const errorCode = error.code;
@@ -115,24 +118,21 @@ export function AccountSettingsPage(): React.JSX.Element {
       <TextInput
         style={styles.input}
         placeholder={name || 'Name'}
-        value={name}
         onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder={selectedDistrict || 'School District'}
-        value={name}
         onChangeText={setSelectedDistrict}
       />
       <TextInput
         style={styles.input}
-        placeholder={selectedSchool || 'School'}
-        value={name}
+        placeholder={selectedSchool}
         onChangeText={setSelectedSchool}
       />
       <TextInput
         style={styles.input}
-        placeholder={numChildren || 'Number of Children'}
+        placeholder={numChildren}
         onChangeText={handleNumChildrenChange}
         keyboardType="numeric"
         autoCapitalize="none"
@@ -145,8 +145,7 @@ export function AccountSettingsPage(): React.JSX.Element {
       </TouchableOpacity>
       <TextInput
         style={styles.input}
-        placeholder="Email Address"
-        value={email}
+        placeholder={email || ''}
         onChangeText={setEmail}
         keyboardType="email-address"
       />

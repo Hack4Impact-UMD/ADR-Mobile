@@ -1,15 +1,21 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, FlatList, SectionList} from 'react-native';
 
 import {CommonActions} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text, BottomNavigation} from 'react-native-paper';
+import {Text, BottomNavigation, List, Checkbox} from 'react-native-paper';
 
 import {AssignmentPage} from './assignmentPage';
+import DonatePage from './donatePage';
 
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {Ionicons} from '@expo/vector-icons';
+import ScheduleItem from '../components/ScheduleItem';
+import moment from 'moment';
+import {ToDoScreen} from './toDoPage';
+import {FontAwesome} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -82,7 +88,7 @@ export default function HomePage() {
       />
       <Tab.Screen
         name="Schedule"
-        component={ScheduleScreen}
+        component={ToDoScreen}
         options={{
           tabBarIcon: () => {
             return (
@@ -95,7 +101,7 @@ export default function HomePage() {
         name="Bookmarks"
         component={BookmarksScreen}
         options={{
-          tabBarIcon: ({color, size}) => {
+          tabBarIcon: () => {
             return (
               <Ionicons
                 name="bookmarks-outline"
@@ -104,6 +110,15 @@ export default function HomePage() {
               />
             );
           },
+        }}
+      />
+      <Tab.Screen
+        name="Donate"
+        component={DonatePage}
+        options={{
+          tabBarIcon: () => (
+            <FontAwesome name="dollar" size={iconSize} color="#222222" />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -125,18 +140,18 @@ function BookmarksScreen() {
     </View>
   );
 }
-function ScheduleScreen() {
-  return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Schedule</Text>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  header: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    backgroundColor: '#f0f0f0',
+    padding: 8,
   },
 });

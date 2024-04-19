@@ -5,12 +5,20 @@ import {RootStackParamList} from '../App';
 import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Progress from 'react-native-progress';
-import questions from '../data/questions';
 import TextHighlight from 'react-native-text-highlighter';
 import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontLoader from '../components/FontLoader';
 
+
+import {
+  getDoc,
+  getFirestore,
+  query,
+  collection,
+  getDocs,
+  doc,
+} from 'firebase/firestore';
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuiz'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookQuiz'>;
@@ -94,6 +102,7 @@ export function BookTriviaQuizPage(
 ): React.JSX.Element {
   let key = 'question';
   const [question, setQuestion] = useState(0);
+  const [questionSet, setQuestionSet] = useState({});
 
   const saveData = async () => {
     try {
@@ -156,7 +165,26 @@ export function BookTriviaQuizPage(
     }
   }, [isFocused]);
 
-  const maxQuestions = Object.keys(questions).length;
+  var questions = {};
+
+  useEffect(() => {
+    async function getQuestionSet() {
+      const questionIDs = props.route.params.book.chapter.questionIds;
+      var counter: number = 1;
+      questionIDs.map(async id => {
+        var docRef = doc(getFirestore(), 'questions', id);
+        var docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          questions[counter] = docSnap.data()['text'];
+          counter += 1;
+          setQuestionSet({...questions});
+        }
+      });
+    }
+    getQuestionSet();
+  }, []);
+
+  const maxQuestions = Object.keys(questionSet).length;
 
   let progressPercentage = 0;
   if (maxQuestions > 0) {
@@ -239,11 +267,13 @@ export function BookTriviaQuizPage(
                 props.navigation.navigate('BookQuizQuestions', {
                   book: props.route.params.book,
                   question: question,
+                  questionSet: questionSet,
                 });
               } else {
                 props.navigation.navigate('BookQuizQuestions', {
                   book: props.route.params.book,
                   question: 1,
+                  questionSet: questionSet,
                 });
               }
             } else {

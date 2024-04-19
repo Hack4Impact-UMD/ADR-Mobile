@@ -81,7 +81,9 @@ export function BookTriviaQuizQuestions(
   props: BookTriviaQuizQuestionsProps,
 ): React.JSX.Element {
   const [questionNum, setQuestionNum] = useState(props.route.params.question);
-  const maxQuestions = Object.keys(questions).length;
+
+  const questionSet = props.route.params.questionSet;
+  const maxQuestions = Object.keys(questionSet).length;
 
   return (
     <SafeAreaView style={styles.bkg}>

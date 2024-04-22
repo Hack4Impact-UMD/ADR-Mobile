@@ -7,24 +7,17 @@ import {FontAwesome5} from '@expo/vector-icons';
 import {Feather} from '@expo/vector-icons';
 import {Ionicons} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
+import {NavigationProp} from '@react-navigation/native';
+import {RootStackParamList} from '../App';
 
 interface ScheduleItemProps {
-  bookTitle: string;
-  task: string;
-  dueDate: string;
-  completed: boolean;
-  taskType: string;
+  navigation: NavigationProp<RootStackParamList>;
+  item: any;
 }
 
-const ScheduleItem: React.FC<ScheduleItemProps> = ({
-  bookTitle,
-  task,
-  dueDate,
-  completed,
-  taskType,
-}) => {
+export function ScheduleItem(props: ScheduleItemProps): React.JSX.Element {
   const theme = useTheme();
-  const dueDateMoment = moment(dueDate, 'M/D');
+  const dueDateMoment = moment(props.item.dueDate, 'M/D');
   const isDueSoon =
     dueDateMoment.isBefore(moment().add(1, 'days')) &&
     dueDateMoment.isAfter(moment());
@@ -34,29 +27,44 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
   const textColor = isDueSoon ? '#FFFFFF' : '#757575';
   const iconSize = 40;
 
+  const navLink =
+    props.item.taskType == 'read'
+      ? 'BookMain'
+      : props.item.taskType == 'quiz'
+      ? 'BookQuiz'
+      : 'BookQuiz';
+
   const iconButton =
-    taskType == 'read' ? (
+    props.item.taskType == 'read' ? (
       <Feather name="book-open" size={iconSize} color={textColor} />
-    ) : taskType == 'quiz' ? (
+    ) : props.item.taskType == 'quiz' ? (
       <Octicons name="tasklist" size={iconSize} color={textColor} />
     ) : (
       <FontAwesome5 name="list-alt" size={iconSize} color={textColor} />
     );
 
   return (
-    <Card style={[styles.card, cardStyle]}>
+    <Card
+      style={[styles.card, cardStyle]}
+      onPress={() => {
+        props.navigation.navigate(navLink, {
+          book: props.item,
+        });
+      }}>
       <Card.Content style={styles.cardContent}>
         <View style={[styles.textContainer, {width: '16%'}]}>{iconButton}</View>
         <View style={[styles.textContainer, {width: '55%'}]}>
           <RNText style={[styles.bookTitle, {color: textColor}]}>
-            {bookTitle}
+            {props.item.bookTitle}
           </RNText>
-          <RNText style={[styles.task, {color: textColor}]}>{task}</RNText>
+          <RNText style={[styles.task, {color: textColor}]}>
+            {props.item.task}
+          </RNText>
         </View>
         <View style={[styles.textContainer, {width: '15%'}]}>
           <RNText style={[styles.dueDate, {color: textColor}]}>{'Due'}</RNText>
           <RNText style={[styles.dueDate, {color: textColor}]}>
-            {dueDate}
+            {props.item.dueDate}
           </RNText>
         </View>
         <View style={[styles.cardContent, {width: '14%'}]}>
@@ -72,7 +80,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
       </Card.Content>
     </Card>
   );
-};
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   dueDate: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   task: {

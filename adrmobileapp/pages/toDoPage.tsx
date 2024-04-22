@@ -9,14 +9,16 @@ import {
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
+import {NavigationProp} from '@react-navigation/native';
+import {BookInfoPage} from '../pages/bookInfoPage';
 
-export function ToDoScreen() {
+export function ToDoScreen({ navigation }: { navigation: NavigationProp }) {
   const tasks = [
     {
       id: '1',
       bookTitle: 'Ready Player One',
       task: 'Read Chapter 1',
-      dueDate: '4/8',
+      dueDate: '4/23',
       taskType: 'read',
       completed: false,
     },
@@ -24,7 +26,7 @@ export function ToDoScreen() {
       id: '2',
       bookTitle: 'Ready Player One',
       task: 'Chapter 1 Quiz',
-      dueDate: '4/10',
+      dueDate: '4/24',
       taskType: 'quiz',
       completed: false,
     },
@@ -32,12 +34,16 @@ export function ToDoScreen() {
       id: '3',
       bookTitle: 'Ready Player One',
       task: 'Chapter 1 Quiz',
-      dueDate: '4/11',
+      dueDate: '4/25',
       taskType: 'survey',
       completed: false,
     },
     // Add more tasks
   ];
+
+  const handleItemClick = () => {
+    navigation.navigate('BookInfoPage'); // Navigate to BookInfoPage
+  };
   const sections = tasks.reduce((acc, task) => {
     const dueDate = moment(task.dueDate, 'M/D').format('MMMM D');
     const category = task.completed ? 'Completed' : dueDate;
@@ -61,26 +67,28 @@ export function ToDoScreen() {
       data: sections[key].data,
     }));
 
-  return (
-    <SafeAreaView
-      style={styles.scrollView}
-      showsVerticalScrollIndicator={false}>
-      <Text style={styles.header}>To Do</Text>
-      <SectionList
-        sections={sortedSections}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <ScheduleItem
-            bookTitle={item.bookTitle}
-            task={item.task}
-            dueDate={item.dueDate}
-            completed={item.completed}
-            taskType={item.taskType}
-          />
-        )}
-      />
-    </SafeAreaView>
-  );
+    return (
+      <SafeAreaView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}>
+        <Text style={styles.header}>To Do</Text>
+        <SectionList
+          sections={sortedSections}
+          keyExtractor={item => item.id}
+          
+          renderItem={({item}) => (
+            <ScheduleItem
+              bookTitle={item.bookTitle}
+              task={item.task}
+              dueDate={item.dueDate}
+              completed={item.completed}
+              taskType={item.taskType}
+              onItemClick={handleItemClick} // Pass handleItemClick as prop
+            />
+          )}
+        />
+      </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -100,7 +108,12 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 30,
     marginBottom: '4%',
-    color: '#726E6E',
+    color: 'black',
     textAlign: 'center',
+    fontFamily: 'Times New Roman',
+    fontWeight: 'bold',
+
+    
   },
 });
+

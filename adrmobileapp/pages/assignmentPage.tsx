@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,15 +14,6 @@ import {Book} from '../customTypes';
 import {CommonActions} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomNavigation} from 'react-native-paper';
-import {
-  getDoc,
-  getFirestore,
-  query,
-  collection,
-  getDocs,
-  doc,
-} from 'firebase/firestore';
-import {ReloadInstructions} from 'react-native/Libraries/NewAppScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +31,8 @@ const styles = StyleSheet.create({
   welcomeBack: {
     fontSize: 40,
     marginBottom: '4%',
-    color: '#726E6E',
+    color: 'black',
+    fontFamily: 'Times New Roman'
   },
   date: {
     fontSize: 20,
@@ -52,7 +44,7 @@ const styles = StyleSheet.create({
   book: {
     height: 300,
     width: '70%',
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#ADD8E6',
     marginBottom: '5%',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 50,
@@ -66,9 +58,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   bookTitle: {
-    color: '#726E6E',
+    color: 'black',
     fontSize: 25,
     padding: '5%',
+    fontFamily:'Times New Roman',
   },
 });
 
@@ -76,48 +69,38 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
   Moment.locale('en');
   const today = new Date();
 
-  const [chapters, setChapters] = useState<any>([]);
+  const books: Book[] = [
+    {
+      title: 'Ready Player One',
+      author: 'Ernest Cline',
+      page_number: 368,
+      info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
+    },
+    {
+      title: 'Dune',
+      author: 'Author 2',
+      page_number: 200,
+      info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
+    },
+    {
+      title: 'Alice in Wonderland',
+      author: 'Author 3',
+      page_number: 300,
+      info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
+    },
+    {
+      title: 'Romeo and Juliet',
+      author: 'William Shakespeare',
+      page_number: 400,
+      info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      isbn: 'none',
+    },
+  ];
 
-  useEffect(() => {
-    var readingSchedules: any[] = [];
-    async function getReadingSchedule() {
-      const q = query(collection(getFirestore(), 'readingSchedules'));
-      const querySnapshot = await getDocs(q);
-
-      await querySnapshot.forEach(async recvDoc => {
-        var data = recvDoc.data();
-        var bookID = data['bookId'];
-        var chapterIDs = data['chapterIds'];
-
-        var docRef = doc(getFirestore(), 'books', bookID);
-        var docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          var bookData = docSnap.data();
-
-          chapterIDs.forEach(async (chapter: string) => {
-            docRef = doc(getFirestore(), `books/${bookID}/Chapters`, chapter);
-            docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-              const newObj = {
-                id: docSnap.id,
-                title: bookData['title'],
-                author: bookData['author'],
-                description: bookData['description'],
-                picture_link: bookData['picture_link'],
-                pages: bookData['pages'],
-                chapter: docSnap.data(),
-              };
-              readingSchedules.push(newObj);
-              setChapters(readingSchedules.slice(0));
-            }
-          });
-        }
-      });
-    }
-    getReadingSchedule();
-  }, []);
+  const [value, setValue] = React.useState(0);
 
   return (
     <SafeAreaView style={styles.view}>
@@ -126,7 +109,7 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
         showsVerticalScrollIndicator={false}>
         <Text style={styles.welcomeBack}>Welcome Back!</Text>
         <Text style={styles.date}>{Moment(today).format('MMMM Do, YYYY')}</Text>
-        {chapters.map(book => {
+        {books.map(book => {
           return (
             <TouchableOpacity
               style={[styles.book, styles.shadowProp]}

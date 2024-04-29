@@ -6,8 +6,49 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {getAuth, updateEmail, updatePassword, updateProfile} from 'firebase/auth';
-import {getFirestore, doc, updateDoc, getDoc, collection, query, where, getDocs} from 'firebase/firestore';
+import {getAuth, updateEmail, updatePassword} from 'firebase/auth';
+import {getFirestore, doc, getDoc, setDoc} from 'firebase/firestore';
+
+import {AntDesign} from '@expo/vector-icons';
+
+type HandleFunctionType = () => Promise<void>;
+
+interface SettingItemProps {
+  title: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
+  handleFunction: HandleFunctionType;
+}
+
+export function SettingItem({
+  title,
+  value,
+  onChangeText,
+  secureTextEntry = false,
+  handleFunction,
+}: SettingItemProps): JSX.Element {
+  return (
+    <View style={styles.settingContainer}>
+      <View style={styles.innerContainer}>
+        <Text style={styles.settingTitle}>{title}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder={value}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+        />
+      </View>
+      <TouchableOpacity style={styles.buttonContainer}>
+        <AntDesign
+          name="arrowright"
+          style={styles.buttonText}
+          onPress={handleFunction}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 export function AccountSettingsPage(): React.JSX.Element {
   const [name, setName] = useState('');
@@ -52,16 +93,28 @@ export function AccountSettingsPage(): React.JSX.Element {
   const handleUpdateProfile = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
+    const firestore = getFirestore();
 
     if (user) {
-      try {
-        //await updateProfile(user, {displayName: name});
-        setFeedbackText('Profile updated successfully.');
-      } catch (error: any) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setFeedbackText(errorMessage);
-      }
+      //await updateProfile(user, {displayName: name});
+      const userDocRef = doc(firestore, 'users', user.uid);
+      const userData = {
+        name: name,
+        email: email,
+        userType: 'Parent',
+        schoolId: selectedSchool,
+        schoolDistrictId: selectedDistrict,
+        numChildren: numChildren,
+      };
+
+      // Set the data in the document. If doc already exists, it's overwritten
+      setDoc(userDocRef, userData, {merge: true})
+        .then(() => {
+          console.log('Document successfully written!');
+        })
+        .catch(error => {
+          console.error('Error writing document: ', error);
+        });
     } else {
       setFeedbackText('User not authenticated.');
     }
@@ -114,56 +167,51 @@ export function AccountSettingsPage(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Account Settings</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={name || 'Name'}
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>My Account</Text>
+      </View>
+      <SettingItem
+        title="Name"
+        value={name}
         onChangeText={setName}
+        secureTextEntry={false}
+        handleFunction={handleUpdateProfile}
       />
-      <TextInput
-        style={styles.input}
-        placeholder={selectedDistrict || 'School District'}
-        onChangeText={setSelectedDistrict}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={selectedSchool}
-        onChangeText={setSelectedSchool}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={numChildren}
-        onChangeText={handleNumChildrenChange}
-        keyboardType="numeric"
-        autoCapitalize="none"
-        returnKeyType="done"
-      />
-      <TouchableOpacity
-        style={styles.updateButton}
-        onPress={handleUpdateProfile}>
-        <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-      <TextInput
-        style={styles.input}
-        placeholder={email || ''}
+      <SettingItem
+        title="Email"
+        value={email}
         onChangeText={setEmail}
-        keyboardType="email-address"
+        secureTextEntry={false}
+        handleFunction={handleUpdateEmail}
       />
-      <TouchableOpacity style={styles.updateButton} onPress={handleUpdateEmail}>
-        <Text style={styles.buttonText}>Update Email</Text>
-      </TouchableOpacity>
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
+      <SettingItem
+        title="Password"
+        value="" // placeholder
         onChangeText={setPassword}
         secureTextEntry={true}
+        handleFunction={handleUpdatePassword}
       />
-      <TouchableOpacity
-        style={styles.updateButton}
-        onPress={handleUpdatePassword}>
-        <Text style={styles.buttonText}>Update Password</Text>
-      </TouchableOpacity>
+      <SettingItem
+        title="School District"
+        value={selectedDistrict}
+        onChangeText={setSelectedDistrict}
+        secureTextEntry={false}
+        handleFunction={handleUpdateProfile}
+      />
+      <SettingItem
+        title="School"
+        value={selectedSchool}
+        onChangeText={setSelectedSchool}
+        secureTextEntry={false}
+        handleFunction={handleUpdateProfile}
+      />
+      <SettingItem
+        title="Number of Children"
+        value={numChildren}
+        onChangeText={handleNumChildrenChange}
+        secureTextEntry={false}
+        handleFunction={handleUpdateProfile}
+      />
       <Text style={styles.feedbackText}>{feedbackText}</Text>
     </View>
   );
@@ -172,20 +220,19 @@ export function AccountSettingsPage(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginLeft: '10%',
+  },
+  titleContainer: {
     alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    width: '80%',
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
+    textAlign: 'center',
   },
   updateButton: {
     backgroundColor: '#007bff',
@@ -193,14 +240,50 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
   },
-  buttonText: {
-    color: '#ffffff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   feedbackText: {
     marginTop: 20,
     color: 'red',
+  },
+  input: {
+    width: '100%',
+    paddingLeft: 10,
+    marginBottom: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    color: '#757575',
+  },
+  settingContainer: {
+    flexDirection: 'row', // Arrange title and TextInput in a row
+    justifyContent: 'space-between', // Align children components with space between them
+    alignItems: 'center',
+    borderColor: 'black',
+    borderRadius: 10, // Adjust the border radius as needed
+    borderWidth: 1,
+    paddingTop: 3,
+    marginBottom: 10, // Add margin to create space between setting items
+    width: '80%',
+  },
+  innerContainer: {
+    flexDirection: 'column', // Arrange title and TextInput in a row
+    alignItems: 'flex-start', // Align items vertically
+  },
+  settingTitle: {
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 5, // Add margin to create space between title and TextInput
+    alignItems: 'flex-start', // Align items vertically
+    paddingLeft: 10,
+  },
+  buttonContainer: {
+    padding: 10,
+    alignItems: 'flex-end',
+  },
+  buttonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#007bff',
+    alignItems: 'flex-end',
   },
 });
 

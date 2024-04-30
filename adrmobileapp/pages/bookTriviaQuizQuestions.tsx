@@ -5,7 +5,6 @@ import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Ionicons} from '@expo/vector-icons';
-import questions from '../data/questions';
 import FontLoader from '../components/FontLoader';
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuizQuestions'>;
@@ -108,7 +107,7 @@ export function BookTriviaQuizQuestions(
           </Text>
           <Text style={styles.question}>
             {questionNum + 1 <= maxQuestions
-              ? questions[(questionNum + 1) as keyof typeof questions]
+              ? questionSet[(questionNum + 1) as keyof typeof questionSet]
               : 'How long did it take to finish this quiz?'}
           </Text>
           {questionNum + 1 == maxQuestions + 1 && [

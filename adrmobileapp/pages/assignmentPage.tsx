@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { Image } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -54,11 +55,24 @@ const styles = StyleSheet.create({
     width: '70%',
     backgroundColor: '#D9D9D9',
     marginBottom: '5%',
+    //marginBottom: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 50,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 50,
+    alignItems: 'center', // Center align items horizontally
+    //justifyContent: 'center', // Center align items vertically
+    overflow: 'hidden'
+    
   },
+  bookImage: {
+    width: '100%',
+    height: '75%',
+    //aspectRatio: 1,
+    borderRadius: 20,
+    resizeMode: 'contain'
+  },
+  
   shadowProp: {
     shadowColor: '#000000',
     shadowOffset: {width: 5, height: 5},
@@ -81,13 +95,14 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
   useEffect(() => {
     var readingSchedules: any[] = [];
     async function getReadingSchedule() {
-      const q = query(collection(getFirestore(), 'readingSchedules'));
+      const q = query(collection(getFirestore(), 'books'));
+      //console.log(q)
       const querySnapshot = await getDocs(q);
 
       await querySnapshot.forEach(async recvDoc => {
+        const bookID = recvDoc.id;
         var data = recvDoc.data();
-        var bookID = data['bookId'];
-        var chapterIDs = data['chapterIds'];
+        var chapterIDs = data['chapters'];
 
         var docRef = doc(getFirestore(), 'books', bookID);
         var docSnap = await getDoc(docRef);
@@ -95,9 +110,10 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
         if (docSnap.exists()) {
           var bookData = docSnap.data();
 
-          chapterIDs.forEach(async (chapter: string) => {
-            docRef = doc(getFirestore(), `books/${bookID}/Chapters`, chapter);
-            docSnap = await getDoc(docRef);
+         // chapterIDs.forEach(async (chapter: string) => {
+            //docRef = doc(getFirestore(), `books/${bookID}/Chapters`, chapter);
+            //docSnap = await getDoc(docRef);
+            console.log(bookData)
 
             if (docSnap.exists()) {
               const newObj = {
@@ -105,14 +121,15 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
                 title: bookData['title'],
                 author: bookData['author'],
                 description: bookData['description'],
-                picture_link: bookData['picture_link'],
+                picture_link: bookData['imageUrl'],
                 pages: bookData['pages'],
                 chapter: docSnap.data(),
               };
               readingSchedules.push(newObj);
+              console.log(newObj.picture_link)
               setChapters(readingSchedules.slice(0));
             }
-          });
+          //});
         }
       });
     }
@@ -133,9 +150,11 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
               onPress={() => {
                 props.navigation.navigate('BookMain', {
                   book: book,
+
                 });
               }}>
               <Text style={styles.bookTitle}>{book.title}</Text>
+              <Image source={{ uri: book.picture_link }} style={styles.bookImage} />
             </TouchableOpacity>
           );
         })}

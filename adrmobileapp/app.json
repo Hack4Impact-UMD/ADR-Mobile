@@ -2,6 +2,7 @@
   "name": "adrmobileapp",
   "displayName": "adrmobileapp",
   "expo": {
-    "entryPoint": "./index.js"
+    "entryPoint": "./index.js",
+    "plugins": ["expo-font"]
   }
 }

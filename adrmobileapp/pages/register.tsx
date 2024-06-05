@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Text,
   TextInput,
@@ -7,11 +7,14 @@ import {
   Dimensions,
   StyleSheet,
   ScrollView,
+  Image,
 } from 'react-native';
-
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
+import FontLoader from '../components/FontLoader';
 
 type RegisterProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -45,58 +48,62 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          placeholderTextColor="gray"
-          autoCapitalize="none" // Prevents auto-capitalization of the first character
-          returnKeyType="done"
-          onChangeText={text => setName(text)}
-        />
-        {/* Email Input */}
-        <TextInput
-          style={styles.input}
-          placeholder="Email Address"
-          placeholderTextColor="gray"
-          autoCapitalize="none" // Prevents auto-capitalization of the first character
-          returnKeyType="done"
-          onChangeText={text => setEmail(text)}
-        />
-        {/* Password */}
-        <View>
-          {/* Password input */}
+      <FontLoader>
+        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30, marginTop: 120}}>Sign up</Text>
+        <Image style = {styles.logo} source={require('../assets/images/adr_logo.png')} />
+        <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            secureTextEntry={true}
-            placeholder="Password"
-            placeholderTextColor="gray"
-            autoCapitalize="none"
+            placeholder="Name"
+            placeholderTextColor="#C4DEEF"
+            autoCapitalize="none" // Prevents auto-capitalization of the first character
             returnKeyType="done"
-            onChangeText={text => setPassword(text)}
+            onChangeText={text => setName(text)}
           />
+          {/* Email Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="Email Address"
+            placeholderTextColor="#C4DEEF"
+            autoCapitalize="none" // Prevents auto-capitalization of the first character
+            returnKeyType="done"
+            onChangeText={text => setEmail(text)}
+          />
+          {/* Password */}
+          <View>
+            {/* Password input */}
+            <TextInput
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+              placeholderTextColor="#C4DEEF"
+              autoCapitalize="none"
+              returnKeyType="done"
+              onChangeText={text => setPassword(text)}
+            />
+          </View>
+          {/* Login Button */}
+          <TouchableOpacity
+            style={styles.signUpButtonContainer}
+            onPress={async () => {
+              try {
+                await handleRegister();
+                // Iif handleRegister doesn't throw error, navigate to next screen
+                _props.navigation.navigate('SecondRegistrationScreen', {
+                  name: name,
+                  email: email,
+                });
+              } catch (error) {
+                const errorMessage = error.message;
+                setFeedbackText(errorMessage);
+              }
+            }}>
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+            {/* Display feedbacktext only if it's not empty */}
+          </TouchableOpacity>
         </View>
-        {/* Login Button */}
-        <TouchableOpacity
-          style={styles.signUpButtonContainer}
-          onPress={async () => {
-            try {
-              await handleRegister();
-              // Iif handleRegister doesn't throw error, navigate to next screen
-              _props.navigation.navigate('SecondRegistrationScreen', {
-                name: name,
-                email: email,
-              });
-            } catch (error) {
-              const errorMessage = error.message;
-              setFeedbackText(errorMessage);
-            }
-          }}>
-          <Text style={styles.signUpButtonText}>Sign Up</Text>
-          {/* Display feedbacktext only if it's not empty */}
-        </TouchableOpacity>
-      </View>
-      {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
+        {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
+        </FontLoader>
     </ScrollView>
   );
 }
@@ -106,8 +113,8 @@ const windowWidth = Dimensions.get('window').width; // Get the width of the devi
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
   },
   inputContainer: {
     padding: 10,
@@ -115,12 +122,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    backgroundColor: '#D9D9D9',
-    padding: 15,
+    backgroundColor: '#FFFFFF',
+    padding: 20,
     paddingLeft: 20,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 10,
-    width: windowWidth * 0.6,
+    width: windowWidth * 0.8,
+    borderColor: '#0071BA',
+    borderWidth: 2,
+    shadowColor: '#000000',
+    shadowOffset: {width: 3, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    fontFamily: 'Karla',
+    fontSize: 20,
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -128,16 +143,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signUpButtonContainer: {
-    backgroundColor: '#000000',
-    padding: 15,
-    borderRadius: 15,
+    padding: 20,
+    borderRadius: 20,
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 10,
+    backgroundColor: '#0071BA',
+    shadowColor: '#000000',
+    shadowOffset: {width: 3, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   signUpButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#FFFFFF',
+    fontFamily: 'KarlaBold',
+    fontSize: 24,
+  },
+  logo: {
+    width: 250,
+    height: 250,
+    resizeMode: 'cover'
   },
 });
 

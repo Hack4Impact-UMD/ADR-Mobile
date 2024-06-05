@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
 import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import FontLoader from '../components/FontLoader';
 
 import SoundIcon from '../assets/icons/SoundIcon.tsx';
 import TriviaIcon from '../assets/icons/TriviaIcon.tsx';
@@ -28,18 +29,19 @@ const styles = StyleSheet.create({
   },
   bookCover: {
     height: 250,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#C4DEEF',
     marginBottom: '5%',
     borderBottomRightRadius: 40,
     borderBottomLeftRadius: 40,
   },
-
   bookTitle: {
-    fontSize: 40,
+    fontFamily: 'CrimsonPro',
+    fontSize: 50,
     marginLeft: '4%',
     marginBottom: '4%',
-    color: '#726E6E',
-    fontWeight: '600', // 600 is semibold
+    color: '#000000',
+    fontWeight: 'bold', // 600 is semibold
+    width: '70%',
   },
   container: {
     flexDirection: 'row',
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: 42,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#0071BA',
     marginLeft: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -67,10 +69,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   iconText: {
-    color: '#726E6E', // Color specified
-    fontFamily: 'Inter-SemiBold', // Inter font with Semibold weight
+    color: '#0071BA', // Color specified
+    fontFamily: 'KarlaMedium', // Inter font with Semibold weight
     fontSize: 28, // Font size specified
-    fontWeight: '600', // 600 is semibold
     paddingLeft: '5%',
   },
   triviaQuestions: {
@@ -78,63 +79,67 @@ const styles = StyleSheet.create({
   },
   chapterInfo: {
     height: 100,
-    width: '70%',
-    backgroundColor: '#D9D9D9',
+    width: '90%',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14, // Adjust as needed
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: '#0071BA',
+    borderWidth: 1.5,
     alignSelf: 'center',
     marginBottom: 30,
+    padding: '3%',
   },
   chapterText: {
-    color: '#333', // gray text color
-    fontWeight: 'bold', // bold font weight
+    fontFamily: 'KarlaMedium',
+    fontWeight: '800',
+    color: '#000000', // gray text color
+    fontSize: 15,
   },
 });
 
 export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
   var iconSize = 70;
+
   return (
     <SafeAreaView style={styles.bkg}>
-      <View style={[styles.bookCover, styles.shadowProp]} />
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate('BookInfo', {
-            book: props.route.params.book,
-          });
-        }}>
-        <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
-      </TouchableOpacity>
-
-      {/* Need to replace text with Assignment Description (inputted from the school liaison website) */}
-      <View style={[styles.chapterInfo, styles.shadowProp]}>
-        <Text style={styles.chapterText}>
-          {props.route.params.book.description}
-        </Text>
-      </View>
-
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.iconContainer}>
-          <View style={[styles.item, styles.shadowProp]}>
-            <SoundIcon width={iconSize} height={iconSize} color="#222222" />
-          </View>
-          <Text style={styles.iconText}>audio</Text>
-        </TouchableOpacity>
-
+      <FontLoader>
+        <View style={[styles.bookCover, styles.shadowProp]} />
         <TouchableOpacity
-          style={[styles.iconContainer, styles.triviaQuestions]}
           onPress={() => {
-            props.navigation.navigate('BookQuiz', {
+            props.navigation.navigate('BookInfo', {
               book: props.route.params.book,
-              prevScreen: 'BookMain',
             });
           }}>
-          <View style={[styles.item, styles.shadowProp]}>
-            <TriviaIcon width={iconSize} height={iconSize} color="#222222" />
-          </View>
-          <Text style={styles.iconText}>trivia questions</Text>
+          <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
         </TouchableOpacity>
-      </View>
+
+        {/* Need to replace text with Assignment Description (inputted from the school liaison website) */}
+        <View style={[styles.chapterInfo, styles.shadowProp]}>
+          <Text style={styles.chapterText}>Assignment Description Goes Here</Text>
+        </View>
+
+        <View style={styles.container}>
+          <TouchableOpacity style={styles.iconContainer}>
+            <View style={[styles.item, styles.shadowProp]}>
+              <SoundIcon width={iconSize} height={iconSize} color="#FFFFFF" />
+            </View>
+            <Text style={styles.iconText}>audio</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.iconContainer, styles.triviaQuestions]}
+            onPress={() => {
+              props.navigation.navigate('BookQuiz', {
+                book: props.route.params.book,
+                prevScreen: 'BookMain',
+              });
+            }}>
+            <View style={[styles.item, styles.shadowProp]}>
+              <TriviaIcon width={iconSize} height={iconSize} color="#FFFFFF" />
+            </View>
+            <Text style={styles.iconText}>trivia questions</Text>
+          </TouchableOpacity>
+        </View>
+      </FontLoader>
     </SafeAreaView>
   );
 }

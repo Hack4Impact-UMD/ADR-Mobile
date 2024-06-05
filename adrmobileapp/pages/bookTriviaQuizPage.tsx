@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Pressable, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../App';
 
@@ -8,6 +8,8 @@ import * as Progress from 'react-native-progress';
 import TextHighlight from 'react-native-text-highlighter';
 import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontLoader from '../components/FontLoader';
+
 
 import {
   getDoc,
@@ -33,21 +35,23 @@ const styles = StyleSheet.create({
   },
   bookCover: {
     height: 250,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#0071BA',
     marginBottom: '5%',
   },
   bookTitle: {
-    fontSize: 40,
+    fontFamily: 'CrimsonPro',
+    fontSize: 50,
+    fontWeight: 'bold',
     marginTop: '20%',
     marginLeft: '4%',
     marginRight: '5%',
-    color: '#726E6E',
+    color: '#FFFFFF',
   },
   subText: {
+    fontFamily: 'KarlaBold',
     fontSize: 25,
-    fontWeight: 'bold',
     color: 'black',
-    lineHeight: 45,
+    lineHeight: 50,
   },
   content: {
     marginLeft: '4%',
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
 
   clearBtn: {
     borderRadius: 33,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#C4DEEF',
     paddingVertical: 15,
     width: 120,
     shadowColor: 'black',
@@ -197,6 +201,7 @@ export function BookTriviaQuizPage(
 
   return (
     <SafeAreaView style={styles.bkg}>
+    <FontLoader>
       <View style={styles.bookCover}>
         <Text style={styles.bookTitle}>
           {props.route.params.book.title} Trivia Quiz
@@ -210,22 +215,29 @@ export function BookTriviaQuizPage(
             book: props.route.params.book,
           });
         }}>
-        <Ionicons name="arrow-back" size={30} color="black" />
+        <Ionicons name="arrow-back" size={30} color="white" />
       </Pressable>
       <View style={styles.content}>
         <Text style={styles.subText}>Questions Answered</Text>
         <TextHighlight
-          textStyle={styles.subText}
+          textStyle={[styles.subText, {fontFamily: 'KarlaMedium'}]}
           textToHighlight={` ${
             question ? question : '0'
           }  out of  ${maxQuestions} `}
           searchWords={[` ${question} `, ` ${maxQuestions} `, ' 0 ']}
-          highlightTextStyle={{backgroundColor: '#D9D9D9'}}
+          highlightTextStyle={{
+            backgroundColor: '#C4DEEF',
+            fontFamily: 'KarlaMedium',
+          }}
         />
       </View>
 
       <View style={styles.progress}>
-        <Text style={styles.subText}>
+        <Text
+          style={[
+            styles.subText,
+            {color: progressPercentage === 1 ? '#0071BA' : '#000000'},
+          ]}>
           Progress{' '}
           {progressPercentage
             ? `${(progressPercentage * 100).toFixed(0)}%`
@@ -233,12 +245,13 @@ export function BookTriviaQuizPage(
         </Text>
         <Progress.Bar
           progress={progressPercentage}
-          borderColor={'white'}
-          borderRadius={22}
+          borderColor={'#0071BA'}
+          borderRadius={25}
+          borderWidth={2}
           height={50}
           width={395}
-          color={'#726E6E'}
-          unfilledColor={'#D9D9D9'}
+          color={'#0071BA'}
+          unfilledColor={'#FFFFFF'}
         />
       </View>
 
@@ -246,7 +259,7 @@ export function BookTriviaQuizPage(
         <Pressable
           style={[
             styles.btn,
-            {backgroundColor: progressPercentage === 1 ? '#33363F' : '#D9D9D9'},
+            {backgroundColor: progressPercentage === 1 ? '#0071BA' : '#C4DEEF'},
           ]}
           onPress={() => {
             if (progressPercentage < 1) {
@@ -271,8 +284,8 @@ export function BookTriviaQuizPage(
             style={{
               textAlign: 'center',
               fontSize: 23,
-              color: progressPercentage === 1 ? '#D9D9D9' : '#726E6E',
-              fontWeight: 'bold',
+              color: progressPercentage === 1 ? '#FFFFFF' : '#0071BA',
+              fontFamily: 'KarlaBold',
             }}>
             {progressPercentage >= 1
               ? 'Finish'
@@ -291,13 +304,14 @@ export function BookTriviaQuizPage(
             style={{
               textAlign: 'center',
               fontSize: 12,
-              color: '#726E6E',
-              fontWeight: 'bold',
+              color: '#0071BA',
+              fontFamily: 'KarlaBold',
             }}>
             Clear Storage
           </Text>
         </Pressable>
       </View>
+      </FontLoader>
     </SafeAreaView>
   );
 }

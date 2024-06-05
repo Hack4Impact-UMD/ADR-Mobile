@@ -19,7 +19,7 @@
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.18",
     "@react-navigation/stack": "^6.3.23",
-    "expo": "~50.0.8",
+    "expo": "^51.0.9",
     "expo-font": "~11.10.3",
     "expo-splash-screen": "~0.26.4",
     "firebase": "^10.8.0",

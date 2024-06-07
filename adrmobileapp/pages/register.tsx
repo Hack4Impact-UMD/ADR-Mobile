@@ -49,7 +49,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <FontLoader>
-        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30, marginTop: 120}}>Sign up</Text>
+        <Text style = {{fontFamily: 'Chillax', fontSize: 25, marginTop: 120}}>Sign up</Text>
         <Image style = {styles.logo} source={require('../assets/images/adr_logo.png')} />
         <View style={styles.inputContainer}>
           <TextInput
@@ -104,6 +104,8 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
         </View>
         {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
         </FontLoader>
+        <Image style={styles.blob1} source={require('../assets/images/blob1.png')} />
+        <Image style={styles.blob2} source={require('../assets/images/blob2.png')} />
     </ScrollView>
   );
 }
@@ -115,6 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    zIndex: 0,
   },
   inputContainer: {
     padding: 10,
@@ -160,8 +163,27 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 250,
-    height: 250,
-    resizeMode: 'cover'
+    height: 240,
+    resizeMode: 'cover',
+    marginTop: 10,
+  },
+  blob1: {
+    position: 'absolute',
+    bottom: 0 ,
+    left: -60,
+    height: '38%',
+    width:'99%',
+    aspectRatio: 1,
+    zIndex: -1,
+  },
+  blob2: {
+    position: 'absolute',
+    bottom: 185,
+    right: 0,
+    height: 340,
+    width:300,
+    aspectRatio: 1 ,
+    zIndex: -1,
   },
 });
 

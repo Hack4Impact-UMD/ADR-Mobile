@@ -51,7 +51,7 @@ export function Login(_props: LoginProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FontLoader>
-        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30, marginTop: 50}}>Log in</Text>
+        <Text style = {{fontFamily: 'Chillax', fontSize: 25, marginTop: 50}}>Log in</Text>
         <Image style = {styles.logo} source={require('../assets/images/adr_logo.png')} />
         <View style={styles.inputContainer}>
           {/* Login Input */}
@@ -120,6 +120,8 @@ export function Login(_props: LoginProps): React.JSX.Element {
         </View>
         {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
       </FontLoader>
+      <Image style={styles.blob1} source={require('../assets/images/blob1.png')} />
+      <Image style={styles.blob2} source={require('../assets/images/blob2.png')} />
     </View>
   );
 }
@@ -131,6 +133,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    height: Dimensions.get('window').height,
   },
   inputContainer: {
     padding: 10,
@@ -139,8 +142,10 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 250,
-    height: 250,
-    resizeMode: 'cover'
+    height: 240,
+    resizeMode: 'cover',
+    marginBottom: 10,
+    marginTop: 10,
   },
   input: {
     backgroundColor: '#FFFFFF',
@@ -167,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   forgotPasswordText: {
-    color: '#C4DEEF',
+    color: '#FFFFFF',
     fontSize: 14,
     fontFamily: 'Karla',
   },
@@ -181,6 +186,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 3, height: 3},
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    zIndex: 4,
   },
   loginButtonText: {
     fontSize: 20,
@@ -194,7 +200,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signupText: {
-    color: '#C4DEEF',
+    color: '#FFFFFF',
     fontSize: 14,
     fontFamily: 'Karla',
   },
@@ -202,6 +208,24 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Karla',
     fontSize: 14,
+  },
+  blob1: {
+    position: 'absolute',
+    bottom: 55 ,
+    left: -60,
+    height: '38%',
+    width:'99%',
+    aspectRatio: 1,
+    zIndex: -1,
+  },
+  blob2: {
+    position: 'absolute',
+    bottom: 250,
+    right: 0,
+    height: 340,
+    width:300,
+    aspectRatio: 1 ,
+    zIndex: -1,
   },
 });
 

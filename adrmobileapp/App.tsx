@@ -9,6 +9,7 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -99,11 +100,11 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
-      <StatusBar
+    <View style={[backgroundStyle, {height: '100%', position:'relative'}]}>
+      {/* <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
-      />
+      /> */}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
@@ -114,7 +115,7 @@ const HomeScreen = ({navigation}) => {
           <Login navigation={navigation} />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -156,7 +157,7 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="SecondRegistrationScreen"
           component={SecondRegistrationScreen}
-          options={{title: 'Continue Registration'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen name="Assignments" component={HomePage} />
         <Stack.Screen name="BookMain" component={BookMainScreen} />

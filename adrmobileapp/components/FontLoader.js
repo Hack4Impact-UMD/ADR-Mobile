@@ -3,6 +3,8 @@ import CrimsonPro from '../assets/fonts/CrimsonPro.ttf';
 import Karla from '../assets/fonts/Karla.ttf';
 import KarlaBold from '../assets/fonts/Karla-Bold.ttf';
 import KarlaMedium from '../assets/fonts/Karla-Medium.ttf';
+import Chillax from '../assets/fonts/Chillax.otf';
+import MontserratSemiBold from '../assets/fonts/Montserrat-SemiBold.ttf';
 
 // FontLoader.js
 import React, { useState, useEffect } from 'react';
@@ -19,6 +21,8 @@ const FontLoader = ({ children }) => {
         Karla,
         KarlaBold,
         KarlaMedium,
+        Chillax,
+        MontserratSemiBold,
       });
       setFontsLoaded(true);
     }

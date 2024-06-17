@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Pressable, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View, Pressable, SafeAreaView, Image} from 'react-native';
 import {RootStackParamList} from '../App';
 
 import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Progress from 'react-native-progress';
-import TextHighlight from 'react-native-text-highlighter';
 import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontLoader from '../components/FontLoader';
@@ -34,21 +33,29 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   bookCover: {
-    height: 250,
-    backgroundColor: '#0071BA',
-    marginBottom: '5%',
+    height: 260,
+    borderBottomRightRadius: 80,
+    borderBottomLeftRadius: 80,
   },
   bookTitle: {
-    fontFamily: 'CrimsonPro',
+    fontFamily: 'Chillax',
     fontSize: 50,
     fontWeight: 'bold',
-    marginTop: '20%',
     marginLeft: '4%',
     marginRight: '5%',
-    color: '#FFFFFF',
+    color: '#000000',
+    marginTop: 20,
+  },
+  subTitle: {
+    fontFamily: 'Chillax',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: '4%',
+    marginRight: '5%',
+    color: '#000000',
   },
   subText: {
-    fontFamily: 'KarlaBold',
+    fontFamily: 'KarlaMedium',
     fontSize: 25,
     color: 'black',
     lineHeight: 50,
@@ -56,15 +63,19 @@ const styles = StyleSheet.create({
   content: {
     marginLeft: '4%',
   },
+  covercontainer: {
+    marginBottom: '5%',
+    height: 250,
+  },
   progress: {
     marginLeft: '4%',
-    marginTop: '15%',
+    marginTop: '5%',
   },
   btn: {
     borderRadius: 33,
     backgroundColor: '#D9D9D9',
     paddingVertical: 25,
-    width: 180,
+    width: 190,
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.45,
@@ -88,12 +99,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end', // Center vertically
     alignItems: 'center', // Center horizontally
-    marginBottom: '8%',
+    marginBottom: '15%',
   },
   arrow: {
     position: 'absolute',
     left: 20,
-    top: 10,
+    top: 50,
+    zIndex: 1,
+  },
+  shadowPropBlue: {
+    shadowColor: '#0071BA',
+    shadowOffset: {width: 0, height: 7},
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  },
+  shadowProp: {
+    shadowColor: '#000000',
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
   },
 });
 
@@ -150,6 +174,7 @@ export function BookTriviaQuizPage(
       console.log('Storage successfully cleared!');
       props.navigation.navigate('BookMain', {
         book: props.route.params.book,
+        chapter: props.route.params.chapter,
       });
     } catch (e) {
       console.log('Failed to clear the async storage.');
@@ -198,13 +223,20 @@ export function BookTriviaQuizPage(
   ) {
     progressPercentage = 0;
   }
-
+  console.log(props.route.params.chapter)
+  
   return (
-    <SafeAreaView style={styles.bkg}>
+    <View style={styles.bkg}>
     <FontLoader>
-      <View style={styles.bookCover}>
+      <View style={[styles.covercontainer, styles.shadowPropBlue]}>
+        <Image style={styles.bookCover} src={props.route.params.book.picture_link}/>
+      </View>
+      <View>
         <Text style={styles.bookTitle}>
-          {props.route.params.book.title} Trivia Quiz
+          {props.route.params.book.title}
+        </Text>
+        <Text style={styles.subTitle}>
+          Chapter {props.route.params.chapter} Quiz
         </Text>
       </View>
       <Pressable
@@ -213,24 +245,11 @@ export function BookTriviaQuizPage(
           saveData();
           props.navigation.navigate('BookMain', {
             book: props.route.params.book,
+            chapter: props.route.params.chapter,
           });
         }}>
-        <Ionicons name="arrow-back" size={30} color="white" />
+        <Ionicons name="arrow-back" size={30} color="black" />
       </Pressable>
-      <View style={styles.content}>
-        <Text style={styles.subText}>Questions Answered</Text>
-        <TextHighlight
-          textStyle={[styles.subText, {fontFamily: 'KarlaMedium'}]}
-          textToHighlight={` ${
-            question ? question : '0'
-          }  out of  ${maxQuestions} `}
-          searchWords={[` ${question} `, ` ${maxQuestions} `, ' 0 ']}
-          highlightTextStyle={{
-            backgroundColor: '#C4DEEF',
-            fontFamily: 'KarlaMedium',
-          }}
-        />
-      </View>
 
       <View style={styles.progress}>
         <Text
@@ -238,20 +257,18 @@ export function BookTriviaQuizPage(
             styles.subText,
             {color: progressPercentage === 1 ? '#0071BA' : '#000000'},
           ]}>
-          Progress{' '}
-          {progressPercentage
-            ? `${(progressPercentage * 100).toFixed(0)}%`
-            : '0%'}
+          Progress {"\n"}{question}/{maxQuestions}
         </Text>
         <Progress.Bar
           progress={progressPercentage}
-          borderColor={'#0071BA'}
+          // borderColor={'#FFFFFF'}
           borderRadius={25}
-          borderWidth={2}
+          borderWidth={0}
           height={50}
           width={395}
           color={'#0071BA'}
-          unfilledColor={'#FFFFFF'}
+          unfilledColor={'#ABDAF9'}
+          style={styles.shadowProp}
         />
       </View>
 
@@ -259,7 +276,7 @@ export function BookTriviaQuizPage(
         <Pressable
           style={[
             styles.btn,
-            {backgroundColor: progressPercentage === 1 ? '#0071BA' : '#C4DEEF'},
+            {backgroundColor: '#0071BA'},
           ]}
           onPress={() => {
             if (progressPercentage < 1) {
@@ -268,12 +285,14 @@ export function BookTriviaQuizPage(
                   book: props.route.params.book,
                   question: question,
                   questionSet: questionSet,
+                  chapter: props.route.params.chapter,
                 });
               } else {
                 props.navigation.navigate('BookQuizQuestions', {
                   book: props.route.params.book,
                   question: 1,
                   questionSet: questionSet,
+                  chapter: props.route.params.chapter,
                 });
               }
             } else {
@@ -284,14 +303,14 @@ export function BookTriviaQuizPage(
             style={{
               textAlign: 'center',
               fontSize: 23,
-              color: progressPercentage === 1 ? '#FFFFFF' : '#0071BA',
+              color: '#FFFFFF',
               fontFamily: 'KarlaBold',
             }}>
             {progressPercentage >= 1
               ? 'Finish'
               : progressPercentage > 0
-              ? 'Continue'
-              : 'Begin Now'}
+              ? 'Continue  >'
+              : 'Begin Now  >'}
           </Text>
         </Pressable>
 
@@ -312,7 +331,7 @@ export function BookTriviaQuizPage(
         </Pressable>
       </View>
       </FontLoader>
-    </SafeAreaView>
+    </View>
   );
 }
 

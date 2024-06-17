@@ -1,9 +1,18 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  Image,
+  Pressable,
+} from 'react-native';
 import {RootStackParamList} from '../App';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import FontLoader from '../components/FontLoader';
+import {Ionicons} from '@expo/vector-icons';
 
 type routeProp = RouteProp<RootStackParamList, 'BookInfo'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookInfo'>;
@@ -15,11 +24,9 @@ type BookInfoPageProps = {
 
 const styles = StyleSheet.create({
   bookCover: {
-    height: 250,
-    backgroundColor: '#C4DEEF',
-    marginBottom: '5%',
-    borderBottomRightRadius: 40,
-    borderBottomLeftRadius: 40,
+    height: 260,
+    borderBottomRightRadius: 80,
+    borderBottomLeftRadius: 80,
   },
   shadowProp: {
     shadowColor: '#000000',
@@ -28,22 +35,21 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   bookTitle: {
-    fontFamily: 'CrimsonPro',
+    fontFamily: 'Chillax',
     fontSize: 50,
     width: '70%',
-    marginBottom: '4%',
     color: '#000000',
   },
   bookSubtitle: {
-    fontFamily: 'Karla',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'MontserratMedium',
+    fontSize: 18,
     marginBottom: '2%',
     color: '#000000',
   },
   scrollView: {
     marginLeft: '4%',
     marginRight: '4%',
+    marginTop: '5%',
     height: '100%',
     backgroundColor: 'white',
   },
@@ -51,18 +57,49 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   text: {
-    fontFamily: 'KarlaMedium',
+    fontFamily: 'MontserratMedium',
     marginTop: '2%',
-    fontSize: 25,
+    fontSize: 20,
+    marginLeft: '1%',
+  },
+  covercontainer: {
+    marginBottom: '5%',
+    height: 250,
+  },
+  shadowPropBlue: {
+    shadowColor: '#0071BA',
+    shadowOffset: {width: 0, height: 7},
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  },
+  arrow: {
+    position: 'absolute',
+    left: 20,
+    top: 50,
+    zIndex: 1,
   },
 });
 
 export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
-  
   return (
-    <SafeAreaView style={styles.bkg}>
+    <View style={styles.bkg}>
       <FontLoader>
-        <View style={[styles.bookCover, styles.shadowProp]}></View>
+        <Pressable
+          style={styles.arrow}
+          onPress={() => {
+            props.navigation.navigate('BookMain', {
+              book: props.route.params.book,
+              chapter: props.route.params.chapter,
+            });
+          }}>
+          <Ionicons name="arrow-back" size={30} color="black" />
+        </Pressable>
+        <View style={[styles.covercontainer, styles.shadowPropBlue]}>
+          <Image
+            style={styles.bookCover}
+            src={props.route.params.book.picture_link}
+          />
+        </View>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -72,12 +109,15 @@ export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
             {props.route.params.book.author}
           </Text>
           <Text style={styles.bookSubtitle}>
-            {props.route.params.book.page_number} pages
+            {props.route.params.book.page_number} Author Placeholder
           </Text>
-          <Text style={styles.text}>{props.route.params.book.info}</Text>
+          <Text style={styles.bookSubtitle}>
+            {props.route.params.book.page_number} Pages Placeholder
+          </Text>
+          <Text style={styles.text}>{props.route.params.book.description}</Text>
         </ScrollView>
       </FontLoader>
-    </SafeAreaView>
+    </View>
   );
 }
 

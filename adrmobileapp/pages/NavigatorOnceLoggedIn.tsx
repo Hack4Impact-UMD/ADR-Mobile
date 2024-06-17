@@ -7,6 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Text, BottomNavigation, List, Checkbox} from 'react-native-paper';
 
 import {AssignmentPage} from './assignmentPage';
+import{Landing} from './landing';
 import DonatePage from './donatePage';
 
 import {Feather} from '@expo/vector-icons';
@@ -70,19 +71,10 @@ export default function HomePage() {
       )}>
       <Tab.Screen
         name="Home"
-        component={AssignmentPage}
+        component={Landing}
         options={{
           tabBarIcon: () => {
             return <Feather name="home" size={iconSize} color="#222222" />;
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Chapters"
-        component={ChaptersScreen}
-        options={{
-          tabBarIcon: () => {
-            return <AntDesign name="book" size={iconSize} color="#222222" />;
           },
         }}
       />
@@ -92,22 +84,7 @@ export default function HomePage() {
         options={{
           tabBarIcon: () => {
             return (
-              <AntDesign name="calendar" size={iconSize} color="#222222" />
-            );
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Bookmarks"
-        component={BookmarksScreen}
-        options={{
-          tabBarIcon: () => {
-            return (
-              <Ionicons
-                name="bookmarks-outline"
-                size={iconSize}
-                color="#222222"
-              />
+              <Feather name="clipboard" size={iconSize} color="#222222" />
             );
           },
         }}
@@ -122,22 +99,6 @@ export default function HomePage() {
         }}
       />
     </Tab.Navigator>
-  );
-}
-
-function ChaptersScreen() {
-  return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Chapters</Text>
-    </View>
-  );
-}
-
-function BookmarksScreen() {
-  return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Bookmarks</Text>
-    </View>
   );
 }
 

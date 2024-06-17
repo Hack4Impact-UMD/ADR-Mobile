@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   SectionList,
+  Image,
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
@@ -64,9 +65,11 @@ export function ToDoScreen() {
   return (
     <SafeAreaView
       style={styles.scrollView}
-      showsVerticalScrollIndicator={false}>
+    >
+      <Image style={styles.blob} source={require('../assets/images/todoBlob.png')} />
       <Text style={styles.header}>To Do</Text>
       <SectionList
+      
         sections={sortedSections}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
@@ -84,23 +87,26 @@ export function ToDoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-  },
-  view: {
-    backgroundColor: 'white',
-  },
   scrollView: {
-    margin: '5%',
     height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',  
+    alignItems: 'center',
   },
   header: {
+    fontFamily:"Chillax",
     fontSize: 30,
     marginBottom: '4%',
-    color: '#726E6E',
+    color: '#000000',
     textAlign: 'center',
+    marginTop: '10%',
   },
+  blob: {
+    position: 'absolute',
+    width: 450,
+    height: 480,
+    top:225,
+    overflow: 'visible',
+  }
 });

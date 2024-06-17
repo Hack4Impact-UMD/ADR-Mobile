@@ -17,7 +17,7 @@ type BookTriviaQuizQuestionsProps = {
 
 const styles = StyleSheet.create({
   bkg: {
-    backgroundColor: 'white',
+    backgroundColor: '#ABDAF9',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -25,25 +25,26 @@ const styles = StyleSheet.create({
   },
   quizBkg: {
     height: 550,
-    backgroundColor: '#0071BA',
-    marginTop: '20%',
+    backgroundColor: '#FFFFFF',
+    marginTop: 30,
     width: '90%',
     borderRadius: 20,
-    padding: '5%',
-    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
   questionNum: {
     fontFamily: 'KarlaBold',
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: '5%',
   },
   question: {
-    fontFamily: 'KarlaBold',
-    fontSize: 28,
+    fontFamily: 'MontserratSemiBold',
+    fontSize: 25,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   btn: {
     marginTop: '10%',
@@ -70,10 +71,42 @@ const styles = StyleSheet.create({
   endAnswer: {
     marginTop: '10%',
     borderRadius: 15,
+    borderColor: '#0071BA',
+    borderWidth: 2,
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
-    width: 350,
+    width: 340,
+    shadowColor: '#000000',
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
+  title:{
+    fontFamily: 'Chillax',
+    fontSize: 25,
+    color: '#000000',
+  },
+  heading:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: 50,
+    marginTop: '5%',
+  },
+  chapterTitle:{
+    fontFamily: 'MontserratSemiBold',
+    fontSize: 20,
+    color: '#000000',
+    marginTop: '3%',
+  },
+  endAnswerChoice:{
+    textAlign: 'center',
+    fontSize: 23,
+    color: '#000000',
+    fontFamily: 'MontserratSemiBold',
+  }
 });
 
 export function BookTriviaQuizQuestions(
@@ -87,20 +120,25 @@ export function BookTriviaQuizQuestions(
   return (
     <SafeAreaView style={styles.bkg}>
       <FontLoader>
-        <Pressable
-          style={styles.arrow}
-          onPress={() => {
-            questionNum === maxQuestions
-              ? setQuestionNum(questionNum - 1)
-              : setQuestionNum(questionNum + 1);
-            props.navigation.navigate('BookQuiz', {
-              book: props.route.params.book,
-              question: questionNum,
-              prevScreen: 'BookQuizQuestions',
-            });
-          }}>
-          <Ionicons name="arrow-back" size={30} color="black" />
-        </Pressable>
+        <View style={styles.heading}>
+          <Pressable
+            style={styles.arrow}
+            onPress={() => {
+              questionNum === maxQuestions
+                ? setQuestionNum(questionNum - 1)
+                : setQuestionNum(questionNum + 1);
+              props.navigation.navigate('BookQuiz', {
+                book: props.route.params.book,
+                question: questionNum,
+                prevScreen: 'BookQuizQuestions',
+                chapter: props.route.params.chapter,
+              });
+            }}>
+            <Ionicons name="arrow-back" size={30} color="black" />
+          </Pressable>
+          <Text style={styles.title}>{props.route.params.book.title}</Text>
+        </View>
+        <Text style={styles.chapterTitle}>Ch {props.route.params.chapter} Questions</Text>
         <View style={styles.quizBkg}>
           <Text style={styles.questionNum}>
             {questionNum + 1 <= maxQuestions ? `Q${questionNum + 1}` : null}
@@ -108,52 +146,20 @@ export function BookTriviaQuizQuestions(
           <Text style={styles.question}>
             {questionNum + 1 <= maxQuestions
               ? questionSet[(questionNum + 1) as keyof typeof questionSet]
-              : 'How long did it take to finish this quiz?'}
+              : 'How long did you take reading together tonight?'}
           </Text>
           {questionNum + 1 == maxQuestions + 1 && [
             <Pressable style={styles.endAnswer}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 23,
-                  color: '#0071BA',
-                  fontFamily: 'KarlaBold',
-                }}>
-                0-30 min
-              </Text>
+              <Text style={styles.endAnswerChoice}> Up to 10 min </Text>
             </Pressable>,
             <Pressable style={styles.endAnswer}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 23,
-                  color: '#0071BA',
-                  fontFamily: 'KarlaBold',
-                }}>
-                31-60 min
-              </Text>
+              <Text style={styles.endAnswerChoice}> Up to 20 min </Text>
             </Pressable>,
             <Pressable style={styles.endAnswer}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 23,
-                  color: '#0071BA',
-                  fontFamily: 'KarlaBold',
-                }}>
-                61-90 min
-              </Text>
+              <Text style={styles.endAnswerChoice}> Up to 30 min </Text>
             </Pressable>,
             <Pressable style={styles.endAnswer}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 23,
-                  color: '#0071BA',
-                  fontFamily: 'KarlaBold',
-                }}>
-                91+ min
-              </Text>
+              <Text style={styles.endAnswerChoice}> More than 30 min </Text>
             </Pressable>,
           ]}
           <Text style={styles.questionCount}>
@@ -179,6 +185,7 @@ export function BookTriviaQuizQuestions(
                   book: props.route.params.book,
                   question: maxQuestions,
                   prevScreen: 'BookQuizQuestions',
+                  chapter: props.route.params.chapter,
                 });
               } else {
                 setQuestionNum(questionNum + 1);

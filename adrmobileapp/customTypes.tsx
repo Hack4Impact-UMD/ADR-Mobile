@@ -4,4 +4,6 @@ export type Book = {
   info: string;
   page_number: number;
   isbn: string;
+  picture_link: string;
+  description: string;
 };

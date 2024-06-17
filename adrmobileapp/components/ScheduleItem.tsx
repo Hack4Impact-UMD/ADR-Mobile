@@ -31,7 +31,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
 
   const cardStyle = isDueSoon ? styles.dueSoon : {};
 
-  const textColor = isDueSoon ? '#FFFFFF' : '#757575';
+  const textColor = isDueSoon ? '#FFFFFF' : '#FFFFFF';
   const iconSize = 40;
 
   const iconButton =
@@ -77,10 +77,10 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
 const styles = StyleSheet.create({
   card: {
     width: 350,
-    marginVertical: 4,
+    marginVertical: 6,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#d9d9d9', // Default background
+    backgroundColor: '#3297D8',
   },
   cardContent: {
     flexDirection: 'row',
@@ -92,15 +92,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 3, // Add some horizontal space
   },
   bookTitle: {
-    fontSize: 18,
+    fontFamily: 'KarlaBold',
+    fontSize: 16,
   },
   dueDate: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontFamily: 'KarlaBold',
   },
   task: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: 'KarlaBold',
   },
   dueSoon: {
     backgroundColor: '#757575', // Dark for items due within 24 hours

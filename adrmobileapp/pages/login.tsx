@@ -16,7 +16,6 @@ import {RootStackParamList} from '../App';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import FontLoader from '../components/FontLoader';
 
-
 type LoginProps = {
   navigation: NavigationProp<RootStackParamList>;
 };
@@ -51,8 +50,13 @@ export function Login(_props: LoginProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FontLoader>
-        <Text style = {{fontFamily: 'Chillax', fontSize: 25, marginTop: 50}}>Log in</Text>
-        <Image style = {styles.logo} source={require('../assets/images/adr_logo.png')} />
+        <Text style={{fontFamily: 'Chillax', fontSize: 25, marginTop: 50}}>
+          Log in
+        </Text>
+        <Image
+          style={styles.logo}
+          source={require('../assets/images/adr_logo.png')}
+        />
         <View style={styles.inputContainer}>
           {/* Login Input */}
           <TextInput
@@ -84,44 +88,38 @@ export function Login(_props: LoginProps): React.JSX.Element {
           </View>
           {/* Login Button */}
           <TouchableOpacity
-            style={[
-              styles.loginButtonContainer
-            ]}
+            style={[styles.loginButtonContainer]}
             onPress={async () => {
               try {
                 await handleLogin();
                 // Iif handleRegister doesn't throw error, navigate to next screen
-                _props.navigation.navigate('Assignments');
+                _props.navigation.navigate('LandingScreen');
               } catch (error) {
                 const errorMessage = error.message;
                 setFeedbackText(errorMessage);
               }
             }}>
-            <Text
-              style={[
-                styles.loginButtonText,
-              ]}>
-              Login
-            </Text>
+            <Text style={[styles.loginButtonText]}>Login</Text>
           </TouchableOpacity>
           {/* New user registration */}
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>Don't have an account yet? </Text>
             <TouchableOpacity
               onPress={() => _props.navigation.navigate('RegistrationScreen')}>
-              <Text
-                style={[
-                  styles.signupLink,
-                ]}>
-                Sign Up
-              </Text>
+              <Text style={[styles.signupLink]}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>
         {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
       </FontLoader>
-      <Image style={styles.blob1} source={require('../assets/images/blob1.png')} />
-      <Image style={styles.blob2} source={require('../assets/images/blob2.png')} />
+      <Image
+        style={styles.blob1}
+        source={require('../assets/images/blob1.png')}
+      />
+      <Image
+        style={styles.blob2}
+        source={require('../assets/images/blob2.png')}
+      />
     </View>
   );
 }
@@ -211,10 +209,10 @@ const styles = StyleSheet.create({
   },
   blob1: {
     position: 'absolute',
-    bottom: 55 ,
+    bottom: 55,
     left: -60,
     height: '38%',
-    width:'99%',
+    width: '99%',
     aspectRatio: 1,
     zIndex: -1,
   },
@@ -223,8 +221,8 @@ const styles = StyleSheet.create({
     bottom: 250,
     right: 0,
     height: 340,
-    width:300,
-    aspectRatio: 1 ,
+    width: 300,
+    aspectRatio: 1,
     zIndex: -1,
   },
 });

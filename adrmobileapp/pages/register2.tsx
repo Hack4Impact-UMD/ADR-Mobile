@@ -69,9 +69,14 @@ export function SecondRegistrationScreen(
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image style={styles.ellipse} source={require('../assets/images/ellipse.png')} />
+      <Image
+        style={styles.ellipse}
+        source={require('../assets/images/ellipse.png')}
+      />
       <FontLoader>
-        <Text style = {{fontFamily: 'Chillax', fontSize: 25}}>School Information</Text>
+        <Text style={{fontFamily: 'Chillax', fontSize: 25}}>
+          School Information
+        </Text>
         <View style={styles.inputContainer}>
           {/* District Input */}
           <View style={styles.input}>
@@ -79,7 +84,9 @@ export function SecondRegistrationScreen(
               style={styles.input}
               onPress={() => setShowDistrictPicker(!showDistrictPicker)}>
               <Text style={styles.inputTitle}>Choose a School District</Text>
-              <Text style = {styles.selector}>{selectedDistrict || 'Search for your district'}</Text>
+              <Text style={styles.selector}>
+                {selectedDistrict || 'Search for your district'}
+              </Text>
             </TouchableOpacity>
             {showDistrictPicker && (
               <Picker
@@ -103,7 +110,9 @@ export function SecondRegistrationScreen(
               style={styles.input}
               onPress={() => setShowSchoolPicker(!showSchoolPicker)}>
               <Text style={styles.inputTitle}>Choose a School</Text>
-              <Text style = {styles.selector} >{selectedSchool || 'Search for your school'}</Text>
+              <Text style={styles.selector}>
+                {selectedSchool || 'Search for your school'}
+              </Text>
             </TouchableOpacity>
             {showSchoolPicker && (
               <Picker
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 50,
   },
-  selector:{
+  selector: {
     padding: 15,
     paddingLeft: 20,
     borderRadius: 28,
@@ -235,7 +244,7 @@ const styles = StyleSheet.create({
     fontFamily: 'KarlaBold',
     fontSize: 24,
   },
-  ellipse :{
+  ellipse: {
     position: 'absolute',
     top: 0,
     left: 0,

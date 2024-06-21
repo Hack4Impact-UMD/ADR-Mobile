@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text as RNText} from 'react-native';
+import {View, StyleSheet, Text as RNText, TouchableOpacity} from 'react-native';
 import {Card, IconButton, useTheme} from 'react-native-paper';
 import moment from 'moment';
 import {Octicons} from '@expo/vector-icons';
@@ -14,6 +14,7 @@ interface ScheduleItemProps {
   dueDate: string;
   completed: boolean;
   taskType: string;
+  onPress: () => void; // navigation purposes - to do list
 }
 
 const ScheduleItem: React.FC<ScheduleItemProps> = ({
@@ -22,6 +23,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
   dueDate,
   completed,
   taskType,
+  onPress,
 }) => {
   const theme = useTheme();
   const dueDateMoment = moment(dueDate, 'M/D');
@@ -44,6 +46,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
     );
 
   return (
+    <TouchableOpacity onPress={onPress}>
     <Card style={[styles.card, cardStyle]}>
       <Card.Content style={styles.cardContent}>
         <View style={[styles.textContainer, {width: '16%'}]}>{iconButton}</View>
@@ -71,6 +74,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
         </View>
       </Card.Content>
     </Card>
+    </TouchableOpacity>
   );
 };
 
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
     fontFamily: 'KarlaBold',
   },
   dueSoon: {
-    backgroundColor: '#757575', // Dark for items due within 24 hours
+    backgroundColor: '#EA3F3F', // Red for items due within 24 hours
   },
 });
 

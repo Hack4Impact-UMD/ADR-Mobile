@@ -26,9 +26,9 @@ const FontLoader = ({ children }) => {
     loadFonts();
   }, []);
 
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>;
-  }
+  //if (!fontsLoaded) {
+  ///  return <Text>Loading...</Text>;
+  //}
 
   return <>{children}</>;
 };

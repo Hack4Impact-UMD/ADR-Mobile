@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
+import { useNavigation } from '@react-navigation/native';
 
 export function ToDoScreen() {
+  const navigation = useNavigation();
+
   const tasks = [
     {
       id: '1',
@@ -32,10 +35,20 @@ export function ToDoScreen() {
     {
       id: '3',
       bookTitle: 'Ready Player One',
-      task: 'Chapter 1 Quiz',
-      dueDate: '4/11',
+      task: 'Pre-Survey',
+      dueDate: '6/22',
       taskType: 'survey',
       completed: false,
+      navigateTo: 'PreSurvey',
+    },
+    {
+      id: '4',
+      bookTitle: 'Ready Player One',
+      task: 'Post-Survey',
+      dueDate: '5/1',
+      taskType: 'survey',
+      completed: false,
+      navigateTo: 'PostSurvey',
     },
     // Add more tasks
   ];
@@ -69,16 +82,26 @@ export function ToDoScreen() {
       <Image style={styles.blob} source={require('../assets/images/todoBlob.png')} />
       <Text style={styles.header}>To Do</Text>
       <SectionList
-      
         sections={sortedSections}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <ScheduleItem
             bookTitle={item.bookTitle}
             task={item.task}
             dueDate={item.dueDate}
             completed={item.completed}
             taskType={item.taskType}
+            onPress={() => {
+              if (item.navigateTo) {
+                // Handle optional navigation with error checking
+                const targetScreen = item.navigateTo;
+                if (targetScreen) {
+                  navigation.navigate(targetScreen);
+                } else {
+                  console.warn(`Navigation target "${item.navigateTo}" not found.`);
+                }
+              }
+            }}
           />
         )}
       />

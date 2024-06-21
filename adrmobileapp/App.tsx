@@ -92,6 +92,7 @@ export type RootStackParamList = {
   Assignments: undefined;
   LandingScreen: undefined;
   Donate: undefined;
+  PreSurvey: undefined;
 };
 
 // used for page navigation
@@ -200,6 +201,16 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Donate"
           component={DonatePage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PreSurvey"
+          component={PreSurvey}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PostSurvey"
+          component={PostSurvey}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

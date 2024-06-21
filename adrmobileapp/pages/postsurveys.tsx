@@ -1,9 +1,74 @@
 import React, {useState} from 'react';
-import {View, Text, useColorScheme, Button} from 'react-native';
+import {View, Text, useColorScheme, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import {Survey} from '../components/survey';
 import {initializeFirebase} from '../config/firebase';
 import {getFirestore} from 'firebase/firestore';
 import {collection, serverTimestamp, doc, setDoc} from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+
+
+const styles = StyleSheet.create({
+  bkg: {
+    backgroundColor: 'white',
+    height: '100%',
+  },
+  bookCover: {
+    height: 250,
+    backgroundColor: '#0071BA',
+    marginBottom: '5%',
+  },
+  bookTitle: {
+    fontFamily: 'CrimsonPro',
+    fontSize: 50,
+    fontWeight: 'bold',
+    marginTop: '20%',
+    marginLeft: '4%',
+    marginRight: '5%',
+    color: '#FFFFFF',
+  },
+  content: {
+    marginLeft: '4%',
+    marginRight: '4%',
+    flex: 1,
+  },
+  btn: {
+    borderRadius: 33,
+    backgroundColor: '#D9D9D9',
+    paddingVertical: 25,
+    width: 180,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.45,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 10,
+  },
+  arrow: {
+    position: 'absolute',
+    left: 20,
+    top: 10,
+  },
+  buttonView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: '8%',
+  },
+  navButton: {
+    padding: 10,
+    backgroundColor: '#0071BA',
+    borderRadius: 5,
+  },
+  navButtonText: {
+    color: 'white',
+    fontSize: 18,
+  },
+  arrow: {
+    position: 'absolute',
+    left: 20,
+    top: 70,
+    zIndex: 1,
+  },
+});
 
 export function PostSurvey(): React.JSX.Element {
   const questionOptions = [
@@ -64,6 +129,8 @@ export function PostSurvey(): React.JSX.Element {
 
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
+
+  
 
   return (
     <View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,35 +9,101 @@ import {
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
+import {
+  getDoc,
+  getFirestore,
+  query,
+  collection,
+  getDocs,
+  doc,
+} from 'firebase/firestore';
+import {NavigationProp} from '@react-navigation/native';
+import {RootStackParamList} from '../App';
 
-export function ToDoScreen() {
-  const tasks = [
-    {
-      id: '1',
-      bookTitle: 'Ready Player One',
-      task: 'Read Chapter 1',
-      dueDate: '4/8',
-      taskType: 'read',
-      completed: false,
-    },
-    {
-      id: '2',
-      bookTitle: 'Ready Player One',
-      task: 'Chapter 1 Quiz',
-      dueDate: '4/10',
-      taskType: 'quiz',
-      completed: false,
-    },
-    {
-      id: '3',
-      bookTitle: 'Ready Player One',
-      task: 'Chapter 1 Quiz',
-      dueDate: '4/11',
-      taskType: 'survey',
-      completed: false,
-    },
-    // Add more tasks
-  ];
+type ToDoProps = {
+  navigation: NavigationProp<RootStackParamList>;
+};
+
+export function ToDoScreen(props: ToDoProps): React.JSX.Element {
+  const [tasks, setTasks] = useState<any>([]);
+
+  useEffect(() => {
+    var taskList: any[] = [];
+    async function getReadingSchedule() {
+      const q = query(collection(getFirestore(), 'readingSchedules'));
+      const querySnapshot = await getDocs(q);
+
+      await querySnapshot.forEach(async recvDoc => {
+        var data = recvDoc.data();
+        var bookID = data['bookId'];
+        var chapterIDs = data['chapterIds'];
+        var dueDates = data['dueDates'];
+
+        var docRef = doc(getFirestore(), 'books', bookID);
+        var docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          var bookData = docSnap.data();
+
+          for (var i = 0; i < chapterIDs.length; i++) {
+            var chapter = chapterIDs[i];
+            var dueDate = dueDates[i];
+
+            docRef = doc(getFirestore(), `books/${bookID}/Chapters`, chapter);
+            docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+              const read = {
+                id: docSnap.id,
+                title: bookData['title'],
+                author: bookData['author'],
+                description: bookData['description'],
+                picture_link: bookData['picture_link'],
+                pages: bookData['pages'],
+                chapter: docSnap.data(),
+                taskType: 'read',
+                completed: false,
+                dueDate: dueDate,
+                task: 'Read ' + docSnap.data()['title'],
+              };
+              const quiz = {
+                id: docSnap.id,
+                title: bookData['title'],
+                author: bookData['author'],
+                description: bookData['description'],
+                picture_link: bookData['picture_link'],
+                pages: bookData['pages'],
+                chapter: docSnap.data(),
+                taskType: 'quiz',
+                completed: false,
+                dueDate: dueDate,
+                task: docSnap.data()['title'] + ' Quiz',
+              };
+              const survey = {
+                id: docSnap.id,
+                title: bookData['title'],
+                author: bookData['author'],
+                description: bookData['description'],
+                picture_link: bookData['picture_link'],
+                pages: bookData['pages'],
+                chapter: docSnap.data(),
+                taskType: 'survey',
+                completed: false,
+                dueDate: dueDate,
+                task: docSnap.data()['title'] + ' Survey',
+              };
+              taskList.push(read);
+              taskList.push(quiz);
+              taskList.push(survey);
+              setTasks(taskList.slice(0));
+            }
+          }
+        }
+      });
+    }
+    getReadingSchedule();
+  }, []);
+
   const sections = tasks.reduce((acc, task) => {
     const dueDate = moment(task.dueDate, 'M/D').format('MMMM D');
     const category = task.completed ? 'Completed' : dueDate;
@@ -70,13 +136,7 @@ export function ToDoScreen() {
         sections={sortedSections}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
-          <ScheduleItem
-            bookTitle={item.bookTitle}
-            task={item.task}
-            dueDate={item.dueDate}
-            completed={item.completed}
-            taskType={item.taskType}
-          />
+          <ScheduleItem item={item} navigation={props.navigation} />
         )}
       />
     </SafeAreaView>

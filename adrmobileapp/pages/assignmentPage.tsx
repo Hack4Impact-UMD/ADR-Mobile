@@ -5,6 +5,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import Moment from 'moment';
 import {NavigationProp} from '@react-navigation/native';
@@ -23,6 +24,7 @@ import {
   doc,
 } from 'firebase/firestore';
 import {ReloadInstructions} from 'react-native/Libraries/NewAppScreen';
+import {Ionicons} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -70,6 +72,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     padding: '5%',
   },
+  arrow: {
+    position: 'absolute',
+    left: 20,
+    top: 50,
+    zIndex: 1,
+  },
 });
 
 export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
@@ -105,9 +113,10 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
                 title: bookData['title'],
                 author: bookData['author'],
                 description: bookData['description'],
-                picture_link: bookData['picture_link'],
+                picture_link: bookData['imageUrl'],
                 pages: bookData['pages'],
                 chapter: docSnap.data(),
+                chapterNumber: docSnap.data()['chapterNumber'],
               };
               readingSchedules.push(newObj);
               setChapters(readingSchedules.slice(0));
@@ -118,9 +127,16 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
     }
     getReadingSchedule();
   }, []);
-
+  // console.log(chapters)
   return (
     <SafeAreaView style={styles.view}>
+      <Pressable
+          style={styles.arrow}
+          onPress={() => {
+            props.navigation.navigate('LandingScreen');
+          }}>
+          <Ionicons name="arrow-back" size={30} color="black" />
+      </Pressable>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}>
@@ -131,11 +147,15 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
             <TouchableOpacity
               style={[styles.book, styles.shadowProp]}
               onPress={() => {
+                // console.log("book");
+                // console.log(book);
                 props.navigation.navigate('BookMain', {
                   book: book,
+                  chapter: book.chapterNumber,
                 });
               }}>
               <Text style={styles.bookTitle}>{book.title}</Text>
+              <Text style={styles.bookTitle}>{book.chapterNumber}</Text>
             </TouchableOpacity>
           );
         })}

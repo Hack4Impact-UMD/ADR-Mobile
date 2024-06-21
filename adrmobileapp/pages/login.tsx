@@ -16,7 +16,6 @@ import {RootStackParamList} from '../App';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import FontLoader from '../components/FontLoader';
 
-
 type LoginProps = {
   navigation: NavigationProp<RootStackParamList>;
 };
@@ -51,8 +50,13 @@ export function Login(_props: LoginProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FontLoader>
-        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30, marginTop: 50}}>Log in</Text>
-        <Image style = {styles.logo} source={require('../assets/images/adr_logo.png')} />
+        <Text style={{fontFamily: 'Chillax', fontSize: 25, marginTop: 50}}>
+          Log in
+        </Text>
+        <Image
+          style={styles.logo}
+          source={require('../assets/images/adr_logo.png')}
+        />
         <View style={styles.inputContainer}>
           {/* Login Input */}
           <TextInput
@@ -84,42 +88,38 @@ export function Login(_props: LoginProps): React.JSX.Element {
           </View>
           {/* Login Button */}
           <TouchableOpacity
-            style={[
-              styles.loginButtonContainer
-            ]}
+            style={[styles.loginButtonContainer]}
             onPress={async () => {
               try {
                 await handleLogin();
                 // Iif handleRegister doesn't throw error, navigate to next screen
-                _props.navigation.navigate('Assignments');
+                _props.navigation.navigate('LandingScreen');
               } catch (error) {
                 const errorMessage = error.message;
                 setFeedbackText(errorMessage);
               }
             }}>
-            <Text
-              style={[
-                styles.loginButtonText,
-              ]}>
-              Login
-            </Text>
+            <Text style={[styles.loginButtonText]}>Login</Text>
           </TouchableOpacity>
           {/* New user registration */}
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>Don't have an account yet? </Text>
             <TouchableOpacity
               onPress={() => _props.navigation.navigate('RegistrationScreen')}>
-              <Text
-                style={[
-                  styles.signupLink,
-                ]}>
-                Sign Up
-              </Text>
+              <Text style={[styles.signupLink]}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>
         {feedbacktext !== '' && <Text>{feedbacktext}</Text>}
       </FontLoader>
+      <Image
+        style={styles.blob1}
+        source={require('../assets/images/blob1.png')}
+      />
+      <Image
+        style={styles.blob2}
+        source={require('../assets/images/blob2.png')}
+      />
     </View>
   );
 }
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    height: Dimensions.get('window').height,
   },
   inputContainer: {
     padding: 10,
@@ -139,8 +140,10 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 250,
-    height: 250,
-    resizeMode: 'cover'
+    height: 240,
+    resizeMode: 'cover',
+    marginBottom: 10,
+    marginTop: 10,
   },
   input: {
     backgroundColor: '#FFFFFF',
@@ -167,7 +170,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   forgotPasswordText: {
-    color: '#C4DEEF',
+    color: '#FFFFFF',
     fontSize: 14,
     fontFamily: 'Karla',
   },
@@ -181,6 +184,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 3, height: 3},
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    zIndex: 4,
   },
   loginButtonText: {
     fontSize: 20,
@@ -194,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signupText: {
-    color: '#C4DEEF',
+    color: '#FFFFFF',
     fontSize: 14,
     fontFamily: 'Karla',
   },
@@ -202,6 +206,24 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Karla',
     fontSize: 14,
+  },
+  blob1: {
+    position: 'absolute',
+    bottom: 55,
+    left: -60,
+    height: '38%',
+    width: '99%',
+    aspectRatio: 1,
+    zIndex: -1,
+  },
+  blob2: {
+    position: 'absolute',
+    bottom: 250,
+    right: 0,
+    height: 340,
+    width: 300,
+    aspectRatio: 1,
+    zIndex: -1,
   },
 });
 

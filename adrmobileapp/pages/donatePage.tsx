@@ -1,8 +1,14 @@
+import { NavigationProp } from '@react-navigation/native';
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
+import { RootStackParamList } from '../App';
 
-const DonatePage = () => {
+type DonateProps = {
+  navigation: NavigationProp<RootStackParamList>;
+};
+
+export function DonatePage(props: DonateProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <WebView

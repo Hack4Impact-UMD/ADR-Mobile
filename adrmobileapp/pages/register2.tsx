@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
@@ -68,8 +69,14 @@ export function SecondRegistrationScreen(
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Image
+        style={styles.ellipse}
+        source={require('../assets/images/ellipse.png')}
+      />
       <FontLoader>
-        <Text style = {{fontFamily: 'CrimsonPro', fontSize: 30}}>School Information</Text>
+        <Text style={{fontFamily: 'Chillax', fontSize: 25}}>
+          School Information
+        </Text>
         <View style={styles.inputContainer}>
           {/* District Input */}
           <View style={styles.input}>
@@ -77,7 +84,9 @@ export function SecondRegistrationScreen(
               style={styles.input}
               onPress={() => setShowDistrictPicker(!showDistrictPicker)}>
               <Text style={styles.inputTitle}>Choose a School District</Text>
-              <Text style = {styles.selector}>{selectedDistrict || 'Search for your district'}</Text>
+              <Text style={styles.selector}>
+                {selectedDistrict || 'Search for your district'}
+              </Text>
             </TouchableOpacity>
             {showDistrictPicker && (
               <Picker
@@ -101,7 +110,9 @@ export function SecondRegistrationScreen(
               style={styles.input}
               onPress={() => setShowSchoolPicker(!showSchoolPicker)}>
               <Text style={styles.inputTitle}>Choose a School</Text>
-              <Text style = {styles.selector} >{selectedSchool || 'Search for your school'}</Text>
+              <Text style={styles.selector}>
+                {selectedSchool || 'Search for your school'}
+              </Text>
             </TouchableOpacity>
             {showSchoolPicker && (
               <Picker
@@ -171,7 +182,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 50,
   },
-  selector:{
+  selector: {
     padding: 15,
     paddingLeft: 20,
     borderRadius: 28,
@@ -180,9 +191,10 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.8,
     borderColor: '#0071BA',
     borderWidth: 2,
-    fontFamily: 'KarlaMedium',
+    fontFamily: 'MontserratSemiBold',
     fontSize: 20,
     color: '#C4DEEF',
+    backgroundColor: '#FFFFFF',
   },
   textInput: {
     backgroundColor: '#FFFFFF',
@@ -194,14 +206,14 @@ const styles = StyleSheet.create({
     borderColor: '#0071BA',
     borderWidth: 2,
     shadowColor: '#000000',
-    fontFamily: 'KarlaMedium',
+    fontFamily: 'MontserratSemiBold',
     fontSize: 20,
   },
   inputTitle: {
     color: '#000000',
     fontSize: 22,
     fontWeight: 'bold',
-    fontFamily: 'KarlaMedium',
+    fontFamily: 'MontserratSemiBold',
     marginBottom: 10,
   },
   picker: {
@@ -231,6 +243,22 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: 'KarlaBold',
     fontSize: 24,
+  },
+  ellipse: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '33%',
+    aspectRatio: 1,
+    overflow: 'visible',
+  },
+  logo: {
+    width: 250,
+    height: 240,
+    resizeMode: 'cover',
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
 

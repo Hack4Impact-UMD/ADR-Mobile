@@ -9,6 +9,7 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppRegistry,
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -30,6 +31,7 @@ import {initializeFirebase, registerApp} from './config/firebase';
 import {name as adrmobileapp} from './app.json';
 import {registerRootComponent} from 'expo';
 import {Login} from './pages/login';
+import {Landing} from './pages/landing';
 import HomePage from './pages/NavigatorOnceLoggedIn';
 import {BookMainPage} from './pages/bookMainPage';
 import {BookInfoPage} from './pages/bookInfoPage';
@@ -42,6 +44,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import RegistrationScreen from './pages/register.tsx';
 import SecondRegistrationScreen from './pages/register2.tsx';
 import {Book} from './customTypes';
+import {AssignmentPage} from './pages/assignmentPage';
+import {DonatePage} from './pages/donatePage';
 
 // Initialize Firebase
 initializeFirebase();
@@ -81,11 +85,13 @@ export type RootStackParamList = {
   HomeScreen: undefined;
   RegistrationScreen: undefined;
   SecondRegistrationScreen: {name: string; email: string};
-  BookMain: {book: Book};
-  BookQuiz: {book: Book; question?: number; prevScreen?: string};
-  BookQuizQuestions: {book: Book; question: number; questionSet: any};
-  BookInfo: {book: Book};
+  BookMain: {book: Book; chapter: number};
+  BookQuiz: {book: Book; question?: number; prevScreen?: string; chapter: number};
+  BookQuizQuestions: {book: Book; question: number; questionSet: any; chapter: number};
+  BookInfo: {book: Book, chapter: number};
   Assignments: undefined;
+  LandingScreen: undefined;
+  Donate: undefined;
 };
 
 // used for page navigation
@@ -99,11 +105,11 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
-      <StatusBar
+    <View style={[backgroundStyle, {height: '100%', position: 'relative'}]}>
+      {/* <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
-      />
+      /> */}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
@@ -114,7 +120,7 @@ const HomeScreen = ({navigation}) => {
           <Login navigation={navigation} />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -138,12 +144,20 @@ const BookQuizQuestionsScreen = ({route, navigation}) => {
   return <BookTriviaQuizQuestions navigation={navigation} route={route} />;
 };
 
+const LandingScreen = ({route, navigation}) => {
+  return <Landing navigation={navigation} route={route} />;
+};
+
+const DonateScreen = ({route, navigation}) => {
+  return <DonatePage navigation={navigation} route={route} />;
+};
+
 // create app
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        <Stack.Screen 
           name="HomeScreen"
           component={HomeScreen}
           options={{headerShown: false}}
@@ -156,15 +170,37 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="SecondRegistrationScreen"
           component={SecondRegistrationScreen}
-          options={{title: 'Continue Registration'}}
+          options={{headerShown: false}}
         />
-        <Stack.Screen name="Assignments" component={HomePage} />
-        <Stack.Screen name="BookMain" component={BookMainScreen} />
-        <Stack.Screen name="BookInfo" component={BookInfoScreen} />
-        <Stack.Screen name="BookQuiz" component={BookQuizScreen} />
+        <Stack.Screen name="LandingScreen" 
+          component={HomePage} 
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="Assignments" 
+          component={AssignmentPage} 
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="BookMain" 
+          component={BookMainScreen} 
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="BookInfo" 
+          component={BookInfoScreen} 
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="BookQuiz" 
+          component={BookQuizScreen} 
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="BookQuizQuestions"
           component={BookQuizQuestionsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Donate"
+          component={DonatePage}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

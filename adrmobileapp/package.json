@@ -35,7 +35,8 @@
     "react-native-svg": "^12.1.1",
     "react-native-text-highlighter": "^1.0.5",
     "react-native-web": "^0.19.10",
-    "react-native-webview": "^13.8.7"
+    "react-native-webview": "^13.8.7",
+    "expo-linear-gradient": "~12.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

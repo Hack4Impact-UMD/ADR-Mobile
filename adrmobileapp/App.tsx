@@ -46,6 +46,7 @@ import SecondRegistrationScreen from './pages/register2.tsx';
 import {Book} from './customTypes';
 import {AssignmentPage} from './pages/assignmentPage';
 import {DonatePage} from './pages/donatePage';
+import { ToDoScreen } from './pages/toDoPage.tsx';
 
 // Initialize Firebase
 initializeFirebase();
@@ -93,6 +94,7 @@ export type RootStackParamList = {
   LandingScreen: undefined;
   Donate: undefined;
   PreSurvey: undefined;
+  ToDo: undefined;
 };
 
 // used for page navigation
@@ -128,6 +130,10 @@ const HomeScreen = ({navigation}) => {
 const AssignmentScreen = ({route, navigation}) => {
   return <AssignmentPage navigation={navigation} route={route} />;
 };
+
+const ToDoPage = ({route, navigation}) => {
+  return <ToDoScreen navigation={navigation} route={route} />;
+}
 
 const BookMainScreen = ({route, navigation}) => {
   return <BookMainPage navigation={navigation} route={route} />;
@@ -175,6 +181,10 @@ function App(): React.JSX.Element {
         />
         <Stack.Screen name="LandingScreen" 
           component={HomePage} 
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="ToDo" 
+          component={ToDoPage} 
           options={{headerShown: false}}
         />
         <Stack.Screen name="Assignments" 

@@ -8,7 +8,7 @@ import {Text, BottomNavigation, List, Checkbox} from 'react-native-paper';
 
 import {AssignmentPage} from './assignmentPage';
 import{Landing} from './landing';
-import DonatePage from './donatePage';
+import {DonatePage} from './donatePage';
 
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
@@ -79,7 +79,7 @@ export default function HomePage() {
         }}
       />
       <Tab.Screen
-        name="Schedule"
+        name="ToDo"
         component={ToDoScreen}
         options={{
           tabBarIcon: () => {

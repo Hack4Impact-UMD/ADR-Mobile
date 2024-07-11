@@ -129,7 +129,7 @@ export function Landing(props: LandingProps): React.JSX.Element {
             <TouchableOpacity 
                 style={styles.assignmentButton}
                 onPress={() => {
-                    props.navigation.navigate('Assignments');
+                    props.navigation.navigate('ToDo');
                 }}>
                 <Text style={styles.assignmentButtonText}>Jump to Today</Text>
             </TouchableOpacity>

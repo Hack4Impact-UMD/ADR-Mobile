@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Pressable, SafeAreaView, Image} from 'react-native';
 import {RootStackParamList} from '../App';
 
-import {RouteProp, useIsFocused} from '@react-navigation/native';
+import {RouteProp, useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Progress from 'react-native-progress';
 import {Ionicons} from '@expo/vector-icons';
@@ -225,6 +225,8 @@ export function BookTriviaQuizPage(
   }
   console.log(props.route.params.chapter)
   
+  const navigation = useNavigation();
+
   return (
     <View style={styles.bkg}>
     <FontLoader>
@@ -243,12 +245,9 @@ export function BookTriviaQuizPage(
         style={styles.arrow}
         onPress={() => {
           saveData();
-          props.navigation.navigate('BookMain', {
-            book: props.route.params.book,
-            chapter: props.route.params.chapter,
-          });
+          navigation.goBack();
         }}>
-        <Ionicons name="arrow-back" size={30} color="black" />
+        <Ionicons name="arrow-back" size={30} color="white" />
       </Pressable>
 
       <View style={styles.progress}>

@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import {RootStackParamList} from '../App';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import FontLoader from '../components/FontLoader';
 
@@ -88,9 +88,9 @@ const styles = StyleSheet.create({
     fontSize: 20, // Font size specified
   },
   chapterInfo: {
-    height: 100,
+    height: 250,
     marginLeft: '2%',
-    width: '70%',
+    width: '90%',
     backgroundColor: '#FFFFFF',
     marginBottom: 30,
     padding: '3%',
@@ -116,16 +116,17 @@ const styles = StyleSheet.create({
 
 export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
   var iconSize = 50;
-  
+  const navigation = useNavigation();
+
   return (
     <View style={styles.bkg}>
       <FontLoader>
         <Pressable
           style={styles.arrow}
           onPress={() => {
-            props.navigation.navigate('Assignments');
+            navigation.goBack();
           }}>
-          <Ionicons name="arrow-back" size={30} color="black" />
+          <Ionicons name="arrow-back" size={30} color="white" />
         </Pressable>
         <View style={[styles.covercontainer, styles.shadowPropBlue]}>
           <Image

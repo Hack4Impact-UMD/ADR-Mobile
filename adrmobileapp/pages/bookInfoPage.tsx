@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import {RootStackParamList} from '../App';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import FontLoader from '../components/FontLoader';
 import {Ionicons} from '@expo/vector-icons';
@@ -39,21 +39,26 @@ const styles = StyleSheet.create({
     fontSize: 50,
     width: '70%',
     color: '#000000',
+    marginBottom: '4%',
+    marginLeft: '1%',
   },
   bookSubtitle: {
     fontFamily: 'MontserratMedium',
     fontSize: 18,
     marginBottom: '2%',
     color: '#000000',
+    marginLeft: '1%',
   },
   scrollView: {
     marginLeft: '4%',
     marginRight: '4%',
     marginTop: '5%',
+    marginBottom: '10%',
     height: '100%',
     backgroundColor: 'white',
   },
   bkg: {
+    flex: 1,
     backgroundColor: 'white',
   },
   text: {
@@ -81,18 +86,17 @@ const styles = StyleSheet.create({
 });
 
 export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.bkg}>
       <FontLoader>
         <Pressable
           style={styles.arrow}
           onPress={() => {
-            props.navigation.navigate('BookMain', {
-              book: props.route.params.book,
-              chapter: props.route.params.chapter,
-            });
+            navigation.goBack();
           }}>
-          <Ionicons name="arrow-back" size={30} color="black" />
+          <Ionicons name="arrow-back" size={30} color="white" />
         </Pressable>
         <View style={[styles.covercontainer, styles.shadowPropBlue]}>
           <Image
@@ -109,10 +113,7 @@ export function BookInfoPage(props: BookInfoPageProps): React.JSX.Element {
             {props.route.params.book.author}
           </Text>
           <Text style={styles.bookSubtitle}>
-            {props.route.params.book.page_number} Author Placeholder
-          </Text>
-          <Text style={styles.bookSubtitle}>
-            {props.route.params.book.page_number} Pages Placeholder
+            {props.route.params.book.pages} Pages
           </Text>
           <Text style={styles.text}>{props.route.params.book.description}</Text>
         </ScrollView>

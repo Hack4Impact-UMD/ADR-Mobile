@@ -13,20 +13,25 @@ import {RootStackParamList} from '../App';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Moment from 'moment';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 type LandingProps = {
     navigation: NavigationProp<RootStackParamList>;
 };
 
+// person-circle-outline
 const styles = StyleSheet.create({
   welcome:{
     fontFamily: 'GilroyExtraBold',
-    fontSize: 48,
+    fontSize: 42,
+    left: -10,
+    top: 20,
   },
   date:{
     fontFamily:'MontserratSemiBold',
     fontSize: 18,
-    marginTop: 20,
+    marginTop: 30,
   },
   container:{
     display: 'flex',
@@ -100,7 +105,18 @@ const styles = StyleSheet.create({
   textContainer: {
     marginRight: 'auto',
     marginLeft: '6%',
+  },
+  arrow: {
+    position: 'absolute',
+    left: 325,
+    top: -35,
+  },
+  menu_icon: {
+    position: 'absolute',
+    left: -315,
+    top: 0,
   }
+  //// menu-outline
 });
 
 export function Landing(props: LandingProps): React.JSX.Element {
@@ -110,10 +126,13 @@ export function Landing(props: LandingProps): React.JSX.Element {
     return (
     <SafeAreaView>
         <View style={styles.container}>
+
+        
             <View style={styles.textContainer}>
                 <Text style={styles.welcome}>Welcome Back!</Text>
                 <Text style={styles.date}>{Moment(today).format('MMMM Do, YYYY')}</Text>
             </View>
+            
             <ImageBackground style={styles.card} resizeMode="cover" source={require('../assets/images/homeimg.png')}>
                 <Text style={styles.getInvolved}>Get Involved</Text>
                 <Text style={styles.paragraph}>If you are a business, foundation, or individual that wants to support this initiative, please contact us.</Text>
@@ -133,6 +152,14 @@ export function Landing(props: LandingProps): React.JSX.Element {
                 }}>
                 <Text style={styles.assignmentButtonText}>Jump to Today</Text>
             </TouchableOpacity>
+            <Pressable
+              style={styles.arrow}
+              onPress={() => 
+                props.navigation.navigate('UserSettings')
+              }>
+              <Ionicons name="person-circle-outline" size={40} color="black" />
+              <Ionicons name="menu-outline" size={40} color="black" style={styles.menu_icon} />
+            </Pressable>
         </View>
     </SafeAreaView>
     );

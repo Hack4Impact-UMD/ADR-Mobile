@@ -47,6 +47,7 @@ import {Book} from './customTypes';
 import {AssignmentPage} from './pages/assignmentPage';
 import {DonatePage} from './pages/donatePage';
 import { ToDoScreen } from './pages/toDoPage.tsx';
+import UserSettings from './pages/userSettings.tsx';
 
 // Initialize Firebase
 initializeFirebase();
@@ -95,6 +96,7 @@ export type RootStackParamList = {
   Donate: undefined;
   PreSurvey: undefined;
   ToDo: undefined;
+  UserSettings: undefined;
 };
 
 // used for page navigation
@@ -159,6 +161,7 @@ const DonateScreen = ({route, navigation}) => {
   return <DonatePage navigation={navigation} route={route} />;
 };
 
+
 // create app
 function App(): React.JSX.Element {
   return (
@@ -211,6 +214,11 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Donate"
           component={DonatePage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserSettings"
+          component={UserSettings}
           options={{headerShown: false}}
         />
         <Stack.Screen

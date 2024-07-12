@@ -65,7 +65,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       id: '3',
       bookTitle: 'Ready Player One',
       task: 'Pre-Survey',
-      dueDate: '6/22',
+      dueDate: '7/12',
       taskType: 'survey',
       completed: false,
       navigateTo: 'PreSurvey',

@@ -5,7 +5,6 @@ import {getFunctions, httpsCallable} from 'firebase/functions';
 export function createUser(
   name: string,
   email: string,
-  schoolId: string,
   schoolDistrictId: string,
   numChildren: string,
 ): Promise<void> {
@@ -16,9 +15,9 @@ export function createUser(
     createUserCloudFunction({
       email: email,
       name: name,
-      schoolId: schoolId,
       schoolDistrictId: schoolDistrictId,
       numChildren: numChildren,
+      userType: 'parent',
     })
       .then(async () => {
         resolve();

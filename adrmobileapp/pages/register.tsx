@@ -15,6 +15,10 @@ import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import FontLoader from '../components/FontLoader';
+import { Picker } from '@react-native-picker/picker';
+import {createUser} from '../backend/CloudFunctionsCalls';
+import { initializeFirebase } from '../config/firebase';
+import { getFirestore } from 'firebase/firestore';
 
 type RegisterProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -24,26 +28,75 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [showDistrictPicker, setShowDistrictPicker] = useState(false);
+  const [numChildren, setNumChildren] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');
 
   const auth = getAuth();
+  initializeFirebase();
+  const firestore = getFirestore();
 
-  const handleRegister = () => {
-    return new Promise<void>((resolve, reject) => {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          // Signed up successfully
-          const user = userCredential.user;
-          setFeedbackText('');
-          resolve(); // Resolve the promise
-        })
-        .catch(error => {
-          // Error during registration
-          const errorMessage = error.message;
-          setFeedbackText(errorMessage);
-          reject(error); // Reject the promise with the error
-        });
-    });
+  // const handleRegister = () => {
+  //   return new Promise<void>(async (resolve, reject) => {
+  //     try {
+  //       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  //       const user = userCredential.user;
+  //       setFeedbackText('');
+        
+  //       // Call writeUser after creating the user
+  //       await writeUser();
+  
+  //       resolve(); // Resolve the promise
+  //     } catch (error) {
+  //       const errorMessage = error.message;
+  //       setFeedbackText(errorMessage);
+  //       reject(error); // Reject the promise with the error
+  //     }
+  //   });
+  // };
+
+  const handleRegister = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      await createUser(
+        name,
+        email,
+        selectedDistrict,
+        numChildren,
+      );  
+
+      console.log("Registration successful:", userCredential.user);
+    } catch (error: any) {
+      console.error("Registration error:", error.message);
+      setFeedbackText(error.message);
+    }
+  };
+  
+  // async function writeUser() {
+  //   try {
+  //     // Adds a new document with an automatically generated ID
+  //     await createUser(
+  //       name,
+  //       email,
+  //       selectedDistrict,
+  //       numChildren,
+  //     );
+  //     console.log('Document written');
+  //   } catch (e) {
+  //     console.error('Error adding document: ', e);
+  //   }
+  // }
+  
+  const handleNumChildrenChange = (text: string) => {
+    if (/^\d+$/.test(text) || text === '') {
+      setNumChildren(text);
+    }
   };
 
   return (
@@ -87,17 +140,51 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
               onChangeText={text => setPassword(text)}
             />
           </View>
+          {/* District Input */}
+          <View style={styles.input}>
+            <TouchableOpacity
+              style={null}
+              onPress={() => setShowDistrictPicker(!showDistrictPicker)}>
+              <Text style={[styles.selectorPlaceholderWithValue, !selectedDistrict && styles.selectorPlaceholder]}>
+                {selectedDistrict || 'Select a district'}
+              </Text>
+            </TouchableOpacity>
+            {showDistrictPicker && (
+              <Picker
+                style={styles.picker}
+                itemStyle={styles.pickerItems}
+                selectedValue={selectedDistrict}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedDistrict(itemValue);
+                  setShowDistrictPicker(false);
+                }}>
+                <Picker.Item label="Select a district" value="" />
+                <Picker.Item label="District 1" value="District 1" />
+                <Picker.Item label="District 2" value="District 2" />
+                <Picker.Item label="District 3" value="District 3" />
+              </Picker>
+            )}
+          </View>
+          {/* Children Number Input */}
+          <View>
+            <TextInput
+              style={styles.input}
+              value={numChildren}
+              onChangeText={handleNumChildrenChange}
+              keyboardType="numeric"
+              placeholder="Number of Children"
+              placeholderTextColor={'#C4DEEF'}
+              autoCapitalize="none"
+              returnKeyType="done"
+            />
+          </View>
           {/* Login Button */}
           <TouchableOpacity
             style={styles.signUpButtonContainer}
             onPress={async () => {
               try {
                 await handleRegister();
-                // Iif handleRegister doesn't throw error, navigate to next screen
-                _props.navigation.navigate('SecondRegistrationScreen', {
-                  name: name,
-                  email: email,
-                });
+                _props.navigation.navigate('HomeScreen');
               } catch (error) {
                 const errorMessage = error.message;
                 setFeedbackText(errorMessage);
@@ -133,7 +220,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
   },
   input: {
     backgroundColor: '#FFFFFF',
@@ -150,6 +236,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     fontFamily: 'Karla',
     fontSize: 20,
+  },
+  selectorPlaceholder: {
+    fontFamily: 'Karla',
+    fontSize: 20,
+    color: '#ABDAF9',
+  },
+  selectorPlaceholderWithValue: {
+    fontFamily: 'Karla',
+    fontSize: 20,
+    color: '#000000',
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -195,6 +291,41 @@ const styles = StyleSheet.create({
     width: 300,
     aspectRatio: 1,
     zIndex: -1,
+  },
+  selector: {
+    padding: 15,
+    paddingLeft: 20,
+    borderRadius: 28,
+    overflow: 'hidden',
+    marginBottom: 10,
+    width: windowWidth * 0.8,
+    borderColor: '#0071BA',
+    borderWidth: 2,
+    fontFamily: 'MontserratSemiBold',
+    fontSize: 20,
+    color: '#C4DEEF',
+    backgroundColor: '#FFFFFF',
+  },
+  pickerItems: {
+    color: 'black',
+    fontSize: 20,
+    fontFamily: 'KarlaMedium',
+  },
+  textInput: {
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    paddingLeft: 20,
+    borderRadius: 50,
+    marginBottom: 10,
+    width: windowWidth * 0.6,
+    borderColor: '#0071BA',
+    borderWidth: 2,
+    shadowColor: '#000000',
+    fontFamily: 'MontserratSemiBold',
+    fontSize: 20,
+  },
+  picker: {
+    marginTop: -50,
   },
 });
 

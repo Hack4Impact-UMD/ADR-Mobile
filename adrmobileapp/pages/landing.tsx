@@ -115,7 +115,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: -315,
     top: 0,
-  }
+  },
+  profilePicture: {
+    width: 55,
+    height: 55,
+    borderRadius: 35,
+  },
   //// menu-outline
 });
 
@@ -157,7 +162,7 @@ export function Landing(props: LandingProps): React.JSX.Element {
               onPress={() => 
                 props.navigation.navigate('UserSettings')
               }>
-              <Ionicons name="person-circle-outline" size={40} color="black" />
+              <Image style={styles.profilePicture} source={require('../assets/images/pfp_temp.jpg')} />
               <Ionicons name="menu-outline" size={40} color="black" style={styles.menu_icon} />
             </Pressable>
         </View>

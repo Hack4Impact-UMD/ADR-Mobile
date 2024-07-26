@@ -37,25 +37,6 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   initializeFirebase();
   const firestore = getFirestore();
 
-  // const handleRegister = () => {
-  //   return new Promise<void>(async (resolve, reject) => {
-  //     try {
-  //       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  //       const user = userCredential.user;
-  //       setFeedbackText('');
-        
-  //       // Call writeUser after creating the user
-  //       await writeUser();
-  
-  //       resolve(); // Resolve the promise
-  //     } catch (error) {
-  //       const errorMessage = error.message;
-  //       setFeedbackText(errorMessage);
-  //       reject(error); // Reject the promise with the error
-  //     }
-  //   });
-  // };
-
   const handleRegister = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -77,21 +58,6 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
       setFeedbackText(error.message);
     }
   };
-  
-  // async function writeUser() {
-  //   try {
-  //     // Adds a new document with an automatically generated ID
-  //     await createUser(
-  //       name,
-  //       email,
-  //       selectedDistrict,
-  //       numChildren,
-  //     );
-  //     console.log('Document written');
-  //   } catch (e) {
-  //     console.error('Error adding document: ', e);
-  //   }
-  // }
   
   const handleNumChildrenChange = (text: string) => {
     if (/^\d+$/.test(text) || text === '') {

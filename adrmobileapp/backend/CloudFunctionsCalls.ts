@@ -3,6 +3,7 @@ import {getAuth, sendPasswordResetEmail} from '@firebase/auth';
 import {getFunctions, httpsCallable} from 'firebase/functions';
 
 export function createUser(
+  userId: string,
   name: string,
   email: string,
   schoolDistrictId: string,
@@ -13,6 +14,7 @@ export function createUser(
     const createUserCloudFunction = httpsCallable(functions, 'createUser');
 
     createUserCloudFunction({
+      userId: userId,
       email: email,
       name: name,
       schoolDistrictId: schoolDistrictId,

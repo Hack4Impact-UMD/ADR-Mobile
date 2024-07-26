@@ -45,7 +45,10 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
         password,
       );
 
+      const userId = userCredential.user.uid;
+
       await createUser(
+        userId,
         name,
         email,
         selectedDistrict,

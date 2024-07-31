@@ -3,9 +3,9 @@ import {getAuth, sendPasswordResetEmail} from '@firebase/auth';
 import {getFunctions, httpsCallable} from 'firebase/functions';
 
 export function createUser(
+  userId: string,
   name: string,
   email: string,
-  schoolId: string,
   schoolDistrictId: string,
   numChildren: string,
 ): Promise<void> {
@@ -14,11 +14,12 @@ export function createUser(
     const createUserCloudFunction = httpsCallable(functions, 'createUser');
 
     createUserCloudFunction({
+      userId: userId,
       email: email,
       name: name,
-      schoolId: schoolId,
       schoolDistrictId: schoolDistrictId,
       numChildren: numChildren,
+      userType: 'parent',
     })
       .then(async () => {
         resolve();

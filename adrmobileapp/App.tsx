@@ -48,6 +48,12 @@ import {AssignmentPage} from './pages/assignmentPage';
 import {DonatePage} from './pages/donatePage';
 import { ToDoScreen } from './pages/toDoPage.tsx';
 import UserSettings from './pages/userSettings.tsx';
+import UserName from './pages/namePage.tsx';
+import UserEmail from './pages/userEmail.tsx';
+import UserSchool from './pages/userSchool.tsx';
+import UserPassword from './pages/userPassword.tsx';
+import UserChildren from './pages/userNumChildren.tsx';
+import UserDistrict from './pages/districtPage.tsx';
 
 // Initialize Firebase
 initializeFirebase();
@@ -97,6 +103,12 @@ export type RootStackParamList = {
   PreSurvey: undefined;
   ToDo: undefined;
   UserSettings: undefined;
+  UserName: undefined;
+  UserEmail: undefined;
+  UserSchool: undefined;
+  UserPassword: undefined;
+  UserChildren: undefined;
+  UserDistrict: undefined;
 };
 
 // used for page navigation
@@ -161,6 +173,7 @@ const DonateScreen = ({route, navigation}) => {
   return <DonatePage navigation={navigation} route={route} />;
 };
 
+//UserName
 
 // create app
 function App(): React.JSX.Element {
@@ -231,11 +244,41 @@ function App(): React.JSX.Element {
           component={PostSurvey}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="UserName"
+          component={UserName}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserEmail"
+          component={UserEmail}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserSchool"
+          component={UserSchool}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserPassword"
+          component={UserPassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserChildren"
+          component={UserChildren}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserDistrict"
+          component={UserDistrict}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
+//UserDistrict
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,

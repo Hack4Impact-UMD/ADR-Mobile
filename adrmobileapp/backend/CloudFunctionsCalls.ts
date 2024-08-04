@@ -8,6 +8,7 @@ export function createUser(
   email: string,
   schoolDistrictId: string,
   numChildren: string,
+  creationDate: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const functions = getFunctions();
@@ -19,6 +20,7 @@ export function createUser(
       name: name,
       schoolDistrictId: schoolDistrictId,
       numChildren: numChildren,
+      creationDate: creationDate,
       userType: 'parent',
     })
       .then(async () => {

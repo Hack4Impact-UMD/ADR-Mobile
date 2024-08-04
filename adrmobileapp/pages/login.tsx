@@ -15,6 +15,7 @@ import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import FontLoader from '../components/FontLoader';
+import { useAuth } from '../components/AuthProvider';
 
 type LoginProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -24,7 +25,7 @@ export function Login(_props: LoginProps): React.JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [feedbacktext, setFeedbackText] = useState('');
-
+  
   const auth = getAuth();
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -34,7 +35,6 @@ export function Login(_props: LoginProps): React.JSX.Element {
       signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           // Signed in
-          const user = userCredential.user;
           setFeedbackText('');
           resolve(); // Resolve the promise
         })
@@ -94,7 +94,7 @@ export function Login(_props: LoginProps): React.JSX.Element {
                 await handleLogin();
                 // Iif handleRegister doesn't throw error, navigate to next screen
                 _props.navigation.navigate('LandingScreen');
-              } catch (error) {
+              } catch (error: any) {
                 const errorMessage = error.message;
                 setFeedbackText(errorMessage);
               }

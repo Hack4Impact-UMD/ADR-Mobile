@@ -10,7 +10,10 @@ import {
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useAuth } from '../components/AuthProvider';
 
 type routeProp = RouteProp<RootStackParamList, 'ToDo'>;
 type navProp = StackNavigationProp<RootStackParamList, 'ToDo'>;
@@ -104,6 +107,10 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       data: sections[key].data,
     }));
 
+
+  const context = useAuth();
+  const userId = context.user?.uid;
+  console.log("User Id  for ToDoPage: ", userId); 
   return (
     <SafeAreaView
       style={styles.scrollView}

@@ -46,6 +46,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
       );
 
       const userId = userCredential.user.uid;
+      const creationDate = userCredential.user.metadata.creationTime ?? "undefined";
 
       await createUser(
         userId,
@@ -53,6 +54,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
         email,
         selectedDistrict,
         numChildren,
+        creationDate,
       );  
 
       console.log("Registration successful:", userCredential.user);
@@ -154,7 +156,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
               try {
                 await handleRegister();
                 _props.navigation.navigate('HomeScreen');
-              } catch (error) {
+              } catch (error: any) {
                 const errorMessage = error.message;
                 setFeedbackText(errorMessage);
               }

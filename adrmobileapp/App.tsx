@@ -54,6 +54,7 @@ import UserSchool from './pages/userSchool.tsx';
 import UserPassword from './pages/userPassword.tsx';
 import UserChildren from './pages/userNumChildren.tsx';
 import UserDistrict from './pages/districtPage.tsx';
+import { AuthProvider } from './components/AuthProvider.tsx';
 
 // Initialize Firebase
 initializeFirebase();
@@ -178,104 +179,106 @@ const DonateScreen = ({route, navigation}) => {
 // create app
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="RegistrationScreen"
-          component={RegistrationScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SecondRegistrationScreen"
-          component={SecondRegistrationScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="LandingScreen" 
-          component={HomePage} 
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="ToDo" 
-          component={ToDoPage} 
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="Assignments" 
-          component={AssignmentPage} 
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="BookMain" 
-          component={BookMainScreen} 
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="BookInfo" 
-          component={BookInfoScreen} 
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="BookQuiz" 
-          component={BookQuizScreen} 
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="BookQuizQuestions"
-          component={BookQuizQuestionsScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Donate"
-          component={DonatePage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserSettings"
-          component={UserSettings}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="PreSurvey"
-          component={PreSurvey}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="PostSurvey"
-          component={PostSurvey}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserName"
-          component={UserName}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserEmail"
-          component={UserEmail}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserSchool"
-          component={UserSchool}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserPassword"
-          component={UserPassword}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserChildren"
-          component={UserChildren}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UserDistrict"
-          component={UserDistrict}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen 
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="RegistrationScreen"
+            component={RegistrationScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SecondRegistrationScreen"
+            component={SecondRegistrationScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="LandingScreen" 
+            component={HomePage} 
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="ToDo" 
+            component={ToDoPage} 
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="Assignments" 
+            component={AssignmentPage} 
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="BookMain" 
+            component={BookMainScreen} 
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="BookInfo" 
+            component={BookInfoScreen} 
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="BookQuiz" 
+            component={BookQuizScreen} 
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="BookQuizQuestions"
+            component={BookQuizQuestionsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Donate"
+            component={DonatePage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserSettings"
+            component={UserSettings}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PreSurvey"
+            component={PreSurvey}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PostSurvey"
+            component={PostSurvey}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserName"
+            component={UserName}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserEmail"
+            component={UserEmail}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserSchool"
+            component={UserSchool}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserPassword"
+            component={UserPassword}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserChildren"
+            component={UserChildren}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="UserDistrict"
+            component={UserDistrict}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 //UserDistrict

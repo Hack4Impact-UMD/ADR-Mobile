@@ -56,11 +56,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom: 10,
   },
-  arrow: {
-    position: 'absolute',
-    left: 20,
-    top: 10,
-  },
   buttonView: {
     flexDirection: 'row',
     justifyContent: 'space-between',

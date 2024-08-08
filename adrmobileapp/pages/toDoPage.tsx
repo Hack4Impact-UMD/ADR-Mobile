@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
-  ScrollView,
   SafeAreaView,
-  TouchableOpacity,
   SectionList,
   Image,
 } from 'react-native';
 import ScheduleItem from '../components/ScheduleItem';
 import moment from 'moment';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAuth } from '../components/AuthProvider';
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore"; 
+import CryptoJS from 'crypto-js';
 
 type routeProp = RouteProp<RootStackParamList, 'ToDo'>;
 type navProp = StackNavigationProp<RootStackParamList, 'ToDo'>;
@@ -24,72 +24,126 @@ type ToDoPageProps = {
 };
 export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
   const navigation = useNavigation();
+  const context = useAuth();
+  const userId = context.user?.uid;
+  const db = getFirestore();
 
-  const tasks = [
-    {
-      id: '1',
-      bookTitle: 'Ready Player One',
-      task: 'Read Chapter 1',
-      dueDate: '4/8',
-      taskType: 'read',
-      completed: false,
-      navigateTo: 'BookMain',
-      book: {
-        id: 1,
-        title: 'Ready Player One',
-        author: 'Ernest Cline',
-        description: 'A world at stake. A quest for the ultimate prize. Are you ready? In the year 2045, reality is an ugly place. The only time Wade Watts really feels alive is when he’s jacked into the OASIS, a vast virtual world where most of humanity spends their days. When the eccentric creator of the OASIS dies, he leaves behind a series of fiendish puzzles, based on his obsession with the pop culture of decades past. Whoever is first to solve them will inherit his vast fortune—and control of the OASIS itself. Then Wade cracks the first clue. Suddenly he’s beset by rivals who’ll kill to take this prize. The race is on—and the only way to survive is to win.',
-        picture_link: 'https://m.media-amazon.com/images/M/MV5BY2JiYTNmZTctYTQ1OC00YjU4LWEwMjYtZjkwY2Y5MDI0OTU3XkEyXkFqcGdeQXVyNTI4MzE4MDU@._V1_.jpg',
-        pages: '374',
-        chapter: '1',
-        chapterNumber: '1',
-      }
-    },
-    {
-      id: '2',
-      bookTitle: 'Ready Player One',
-      task: 'Chapter 1 Quiz',
-      dueDate: '4/10',
-      taskType: 'quiz',
-      completed: false,
-      navigateTo: 'BookQuiz',
-      book: {
-        id: 1,
-        title: 'Ready Player One',
-        author: 'Ernest Cline',
-        description: 'Cool book about VR and stuff',
-        picture_link: 'https://m.media-amazon.com/images/M/MV5BY2JiYTNmZTctYTQ1OC00YjU4LWEwMjYtZjkwY2Y5MDI0OTU3XkEyXkFqcGdeQXVyNTI4MzE4MDU@._V1_.jpg',
-        pages: '374',
-        chapter: '1',
-        chapterNumber: '1',
-      }
-    },
-    {
-      id: '3',
-      bookTitle: 'Ready Player One',
-      task: 'Pre-Survey',
-      dueDate: '7/12',
+  const [tasks, setTasks] = useState<{ id: string; bookTitle: string; task: string; dueDate: string; taskType: string; completed: boolean; navigateTo: string; }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function getPreSurveyDueDate(uid: string) {
+    const docRef = doc(db, "users", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const creationDate = docSnap.data().creationDate;
+      const date = new Date(creationDate);
+      const dueDate = moment(date).add(1, 'day').format('M/D');
+      return dueDate;
+    } else {
+      console.log("No such document");
+      return null;
+    }
+  }
+
+  function generateTaskId(uid: string, bookTitle: string, task: string, dueDate: string): string {
+    const rawId = `${uid}_${bookTitle}_${task}_${dueDate}`;
+    const hash = CryptoJS.SHA256(rawId).toString();
+  
+    return hash;
+  }
+
+  async function writePreSurvey(uid: string) {
+    const bookTitle = 'Survey';
+    const task = 'Pre-Survey';
+    const dueDate = await getPreSurveyDueDate(uid);
+  
+    let taskId = '';
+    if(dueDate) {
+      taskId = generateTaskId(uid, bookTitle, task, dueDate);
+    }
+  
+    const docRef = doc(db, "users", uid);
+    const tasksCollection = collection(docRef, 'tasks');
+    const taskDocRef = doc(tasksCollection, taskId);
+  
+    const taskDocSnap = await getDoc(taskDocRef);
+    if (taskDocSnap.exists()) {
+      console.log("Task already exists. Skipping creation.");
+      return;
+    }
+  
+    const presurveyData = {
+      id: taskId,
+      bookTitle,
+      task,
+      dueDate,
       taskType: 'survey',
       completed: false,
       navigateTo: 'PreSurvey',
-    },
-    {
-      id: '4',
-      bookTitle: 'Ready Player One',
-      task: 'Post-Survey',
-      dueDate: '5/1',
-      taskType: 'survey',
-      completed: false,
-      navigateTo: 'PostSurvey',
-    },
-    // Add more tasks
-  ];
+    };
+  
+    await setDoc(taskDocRef, presurveyData);
+    console.log("Pre-Survey task created with ID:", taskId);
+  }
+
+  type Task = {
+    id: string;
+    bookTitle: string;
+    task: string;
+    dueDate: string;
+    taskType: string;
+    completed: boolean;
+    navigateTo: string;
+  };
+  
+  async function getTasks(uid: string) {
+    const docRef = doc(db, "users", uid);
+    const tasksCollection = collection(docRef, 'tasks');
+  
+    try {
+      const querySnapshot = await getDocs(tasksCollection);
+      const fetchedTasks: Task[] = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Task[];
+  
+      const incompleteTasks = fetchedTasks.filter(task => !task.completed);
+      
+      setTasks(incompleteTasks);
+      console.log("Tasks refreshed");
+    } catch (error) {
+      console.error("Error fetching tasks: ", error);
+    }
+  }
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        if (userId) {
+          await writePreSurvey(userId);
+          await getTasks(userId);
+        }
+        setLoading(false);
+      };
+  
+      fetchData();
+    }, [userId])
+  );  
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.scrollView}>
+        <Text style={styles.header}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
   const sections = tasks.reduce((acc, task) => {
     const dueDate = moment(task.dueDate, 'M/D').format('MMMM D');
     const category = task.completed ? 'Completed' : dueDate;
 
     if (!acc[category]) {
-      acc[category] = {title: category, data: []};
+      acc[category] = { title: category, data: [] };
     }
     acc[category].data.push(task);
     return acc;
@@ -107,10 +161,6 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       data: sections[key].data,
     }));
 
-
-  const context = useAuth();
-  const userId = context.user?.uid;
-  console.log("User Id  for ToDoPage: ", userId); 
   return (
     <SafeAreaView
       style={styles.scrollView}
@@ -129,13 +179,15 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
             taskType={item.taskType}
             onPress={() => {
               if (item.navigateTo) {
-                // Handle optional navigation with error checking
                 const targetScreen = item.navigateTo;
-                if (targetScreen == 'BookMain' || targetScreen == 'BookQuiz') {
-                  navigation.navigate(targetScreen, {book: item.book, chapter: item.book.chapter});
-                } else if(targetScreen == 'PreSurvey' || targetScreen == 'PostSurvey') {
-                  navigation.navigate(targetScreen);
-                } else {
+                const taskType = item.taskType;
+                try {
+                  if (taskType != 'survey') {
+                    props.navigation.navigate(targetScreen, {book: item.book, chapter: item.book.chapter});
+                  } else {
+                    props.navigation.navigate(targetScreen, {surveyId: item.id});
+                  }
+                } catch (error) {
                   console.warn(`Navigation target "${item.navigateTo}" not found.`);
                 }
               }

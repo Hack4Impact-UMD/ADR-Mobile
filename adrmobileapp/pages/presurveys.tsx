@@ -9,16 +9,19 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 import {RouteProp} from '@react-navigation/native';
+import { useAuth } from '../components/AuthProvider';
 
+type routeProp = RouteProp<RootStackParamList, 'PreSurvey'>;
+type navProp = StackNavigationProp<RootStackParamList, 'PreSurvey'>;
 
-type PreSurveyNavigationProp = StackNavigationProp<RootStackParamList, 'PreSurvey'>;
-
+type PreSurveyProps = {
+  route: routeProp;
+  navigation: navProp;
+};
 interface SurveyQuestion {
   question: string;
   options: string[];
 }
-
-interface PreSurveyProps {}
 
 const styles = StyleSheet.create({
   bkg: {
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const PreSurvey: React.FC<PreSurveyProps> = (): React.JSX.Element => {
+export function PreSurvey(props: PreSurveyProps): React.JSX.Element {
   const questionOptions: SurveyQuestion[] = [
     {
       question: 'How often does our family read together?',
@@ -107,6 +110,9 @@ export const PreSurvey: React.FC<PreSurveyProps> = (): React.JSX.Element => {
   const [responses, setResponses] = useState<string[]>(initialResponses);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  const context = useAuth();
+  const userId = context.user?.uid;
+
   const handleResponse = (response: string) => {
     const newResponses = [...responses];
     newResponses[currentQuestionIndex] = response;
@@ -125,9 +131,11 @@ export const PreSurvey: React.FC<PreSurveyProps> = (): React.JSX.Element => {
     }
   };
 
-  const navigation = useNavigation<PreSurveyNavigationProp>();
+  const navigation = useNavigation();
+  const surveyId = props.route.params.surveyId;
+  console.log(surveyId);
 
-  const writeSurvey = () => {
+  const writeSurvey = async () => {
     const firestore = getFirestore();
     const surveyDB = doc(collection(firestore, 'surveys'));
     const questionData = {
@@ -135,14 +143,27 @@ export const PreSurvey: React.FC<PreSurveyProps> = (): React.JSX.Element => {
       questions: questions,
     };
     setDoc(surveyDB, questionData);
-    const responsesCollection = doc(collection(surveyDB, 'responses'));
 
+    const responsesCollection = doc(collection(surveyDB, 'responses'));
     const responseData = {
       answers: responses,
       submittedAt: serverTimestamp(),
+      parentId: userId,
     };
-
     setDoc(responsesCollection, responseData);
+
+    const docRef = doc(firestore, "users", userId, "tasks", surveyId);
+    try {
+      await setDoc(docRef, { completed: true }, { merge: true });
+      console.log("Task marked as complete:", surveyId);
+    } catch (error) {
+      console.error("Error updating task: ", error);
+    }
+  };
+
+  const handlePress = async () => {
+    await writeSurvey();
+    navigation.goBack();
   };
 
   return (
@@ -183,8 +204,10 @@ export const PreSurvey: React.FC<PreSurveyProps> = (): React.JSX.Element => {
               <Text style={styles.navButtonText}>Next</Text>
             </Pressable>
           ) : (
-            <Pressable style={styles.navButton} onPress={writeSurvey}>
-              <Text style={styles.navButtonText}>Submit</Text>
+            <Pressable 
+              style={styles.navButton} 
+              onPress={handlePress}>
+                <Text style={styles.navButtonText}>Submit</Text>
             </Pressable>
           )}
         </View>

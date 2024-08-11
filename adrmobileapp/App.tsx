@@ -101,7 +101,7 @@ export type RootStackParamList = {
   Assignments: undefined;
   LandingScreen: undefined;
   Donate: undefined;
-  PreSurvey: undefined;
+  PreSurvey: {surveyId: string};
   ToDo: undefined;
   UserSettings: undefined;
   UserName: undefined;

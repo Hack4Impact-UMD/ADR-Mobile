@@ -27,9 +27,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
 }) => {
   const theme = useTheme();
   const dueDateMoment = moment(dueDate, 'M/D');
-  const isDueSoon =
-    dueDateMoment.isBefore(moment().add(1, 'days')) &&
-    dueDateMoment.isAfter(moment());
+  const isDueSoon = dueDateMoment.isSameOrBefore(moment().add(1, 'days').endOf('day'));
 
   const cardStyle = isDueSoon ? styles.dueSoon : {};
 

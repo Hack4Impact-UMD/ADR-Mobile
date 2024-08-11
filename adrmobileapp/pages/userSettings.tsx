@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,7 +12,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import Moment from 'moment';
 import { Ionicons } from '@expo/vector-icons';
-import FontLoader from '../components/FontLoader';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 type userSettingsProps = StackNavigationProp<RootStackParamList, 'UserSettings'>;
 
@@ -163,18 +164,82 @@ const styles = StyleSheet.create({
 
 export function UserSettings(props: userSettingsProps): React.JSX.Element {
   const navigation = useNavigation<userSettingsProps>();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userEmail = user?.email
+  const userID = user?.uid
+
 
   Moment.locale('en');
   const today = new Date();
   const subBoxes = [1, 2, 3, 4, 5, 6, 7];
 
+
+  const [userName, setUserName] = useState<string | null>(null);
+  const [schoolDistrict, setSchoolDistrict] = useState<string | null>(null);
+  const [numberOfChildren, setNumberOfChildren] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function getUserNameByUID(userId: string | undefined) {
+      if (!userId) {
+        console.error('User ID is undefined or empty');
+        return;
+      }
+      try {
+        const db = getFirestore();
+        const userDocRef = doc(db, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userName = userDocSnap.data()?.name;
+          setUserName(userName || '');
+          const schoolDistrictId = userDocSnap.data()?.schoolDistrictId;
+          if (schoolDistrictId) {
+            await getSchoolDistrictById(schoolDistrictId);
+          } else {
+            setSchoolDistrict("Unknown");
+          }
+
+          const numChildren = userDocSnap.data()?.numChildren;
+          setNumberOfChildren(numChildren || 0);
+        } else {
+          console.log('No user found with this UID.');
+          setUserName(null);
+        }
+      } catch (error) {
+        console.error('Error retrieving user name:', error);
+        setUserName(null);
+      }
+    }
+
+    async function getSchoolDistrictById(userID: string) {
+      try {
+        const db = getFirestore();
+        const districtName = userID
+        setSchoolDistrict(districtName || 'Unknown');
+        
+      } catch (error) {
+        console.error('Error retrieving school district:', error);
+        setSchoolDistrict("Unknown");
+      }
+    }
+
+    if (userID) {
+      getUserNameByUID(userID);
+    }
+  }, [userID]);
+
+  
+
+  // userID
+  // getUserNameByUID(userID)
   const subBoxContents = [
-    { title: "Name", subtitle: "Jane Doe", screen: "UserName" },
-    { title: "Email", subtitle: "jane.doe@gmail.com", screen: "UserEmail" },
+    { title: "Name", subtitle: userName, screen: "UserName" },
+    { title: "Email", subtitle: userEmail, screen: "UserEmail" },
     { title: "Password", subtitle: "***********", screen: "UserPassword" },
-    { title: "School District", subtitle: "School District Name", screen: "UserDistrict" },
+    { title: "School District", subtitle: schoolDistrict || "Loading...", screen: "UserDistrict" },
     { title: "School", subtitle: "School Name", screen: "UserSchool" },
-    { title: "Number of Children", subtitle: "3", screen: "UserChildren" },
+    { title: "Number of Children", subtitle: numberOfChildren !== null ? numberOfChildren.toString() : "Loading...", screen: "UserChildren" },
   ]; // Array of content for each sub-box
 
   return (

@@ -39,6 +39,7 @@ export function SecondRegistrationScreen(
   const [selectedSchool, setSelectedSchool] = useState('');
   const [showSchoolPicker, setShowSchoolPicker] = useState(false);
   const [numChildren, setNumChildren] = useState('');
+  const [creationDate, setCreationDate] = useState('')
 
   initializeFirebase();
   const firestore = getFirestore();
@@ -53,6 +54,7 @@ export function SecondRegistrationScreen(
         selectedSchool,
         selectedDistrict,
         numChildren,
+        creationDate
       );
       console.log('Document written');
     } catch (e) {

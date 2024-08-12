@@ -73,7 +73,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <FontLoader>
-        <Text style={{fontFamily: 'Chillax', fontSize: 25, marginTop: 120}}>
+        <Text style={{fontFamily: 'Chillax', fontSize: 25, marginTop: 100}}>
           Sign up
         </Text>
         <Image

@@ -238,7 +238,6 @@ export function UserSettings(props: userSettingsProps): React.JSX.Element {
     { title: "Email", subtitle: userEmail, screen: "UserEmail" },
     { title: "Password", subtitle: "***********", screen: "UserPassword" },
     { title: "School District", subtitle: schoolDistrict || "Loading...", screen: "UserDistrict" },
-    { title: "School", subtitle: "School Name", screen: "UserSchool" },
     { title: "Number of Children", subtitle: numberOfChildren !== null ? numberOfChildren.toString() : "Loading...", screen: "UserChildren" },
   ]; // Array of content for each sub-box
 

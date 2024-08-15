@@ -138,7 +138,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
           onPress={() => {
             props.navigation.navigate('BookInfo', {
               book: props.route.params.book,
-              chapter: props.route.params.chapter,
+              chapter: props.route.params.chapter.chapterNum,
             });
           }}>
           <Text style={styles.bookTitle}>{props.route.params.book.title}</Text>
@@ -147,7 +147,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
         {/* Need to replace text with Assignment Description (inputted from the school liaison website) */}
         <View style={styles.chapterInfo}>
           <Text style={styles.chapterText}>
-            Chapter {props.route.params.chapter} Description
+            Chapter {props.route.params.chapter.chapterNum} Description
           </Text>
           <Text style={styles.descriptionText}>
             {props.route.params.book.description}
@@ -168,6 +168,7 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
                 book: props.route.params.book,
                 chapter: props.route.params.chapter,
                 prevScreen: 'BookMain',
+                taskId: props.route.params.taskId,
               });
             }}>
             <View style={[styles.item, styles.shadowProp]}>

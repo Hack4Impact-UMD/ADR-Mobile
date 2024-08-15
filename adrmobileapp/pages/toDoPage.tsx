@@ -12,8 +12,10 @@ import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/nati
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAuth } from '../components/AuthProvider';
-import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore"; 
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore"; 
 import CryptoJS from 'crypto-js';
+import { Book } from '../customTypes';
+import {Chapter} from '../customTypes';
 
 type routeProp = RouteProp<RootStackParamList, 'ToDo'>;
 type navProp = StackNavigationProp<RootStackParamList, 'ToDo'>;
@@ -28,8 +30,20 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
   const userId = context.user?.uid;
   const db = getFirestore();
 
-  const [tasks, setTasks] = useState<{ id: string; bookTitle: string; task: string; dueDate: string; taskType: string; completed: boolean; navigateTo: string; }[]>([]);
+  const [tasks, setTasks] = useState<{ id: string; bookId: string; chapterId : string; dueDate: string; taskType: string; completed: boolean; navigateTo: string; }[]>([]);
   const [loading, setLoading] = useState(true);
+
+  async function getDistrict() {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // return docSnap.data().schoolDistrictId;
+      return '1234567';
+    } else {
+      console.log("No such document");
+      return null;
+    }
+  }
 
   async function getPreSurveyDueDate(uid: string) {
     const docRef = doc(db, "users", uid);
@@ -45,21 +59,19 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     }
   }
 
-  function generateTaskId(uid: string, bookTitle: string, task: string, dueDate: string): string {
-    const rawId = `${uid}_${bookTitle}_${task}_${dueDate}`;
+  function generateTaskId(uid: string, taskType: string, dueDate: string): string {
+    const rawId = `${uid}_${taskType}_${dueDate}`;
     const hash = CryptoJS.SHA256(rawId).toString();
   
     return hash;
   }
 
   async function writePreSurvey(uid: string) {
-    const bookTitle = 'Survey';
-    const task = 'Pre-Survey';
     const dueDate = await getPreSurveyDueDate(uid);
   
     let taskId = '';
     if(dueDate) {
-      taskId = generateTaskId(uid, bookTitle, task, dueDate);
+      taskId = generateTaskId(uid, 'presurvey', dueDate);
     }
   
     const docRef = doc(db, "users", uid);
@@ -74,10 +86,8 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
   
     const presurveyData = {
       id: taskId,
-      bookTitle,
-      task,
       dueDate,
-      taskType: 'survey',
+      taskType: 'presurvey',
       completed: false,
       navigateTo: 'PreSurvey',
     };
@@ -86,15 +96,108 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     console.log("Pre-Survey task created with ID:", taskId);
   }
 
+  async function getReadingSchedule() {
+    const districtId = await getDistrict();
+
+    const collectionRef = collection(db, 'readingSchedules');
+    const q = query(collectionRef, where('schoolDistrictId', '==', districtId));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (readingScheduleItem) => {
+      const taskId = generateTaskId(userId, 'presurvey', readingScheduleItem.data().dueDate);
+
+      const userRef = doc(db, "users", userId);
+      const tasksCollection = collection(userRef, 'tasks');
+      const taskDocRef = doc(tasksCollection, taskId);
+      const taskDocSnap = await getDoc(taskDocRef);
+
+      if (taskDocSnap.exists()) {
+        console.log("Task already exists. Skipping creation.");
+      } else {
+        const taskData = {
+          id: taskId,
+          bookId: readingScheduleItem.data().bookId,
+          chapterId: readingScheduleItem.data().chapterId,
+          dueDate: readingScheduleItem.data().dueDate,
+          taskType: 'read',
+          completed: false,
+          navigateTo: 'BookMain',
+        };
+        await setDoc(taskDocRef, taskData);
+        console.log("Reading task created with ID:", taskId);
+      }
+    
+
+      const quizTaskId = generateTaskId(userId, 'quiz', readingScheduleItem.data().dueDate);
+      const quizTaskDocRef = doc(tasksCollection, quizTaskId);
+      const quizTaskDocSnap = await getDoc(quizTaskDocRef);
+
+      if (quizTaskDocSnap.exists()) {
+        console.log("Quiz task already exists. Skipping creation.");
+      } else {
+        const quizTaskData = {
+          id: quizTaskId,
+          bookId: readingScheduleItem.data().bookId,
+          chapterId: readingScheduleItem.data().chapterId,
+          dueDate: readingScheduleItem.data().dueDate,
+          taskType: 'quiz',
+          completed: false,
+          navigateTo: 'BookQuiz',
+        };
+        await setDoc(quizTaskDocRef, quizTaskData);
+        console.log("Quiz task created with ID:", quizTaskId);
+      }
+    });
+  }
+
   type Task = {
     id: string;
-    bookTitle: string;
-    task: string;
+    bookId: string;
+    chapterId: string;
     dueDate: string;
     taskType: string;
     completed: boolean;
     navigateTo: string;
   };
+
+  async function getBook(bookId:string) {
+    const docRef = doc(db, "books", bookId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const bookData = docSnap.data();
+      const book: Book = {
+        title: bookData.title,
+        author: bookData.author,
+        info: '',
+        pages: 0,
+        isbn: '111',
+        picture_link: bookData.imageUrl,
+        description: bookData.description
+      };
+      return book;
+    } else {
+      console.log("No such book");
+      return undefined;
+    }
+  }
+
+  async function getChapter(bookId:string, chapterId:string) {
+    const docRef = doc(db, "books", bookId, "Chapters", chapterId);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const chapterData = docSnap.data();
+
+      const chapter: Chapter = {
+        chapterNum: chapterData.chapterNumber,
+        questions: chapterData.questions,
+      };
+      return chapter;
+    } else {
+      console.log("No such chapter");
+      return undefined;
+    }
+  }
   
   async function getTasks(uid: string) {
     const docRef = doc(db, "users", uid);
@@ -108,8 +211,21 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       })) as Task[];
   
       const incompleteTasks = fetchedTasks.filter(task => !task.completed);
-      
-      setTasks(incompleteTasks);
+
+      const tasksWithTitles = await Promise.all(incompleteTasks.map(async (task) => {
+        if(!task.taskType.includes('survey')) {
+          const book = await getBook(task.bookId);
+          const chapter = await getChapter(task.bookId, task.chapterId);
+          return {
+            ...task,
+            book: book,
+            chapter: chapter 
+          };
+      } else {
+        return task;
+      }
+    }));
+      setTasks(tasksWithTitles);
       console.log("Tasks refreshed");
     } catch (error) {
       console.error("Error fetching tasks: ", error);
@@ -120,15 +236,18 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     React.useCallback(() => {
       const fetchData = async () => {
         if (userId) {
-          await writePreSurvey(userId);
-          await getTasks(userId);
+          await Promise.all([
+            writePreSurvey(userId),
+            getReadingSchedule(),
+            getTasks(userId)
+          ]);
         }
         setLoading(false);
       };
   
       fetchData();
     }, [userId])
-  );  
+  );
 
   if (loading) {
     return (
@@ -172,7 +291,8 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <ScheduleItem
-            bookTitle={item.bookTitle}
+            bookTitle={item.book?.title}
+            chapterNumber={item.chapter?.chapterNum}
             task={item.task}
             dueDate={item.dueDate}
             completed={item.completed}
@@ -182,9 +302,10 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
                 const targetScreen = item.navigateTo;
                 const taskType = item.taskType;
                 try {
-                  if (taskType != 'survey') {
-                    props.navigation.navigate(targetScreen, {book: item.book, chapter: item.book.chapter});
+                  if (taskType != 'presurvey' && taskType != 'postsurvey') {
+                    props.navigation.navigate(targetScreen, {book: item.book, chapter: item.chapter, taskId: item.id});
                   } else {
+                    console.log('nav');
                     props.navigation.navigate(targetScreen, {surveyId: item.id});
                   }
                 } catch (error) {

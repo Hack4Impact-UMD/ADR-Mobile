@@ -10,6 +10,7 @@ import {AntDesign} from '@expo/vector-icons';
 
 interface ScheduleItemProps {
   bookTitle: string;
+  chapterNumber: string;
   task: string;
   dueDate: string;
   completed: boolean;
@@ -19,9 +20,8 @@ interface ScheduleItemProps {
 
 const ScheduleItem: React.FC<ScheduleItemProps> = ({
   bookTitle,
-  task,
+  chapterNumber,
   dueDate,
-  completed,
   taskType,
   onPress,
 }) => {
@@ -48,19 +48,21 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
     <Card style={[styles.card, cardStyle]}>
       <Card.Content style={styles.cardContent}>
         <View style={[styles.textContainer, {width: '16%'}]}>{iconButton}</View>
-        <View style={[styles.textContainer, {width: '55%'}]}>
-          <RNText style={[styles.bookTitle, {color: textColor}]}>
-            {bookTitle}
+        <View style={[styles.textContainer, {width: '50%'}]}>
+        <RNText style={[styles.bookTitle, {color: textColor}]}>
+          {taskType.toLowerCase().includes("survey") ? "Survey" : bookTitle}
+        </RNText>
+          <RNText style={[styles.task, {color: textColor}]}>
+            {taskType.toLowerCase().includes("survey") ? taskType.charAt(0).toUpperCase() + taskType.slice(1) : taskType.charAt(0).toUpperCase() + taskType.slice(1) + ": Chapter " + chapterNumber}
           </RNText>
-          <RNText style={[styles.task, {color: textColor}]}>{task}</RNText>
         </View>
-        <View style={[styles.textContainer, {width: '15%'}]}>
+        <View style={[styles.textContainer, {width: '20%'}]}>
           <RNText style={[styles.dueDate, {color: textColor}]}>{'Due'}</RNText>
           <RNText style={[styles.dueDate, {color: textColor}]}>
             {dueDate}
           </RNText>
         </View>
-        <View style={[styles.cardContent, {width: '14%'}]}>
+        <View style={[styles.cardContent, {width: '15%'}]}>
           {isDueSoon && <Ionicons name="alarm" size={24} color="white" />}
           {isDueSoon ? (
             <AntDesign name="right" size={24} color={textColor} />
@@ -78,7 +80,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    width: 350,
+    width: 370,
     marginVertical: 6,
     flexDirection: 'row',
     alignItems: 'center',
@@ -100,6 +102,7 @@ const styles = StyleSheet.create({
   dueDate: {
     fontSize: 18,
     fontFamily: 'KarlaBold',
+    flexShrink: 1,
   },
   task: {
     fontSize: 20,

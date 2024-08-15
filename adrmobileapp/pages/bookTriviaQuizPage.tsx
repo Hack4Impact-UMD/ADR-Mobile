@@ -17,7 +17,10 @@ import {
   collection,
   getDocs,
   doc,
+  setDoc,
+  where,
 } from 'firebase/firestore';
+import { useAuth } from '../components/AuthProvider';
 
 type routeProp = RouteProp<RootStackParamList, 'BookQuiz'>;
 type navProp = StackNavigationProp<RootStackParamList, 'BookQuiz'>;
@@ -124,14 +127,17 @@ const styles = StyleSheet.create({
 export function BookTriviaQuizPage(
   props: BookTriviaQuizPageProps,
 ): React.JSX.Element {
-  let key = 'question';
+  const key = `question_${props.route.params.book.title}_${props.route.params.chapter.chapterNum}`;
   const [question, setQuestion] = useState(0);
   const [questionSet, setQuestionSet] = useState({});
+  const context = useAuth();
+  const userId = context.user.uid;
+  const firestore = getFirestore();
 
   const saveData = async () => {
     try {
       await AsyncStorage.setItem(key, question.toString());
-      console.log('Question successfully saved to storage: ' + question);
+      // console.log('Question successfully saved to storage: ' + question);
     } catch (e) {
       console.log('Failed to save the question to the storage');
     }
@@ -144,20 +150,20 @@ export function BookTriviaQuizPage(
         props.route.params.question != null
       ) {
         await AsyncStorage.setItem(key, props.route.params.question.toString());
-        console.log(
-          'Question in storage is set to: ' + props.route.params.question,
-        );
+        // console.log(
+        //   'Question in storage is set to: ' + props.route.params.question,
+        // );
 
         const value = await AsyncStorage.getItem(key);
         if (value !== null) {
           setQuestion(parseInt(value));
-          console.log('Question state is set to ' + value);
+          // console.log('Question state is set to ' + value);
         }
       } else if (props.route.params.prevScreen == 'BookMain') {
         const value = await AsyncStorage.getItem(key);
         if (value !== null) {
           setQuestion(parseInt(value));
-          console.log('Question state is set to ' + value);
+          // console.log('Question state is set to ' + value);
         } else {
           console.log('Value was null');
         }
@@ -169,13 +175,14 @@ export function BookTriviaQuizPage(
 
   const clearStorage = async () => {
     try {
-      await AsyncStorage.clear();
+      await AsyncStorage.removeItem(key);  // Use removeItem to clear specific key
       setQuestion(0);
       console.log('Storage successfully cleared!');
-      props.navigation.navigate('BookMain', {
-        book: props.route.params.book,
-        chapter: props.route.params.chapter,
-      });
+      // props.navigation.navigate('BookMain', {
+      //   book: props.route.params.book,
+      //   chapter: props.route.params.chapter,
+      // });
+      navigation.goBack();
     } catch (e) {
       console.log('Failed to clear the async storage.');
     }
@@ -184,7 +191,7 @@ export function BookTriviaQuizPage(
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log('Called screen');
+    // console.log('Called screen');
     if (isFocused) {
       readData();
     }
@@ -194,17 +201,18 @@ export function BookTriviaQuizPage(
 
   useEffect(() => {
     async function getQuestionSet() {
-      const questionIDs = props.route.params.book.chapter.questionIds;
-      var counter: number = 1;
-      questionIDs.map(async id => {
-        var docRef = doc(getFirestore(), 'questions', id);
-        var docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          questions[counter] = docSnap.data()['text'];
-          counter += 1;
-          setQuestionSet({...questions});
-        }
-      });
+      // const questionIDs = props.route.params.book.chapter.questionIds;
+      // var counter: number = 1;
+      // questionIDs.map(async id => {
+      //   var docRef = doc(getFirestore(), 'questions', id);
+      //   var docSnap = await getDoc(docRef);
+      //   if (docSnap.exists()) {
+      //     questions[counter] = docSnap.data()['text'];
+      //     counter += 1;
+      //     setQuestionSet({...questions});
+      //   }
+      // });
+      setQuestionSet(props.route.params.chapter.questions);
     }
     getQuestionSet();
   }, []);
@@ -223,9 +231,70 @@ export function BookTriviaQuizPage(
   ) {
     progressPercentage = 0;
   }
-  console.log(props.route.params.chapter)
+  // console.log(props.route.params.chapter)
   
   const navigation = useNavigation();
+
+
+  async function submitFromQuiz() {
+    const taskId = props.route.params.taskId;
+    const docRef = doc(firestore, "users", userId, "tasks", taskId);
+    try {
+      await setDoc(docRef, { completed: true }, { merge: true });
+      console.log("Quiz marked as complete:", taskId);
+      
+      // Fetch the corresponding reading assignment
+      const taskRef = doc(firestore, "users", userId, "tasks", taskId);
+      const docSnap = await getDoc(taskRef);
+      if(docSnap.exists()) {
+        const bookId = docSnap.data().bookId;
+        const chapterId = docSnap.data().chapterId;
+
+        // Fetch the corresponding reading assignment
+        const tasksRef2 = collection(firestore, "users", userId, "tasks");
+        const q = query(tasksRef2, where("taskType", "==", "read"), where("bookId", "==", bookId), where("chapterId", "==", chapterId));
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach(async (doc) => {
+          // Update each reading assignment to mark it as complete
+          const readDocRef = doc.ref;
+          await setDoc(readDocRef, { completed: true }, { merge: true });
+          console.log("Reading assignment marked as complete:", readDocRef.id);
+        });
+      }
+    } catch (error) {
+      console.error("Error updating task: ", error);
+    }
+  }
+
+  async function submitFromReading() {
+    const taskId = props.route.params.taskId;
+    const docRef = doc(firestore, "users", userId, "tasks", taskId);
+    try {
+      await setDoc(docRef, { completed: true }, { merge: true });
+      console.log("Reading marked as complete:", taskId);
+      
+      // Fetch the corresponding Quiz assignment
+      const taskRef = doc(firestore, "users", userId, "tasks", taskId);
+      const docSnap = await getDoc(taskRef);
+      if(docSnap.exists()) {
+        const bookId = docSnap.data().bookId;
+        const chapterId = docSnap.data().chapterId;
+
+        const tasksRef2 = collection(firestore, "users", userId, "tasks");
+        const q = query(tasksRef2, where("taskType", "==", "quiz"), where("bookId", "==", bookId), where("chapterId", "==", chapterId));
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach(async (doc) => {
+          const readDocRef = doc.ref;
+          await setDoc(readDocRef, { completed: true }, { merge: true });
+          console.log("Quiz assignment marked as complete:", readDocRef.id);
+        });
+      }
+    } catch (error) {
+      console.error("Error updating task: ", error);
+    }
+  }
 
   return (
     <View style={styles.bkg}>
@@ -238,7 +307,7 @@ export function BookTriviaQuizPage(
           {props.route.params.book.title}
         </Text>
         <Text style={styles.subTitle}>
-          Chapter {props.route.params.chapter} Quiz
+          Chapter {props.route.params.chapter.chapterNum} Quiz
         </Text>
       </View>
       <Pressable
@@ -277,7 +346,7 @@ export function BookTriviaQuizPage(
             styles.btn,
             {backgroundColor: '#0071BA'},
           ]}
-          onPress={() => {
+          onPress={async () => {
             if (progressPercentage < 1) {
               if (question != undefined) {
                 props.navigation.navigate('BookQuizQuestions', {
@@ -285,6 +354,7 @@ export function BookTriviaQuizPage(
                   question: question,
                   questionSet: questionSet,
                   chapter: props.route.params.chapter,
+                  taskId: props.route.params.taskId,
                 });
               } else {
                 props.navigation.navigate('BookQuizQuestions', {
@@ -292,10 +362,25 @@ export function BookTriviaQuizPage(
                   question: 1,
                   questionSet: questionSet,
                   chapter: props.route.params.chapter,
+                  taskId: props.route.params.taskId,
                 });
               }
             } else {
-              // Backend to submit the quiz
+              const taskId = props.route.params.taskId;
+              const docRef = doc(firestore, "users", userId, "tasks", taskId);
+              const docSnap = await getDoc(docRef);
+              if(docSnap.exists()) {
+                const taskType = docSnap.data().taskType;
+
+                if(taskType === "quiz") {
+                  console.log('called')
+                  submitFromQuiz();
+                } else {
+                  console.log('called2')
+                  submitFromReading();
+                }
+              }
+              navigation.goBack();
             }
           }}>
           <Text

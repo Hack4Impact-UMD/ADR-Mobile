@@ -7,3 +7,8 @@ export type Book = {
   picture_link: string;
   description: string;
 };
+
+export type Chapter = {
+  chapterNum: number;
+  questions: string[];
+}

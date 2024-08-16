@@ -407,7 +407,7 @@ export function BookTriviaQuizPage(
           </Text>
         </Pressable>
 
-        <Pressable
+        {/* <Pressable
           style={[styles.clearBtn]}
           onPress={() => {
             clearStorage();
@@ -421,7 +421,7 @@ export function BookTriviaQuizPage(
             }}>
             Clear Storage
           </Text>
-        </Pressable>
+        </Pressable> */}
       </View>
       </FontLoader>
     </View>

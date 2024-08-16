@@ -97,6 +97,53 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     console.log("Pre-Survey task created with ID:", taskId);
   }
 
+  async function writePostSurvey(uid: string) {
+    const districtId = await getDistrict();
+  
+    const collectionRef = collection(db, 'readingSchedules');
+    const q = query(collectionRef, where('schoolDistrictId', '==', districtId));
+    const querySnapshot = await getDocs(q);
+  
+    let dueDate = '';
+    querySnapshot.forEach((readingScheduleItem) => {
+      const readingPeriod = readingScheduleItem.data().readingPeriod;
+      
+      
+      if (readingPeriod.includes("fall")) {
+        dueDate = '12/15';
+      } else if (readingPeriod.includes("spring")) {
+        dueDate = '6/1';
+      }
+    });
+    if (!dueDate) {
+      console.log("No valid reading period found. Skipping task creation.");
+      return;
+    }
+  
+    const taskId = generateTaskId(uid, 'postsurvey', dueDate);
+    const docRef = doc(db, "users", uid);
+    const tasksCollection = collection(docRef, 'tasks');
+    const taskDocRef = doc(tasksCollection, taskId);
+  
+    const taskDocSnap = await getDoc(taskDocRef);
+    if (taskDocSnap.exists()) {
+      console.log("Task already exists. Skipping creation.");
+      return;
+    }
+  
+    const postSurveyData = {
+      id: taskId,
+      dueDate,
+      taskType: 'postsurvey',
+      completed: false,
+      navigateTo: 'PostSurvey',
+    };
+  
+    await setDoc(taskDocRef, postSurveyData);
+    console.log("Post-Survey task created with ID:", taskId);
+  }
+  
+
   async function getReadingSchedule() {
     const districtId = await getDistrict();
 
@@ -159,6 +206,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     taskType: string;
     completed: boolean;
     navigateTo: string;
+    readingURL?: string;
   };
 
   async function getBook(bookId:string) {
@@ -174,7 +222,8 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
         pages: 0,
         isbn: '',
         picture_link: bookData.imageUrl,
-        description: bookData.description
+        description: bookData.description,
+        bookId: bookId
       };
       return book;
     } else {
@@ -249,10 +298,23 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     }
   }
 
-  
+  async function fetchReadingURL(scheduleId: string): Promise<string> {
+    const docRef = doc(db, "readingSchedules", scheduleId);
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        return data?.url || "";
+      } else {
+        console.log("No such document");
+        return "";
+      }
+    } catch (error) {
+      console.error('Error fetching document:', error);
+      return "";
+    }
+  }  
 
-
-  
   async function getTasks(uid: string) {
     const docRef = doc(db, "users", uid);
     const tasksCollection = collection(docRef, 'tasks');
@@ -270,12 +332,14 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
         if (!task.taskType.includes('survey')) {
           const book = await getBook(task.bookId);
           const chapter = await getChapter(task.bookId, task.chapterId);
+          const readingURL = await fetchReadingURL(task.id);
   
           if (book && chapter) {
             return {
               ...task,
               book: book,
-              chapter: chapter 
+              chapter: chapter,
+              readingURL: readingURL,
             };
           } else {
             return null;
@@ -301,6 +365,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
         if (userId) {
           await Promise.all([
             writePreSurvey(userId),
+            writePostSurvey(userId),
             getReadingSchedule(),
             getTasks(userId)
           ]);
@@ -375,7 +440,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
                 const taskType = item.taskType;
                 try {
                   if (taskType != 'presurvey' && taskType != 'postsurvey') {
-                    props.navigation.navigate(targetScreen, {book: item.book, chapter: item.chapter, taskId: item.id});
+                    props.navigation.navigate(targetScreen, {book: item.book, chapter: item.chapter, taskId: item.id, readingURL: item.readingURL});
                   } else {
                     console.log('nav');
                     props.navigation.navigate(targetScreen, {surveyId: item.id});

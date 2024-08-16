@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Chillax',
     fontSize: 28,
     marginTop: '6%',
-    marginLeft: '30%',
+    marginLeft: '28%',
     marginRight: '5%',
     color: '#000000',
   },
@@ -227,7 +227,7 @@ export function PostSurvey(props: PostSurveyProps): React.JSX.Element {
         </Pressable>
 
         <View>
-          <Text style={styles.bookTitle}>Pre-Survey</Text>
+          <Text style={styles.bookTitle}>Post-Survey</Text>
         </View>
         <Pressable
           style={styles.arrow}

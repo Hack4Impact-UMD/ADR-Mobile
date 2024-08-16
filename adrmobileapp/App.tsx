@@ -95,7 +95,7 @@ export type RootStackParamList = {
   HomeScreen: undefined;
   RegistrationScreen: undefined;
   SecondRegistrationScreen: {name: string; email: string};
-  BookMain: {book: Book; chapter: Chapter; taskId: string;};
+  BookMain: {book: Book; chapter: Chapter; readingURL: string; taskId: string;};
   BookQuiz: {book: Book; question?: number; prevScreen?: string; chapter: Chapter; taskId: string;};
   BookQuizQuestions: {book: Book; question: number; questionSet: any; answerSet: any; chapter: Chapter; taskId: string;};
   BookInfo: {book: Book, chapter: number};

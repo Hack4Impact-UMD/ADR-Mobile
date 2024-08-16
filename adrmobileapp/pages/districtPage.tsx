@@ -13,7 +13,7 @@ import {Picker} from '@react-native-picker/picker';
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
 export function UserDistrict(props: userSettingsProps): React.JSX.Element {
   const navigation = useNavigation<userSettingsProps>();
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [districts, setDistricts] = useState<string[]>([]);
 
   const fetchCurrentDistrict = useCallback(async () => {
     const auth = getAuth();
@@ -122,8 +123,21 @@ export function UserDistrict(props: userSettingsProps): React.JSX.Element {
     }
   }, []);
 
+  const db = getFirestore();
+  async function getDistricts() {
+    try {
+      const districtsCollection = collection(db, 'schoolDistrictIds');
+      const districtSnapshot = await getDocs(districtsCollection);
+      const districtsArray: string[] = districtSnapshot.docs.map(doc => doc.id);
+      setDistricts(districtsArray);
+    } catch (error) {
+      console.error('Error fetching districts:', error);
+    }
+  }
+
   useEffect(() => {
     fetchCurrentDistrict();
+    getDistricts();
   }, [fetchCurrentDistrict]);
 
   async function handleUpdateDistrict() {
@@ -169,10 +183,9 @@ export function UserDistrict(props: userSettingsProps): React.JSX.Element {
           selectedValue={selectedDistrict}
           onValueChange={(itemValue) => setSelectedDistrict(itemValue)}
         >
-          <Picker.Item label="Select a district" value="" />
-          <Picker.Item label="District 1" value="District 1" />
-          <Picker.Item label="District 2" value="District 2" />
-          <Picker.Item label="District 3" value="District 3" />
+          {districts.map((district, index) => (
+                  <Picker.Item key={index} label={district} value={district} />
+                ))}
         </Picker>
         <TouchableOpacity style={styles.buttonContainer} onPress={handleUpdateDistrict}>
           <Text style={styles.buttonText}>Update District</Text>

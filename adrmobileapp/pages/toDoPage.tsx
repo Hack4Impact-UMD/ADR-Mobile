@@ -183,16 +183,64 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     }
   }
 
+  async function getSelectedQuestions(chapterId: string): Promise<string[]> {
+    const districtId = await getDistrict();
+  
+    const collectionRef = collection(db, 'readingSchedules');
+    const q = query(
+      collectionRef,
+      where("chapterId", "==", chapterId),
+      where("schoolDistrictId", "==", districtId)
+    );
+    const querySnapshot = await getDocs(q);
+  
+    const selectedQuestions: string[] = [];
+    querySnapshot.forEach((doc) => {
+      const questions = doc.data()["selectedQuestions"] as string[];
+      if (questions && Array.isArray(questions)) {
+        selectedQuestions.push(...questions);
+      }
+    });
+  
+    return selectedQuestions;
+  }
+
+  async function getSelectedAnswers(chapterId: string): Promise<string[]> {
+    const districtId = await getDistrict();
+  
+    const collectionRef = collection(db, 'readingSchedules');
+    const q = query(collectionRef, where("chapterId", "==", chapterId),
+    where("schoolDistrictId", "==", districtId));
+    const querySnapshot = await getDocs(q);
+  
+    const selectedAnswers: string[] = [];
+    querySnapshot.forEach((doc) => {
+      const answers = doc.data()["selectedAnswers"] as string[];
+      if (answers && Array.isArray(answers)) {
+        selectedAnswers.push(...answers);
+      }
+    });
+  
+    return selectedAnswers;
+  }
+
   async function getChapter(bookId:string, chapterId:string) {
     const docRef = doc(db, "books", bookId, "Chapters", chapterId);
+    //console.log(getSelectedQuestions(chapterId))
+    const questionsSelected = await getSelectedQuestions(chapterId);
+    //console.log("questions,",questionsSelected)
+    //const answersSelected = getSelectedAnswers(chapterId);
+    const answersSelected = await getSelectedAnswers(chapterId);
+    //console.log("answers", answersSelected)
+    
     const docSnap = await getDoc(docRef);
     if(docSnap.exists()) {
       const chapterData = docSnap.data();
-
+      console.log("chapter data", chapterData)
       const chapter: Chapter = {
         chapterNum: chapterData.chapterNumber,
-        questions: chapterData.questions,
-        answers: chapterData.answers,
+        questions: questionsSelected,
+        answers: answersSelected,
       };
       return chapter;
     } else {
@@ -200,6 +248,10 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       return undefined;
     }
   }
+
+  
+
+
   
   async function getTasks(uid: string) {
     const docRef = doc(db, "users", uid);

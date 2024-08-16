@@ -32,12 +32,14 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
 
   const [tasks, setTasks] = useState<{ id: string; bookId: string; chapterId : string; dueDate: string; taskType: string; completed: boolean; navigateTo: string; }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [frontendLoading, setFrontendLoading] = useState(true);
 
   async function getDistrict() {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return docSnap.data().schoolDistrictId;
+
     } else {
       console.log("No such document");
       return null;
@@ -170,7 +172,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
         author: bookData.author,
         info: '',
         pages: 0,
-        isbn: '111',
+        isbn: '',
         picture_link: bookData.imageUrl,
         description: bookData.description
       };
@@ -211,21 +213,29 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       })) as Task[];
   
       const incompleteTasks = fetchedTasks.filter(task => !task.completed);
-
+  
       const tasksWithTitles = await Promise.all(incompleteTasks.map(async (task) => {
-        if(!task.taskType.includes('survey')) {
+        if (!task.taskType.includes('survey')) {
           const book = await getBook(task.bookId);
           const chapter = await getChapter(task.bookId, task.chapterId);
-          return {
-            ...task,
-            book: book,
-            chapter: chapter 
-          };
-      } else {
-        return task;
-      }
-    }));
-      setTasks(tasksWithTitles);
+  
+          if (book && chapter) {
+            return {
+              ...task,
+              book: book,
+              chapter: chapter 
+            };
+          } else {
+            return null;
+          }
+        } else {
+          return task;
+        }
+      }));
+
+      const filteredTasks = tasksWithTitles.filter(task => task !== null);
+  
+      setTasks(filteredTasks as Task[]);
       console.log("Tasks refreshed");
     } catch (error) {
       console.error("Error fetching tasks: ", error);
@@ -235,6 +245,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
+        setLoading(true);
         if (userId) {
           await Promise.all([
             writePreSurvey(userId),
@@ -249,7 +260,16 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     }, [userId])
   );
 
-  if (loading) {
+  useEffect(() => {
+    if (!loading) {
+      // Simulate frontend tasks
+      setTimeout(() => {
+        setFrontendLoading(false);
+      }, 1000); // Adjust the timeout as needed
+    }
+  }, [loading]);
+
+  if (loading || frontendLoading) {
     return (
       <SafeAreaView style={styles.scrollView}>
         <Text style={styles.header}>Loading...</Text>

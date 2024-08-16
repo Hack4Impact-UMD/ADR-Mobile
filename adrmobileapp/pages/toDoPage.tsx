@@ -98,7 +98,6 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
   }
 
   async function writePostSurvey(uid: string) {
-    // Get the reading schedule and determine the due date based on the period
     const districtId = await getDistrict();
   
     const collectionRef = collection(db, 'readingSchedules');
@@ -107,9 +106,9 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
   
     let dueDate = '';
     querySnapshot.forEach((readingScheduleItem) => {
-      const readingPeriod = readingScheduleItem.data().readingPeriod; // Assuming this field exists
+      const readingPeriod = readingScheduleItem.data().readingPeriod;
       
-      // Determine due date based on reading period
+      
       if (readingPeriod.includes("fall")) {
         dueDate = '12/15';
       } else if (readingPeriod.includes("spring")) {

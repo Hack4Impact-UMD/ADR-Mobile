@@ -199,7 +199,7 @@ export function BookTriviaQuizQuestions(
         taskId: props.route.params.taskId,
         readingTime,
         timestamp: new Date(),
-        userType: SurveyType.ChapterQuiz,
+        surveyType: SurveyType.ChapterQuiz,
       });
       console.log('Document written successfully');
     } catch (e) {

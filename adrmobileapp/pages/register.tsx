@@ -76,7 +76,6 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
       const districtsCollection = collection(firestore, 'schoolDistrictIds');
       const districtSnapshot = await getDocs(districtsCollection);
       const districtsArray: string[] = districtSnapshot.docs.map(doc => doc.id);
-      console.log('Districts:', districtsArray);
       setDistricts(districtsArray);
     } catch (error) {
       console.error('Error fetching districts:', error);

@@ -6,6 +6,7 @@ export type Book = {
   isbn: string;
   picture_link: string;
   description: string;
+  bookId: string;
 };
 
 export type Chapter = {

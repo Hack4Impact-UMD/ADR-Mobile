@@ -24,6 +24,7 @@ import {
   collection,
   getDocs,
   doc,
+  where,
 } from 'firebase/firestore';
 
 type routeProp = RouteProp<RootStackParamList, 'BookMain'>;
@@ -112,11 +113,28 @@ const styles = StyleSheet.create({
     top: 50,
     zIndex: 1,
   },
+  itemDisabled: {
+    backgroundColor: '#E0E0E0',
+  },
+  iconTextDisabled: {
+    color: '#9E9E9E',
+  },
+  iconDisabled: {
+    color: '#9E9E9E',
+  },
+  iconEnabled: {
+    color: '#0071BA',
+  },
 });
+
+
 
 export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
   var iconSize = 50;
   const navigation = useNavigation();
+  //const bookID = props.route.params.book.bookId;
+  //const url = fetchReadingURL(bookID);
+  const { book, chapter, taskId, readingURL } = props.route.params;
 
   return (
     <View style={styles.bkg}>
@@ -155,10 +173,22 @@ export function BookMainPage(props: BookMainPageProps): React.JSX.Element {
         </View>
 
         <View style={styles.container}>
-          <TouchableOpacity>
-            <View style={[styles.item, styles.shadowProp]}>
-              <SoundIcon width={iconSize} height={iconSize} color="#0071BA" />
-              <Text style={styles.iconText}>audio</Text>
+          <TouchableOpacity
+            onPress={() => {
+              if (readingURL) {
+                // Handle audio button press
+                console.log('Audio button pressed');
+              }
+            }}
+            disabled={!readingURL} // Disable button if readingURL is not available
+          >
+            <View style={[styles.item, styles.shadowProp, !readingURL && styles.itemDisabled]}>
+              <SoundIcon
+                width={50}
+                height={50}
+                color={readingURL ? styles.iconEnabled.color : styles.iconDisabled.color} // Conditionally set icon color
+              />
+              <Text style={[styles.iconText, !readingURL && styles.iconTextDisabled]}>audio</Text>
             </View>
           </TouchableOpacity>
 

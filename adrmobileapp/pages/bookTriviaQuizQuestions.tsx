@@ -9,6 +9,7 @@ import FontLoader from '../components/FontLoader';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { addDoc, collection, doc, getFirestore } from 'firebase/firestore';
 import { SurveyType } from '../types/types';
+import { useAuth } from '../components/AuthProvider';
 
 
 
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     width: 320,
   },
   btnPressed: {
-    backgroundColor: '#0056A0', // Different color for pressed state
+    backgroundColor: '#0056A0',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
@@ -163,16 +164,18 @@ export function BookTriviaQuizQuestions(
   const [questionNum, setQuestionNum] = useState(props.route.params.question);
   const [responses, setResponses] = useState<{ [key: number]: string }>({});
   const [showAnswer, setShowAnswer] = useState(false);
-  const [btnPressed, setBtnPressed] = useState(false); // State for button press
+  const [btnPressed, setBtnPressed] = useState(false);
   const [endAnswerPressed, setEndAnswerPressed] = useState<number | null>(null);
 
   const questionSet = props.route.params.questionSet;
   const answerSet = props.route.params.answerSet;
   const maxQuestions = Object.keys(questionSet).length;
+  const context = useAuth();
+  const userId = context.user?.uid;
 
   const handleNextQuestion = () => {
     setBtnPressed(true);
-    setTimeout(() => setBtnPressed(false), 300); // Reset button state after delay
+    setTimeout(() => setBtnPressed(false), 300);
     if (questionNum < maxQuestions) {
       setQuestionNum(prev => prev + 1);
       setShowAnswer(false);
@@ -200,6 +203,7 @@ export function BookTriviaQuizQuestions(
         readingTime,
         timestamp: new Date(),
         surveyType: SurveyType.ChapterQuiz,
+        parentId: userId,
       });
       console.log('Document written successfully');
     } catch (e) {

@@ -9,6 +9,7 @@ export type Book = {
 };
 
 export type Chapter = {
+  answers: string[];
   chapterNum: number;
   questions: string[];
 }

@@ -41,22 +41,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   question: {
-    fontSize: 18,
+    fontSize: 20,
     marginBottom: 10,
+    fontFamily: 'MontserratSemiBold',
+    padding: 10,
   },
   option: {
     borderWidth: 1,
     borderColor: '#0071BA',
-    borderRadius: 5,
+    borderRadius: 15,
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   selectedOption: {
     backgroundColor: '#C4E7FF',
   },
   optionText: {
-    fontSize: 16,
-    color: '#0071BA',
+    fontSize: 20,
+    color: '#000000',
+    textAlign: 'center',
+    fontFamily: 'MontserratSemiBold',
   },
 });
 

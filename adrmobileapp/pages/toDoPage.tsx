@@ -191,6 +191,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
       const chapter: Chapter = {
         chapterNum: chapterData.chapterNumber,
         questions: chapterData.questions,
+        answers: chapterData.answers,
       };
       return chapter;
     } else {

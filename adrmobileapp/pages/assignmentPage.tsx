@@ -142,23 +142,7 @@ export function AssignmentPage(props: AssignmentProps): React.JSX.Element {
         showsVerticalScrollIndicator={false}>
         <Text style={styles.welcomeBack}>Welcome Back!</Text>
         <Text style={styles.date}>{Moment(today).format('MMMM Do, YYYY')}</Text>
-        {chapters.map(book => {
-          return (
-            <TouchableOpacity
-              style={[styles.book, styles.shadowProp]}
-              onPress={() => {
-                // console.log("book");
-                // console.log(book);
-                props.navigation.navigate('BookMain', {
-                  book: book,
-                  chapter: book.chapterNumber,
-                });
-              }}>
-              <Text style={styles.bookTitle}>{book.title}</Text>
-              <Text style={styles.bookTitle}>{book.chapterNumber}</Text>
-            </TouchableOpacity>
-          );
-        })}
+
       </ScrollView>
     </SafeAreaView>
   );

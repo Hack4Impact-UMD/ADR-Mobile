@@ -383,10 +383,10 @@ export function BookTriviaQuizPage(
 
                 if(taskType === "quiz") {
                   console.log('called')
-                  submitFromQuiz();
+                  await submitFromQuiz();
                 } else {
                   console.log('called2')
-                  submitFromReading();
+                  await submitFromReading();
                 }
               }
               navigation.goBack();

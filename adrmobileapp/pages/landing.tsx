@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   arrow: {
     position: 'absolute',
-    left: 325,
+    right: 25,
     top: -35,
   },
   menu_icon: {
@@ -162,8 +162,7 @@ export function Landing(props: LandingProps): React.JSX.Element {
               onPress={() => 
                 props.navigation.navigate('UserSettings')
               }>
-              <Image style={styles.profilePicture} source={require('../assets/images/pfp_temp.jpg')} />
-              <Ionicons name="menu-outline" size={40} color="black" style={styles.menu_icon} />
+              <Ionicons name="person-circle-outline" size={40} color="black" />
             </Pressable>
         </View>
     </SafeAreaView>

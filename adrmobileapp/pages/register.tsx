@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Text,
   TextInput,
@@ -18,7 +18,7 @@ import FontLoader from '../components/FontLoader';
 import { Picker } from '@react-native-picker/picker';
 import {createUser} from '../backend/CloudFunctionsCalls';
 import { initializeFirebase } from '../config/firebase';
-import { getFirestore } from 'firebase/firestore';
+import { collection, doc, getDocs, getFirestore } from 'firebase/firestore';
 
 type RegisterProps = {
   navigation: NavigationProp<RootStackParamList>;
@@ -28,6 +28,7 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [districts, setDistricts] = useState<string[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [showDistrictPicker, setShowDistrictPicker] = useState(false);
   const [numChildren, setNumChildren] = useState('');
@@ -69,6 +70,22 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
       setNumChildren(text);
     }
   };
+
+  async function getDistricts() {
+    try {
+      const districtsCollection = collection(firestore, 'schoolDistrictIds');
+      const districtSnapshot = await getDocs(districtsCollection);
+      const districtsArray: string[] = districtSnapshot.docs.map(doc => doc.id);
+      console.log('Districts:', districtsArray);
+      setDistricts(districtsArray);
+    } catch (error) {
+      console.error('Error fetching districts:', error);
+    }
+  }
+
+  useEffect(() => {
+    getDistricts(); // Fetch districts when the component mounts
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -129,10 +146,9 @@ export function RegistrationScreen(_props: RegisterProps): React.JSX.Element {
                   setSelectedDistrict(itemValue);
                   setShowDistrictPicker(false);
                 }}>
-                <Picker.Item label="Select a district" value="" />
-                <Picker.Item label="District 1" value="District 1" />
-                <Picker.Item label="District 2" value="District 2" />
-                <Picker.Item label="District 3" value="District 3" />
+                {districts.map((district, index) => (
+                  <Picker.Item key={index} label={district} value={district} />
+                ))}
               </Picker>
             )}
           </View>

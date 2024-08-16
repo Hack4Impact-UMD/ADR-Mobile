@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'MontserratBold',
     fontSize: 26,
-    marginLeft: 85,
+    marginLeft: 110,
     marginTop: -40
   },
   date: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   blob1: {
     position: 'absolute',
-    width: 420,
+    width: 450,
     height: 180,
     top: 200,
     left: -15,
@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
   logo: {
     position: 'absolute',
     alignItems: 'center',
-    left: 140,
-    top: 700,
+    left: 170,
+    top: 800,
   },
   mainContainer: {
     width: '88%',

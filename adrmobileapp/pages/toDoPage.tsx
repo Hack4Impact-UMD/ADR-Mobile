@@ -97,6 +97,54 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
     console.log("Pre-Survey task created with ID:", taskId);
   }
 
+  async function writePostSurvey(uid: string) {
+    // Get the reading schedule and determine the due date based on the period
+    const districtId = await getDistrict();
+  
+    const collectionRef = collection(db, 'readingSchedules');
+    const q = query(collectionRef, where('schoolDistrictId', '==', districtId));
+    const querySnapshot = await getDocs(q);
+  
+    let dueDate = '';
+    querySnapshot.forEach((readingScheduleItem) => {
+      const readingPeriod = readingScheduleItem.data().readingPeriod; // Assuming this field exists
+      
+      // Determine due date based on reading period
+      if (readingPeriod.includes("fall")) {
+        dueDate = '12/15';
+      } else if (readingPeriod.includes("spring")) {
+        dueDate = '6/1';
+      }
+    });
+    if (!dueDate) {
+      console.log("No valid reading period found. Skipping task creation.");
+      return;
+    }
+  
+    const taskId = generateTaskId(uid, 'postsurvey', dueDate);
+    const docRef = doc(db, "users", uid);
+    const tasksCollection = collection(docRef, 'tasks');
+    const taskDocRef = doc(tasksCollection, taskId);
+  
+    const taskDocSnap = await getDoc(taskDocRef);
+    if (taskDocSnap.exists()) {
+      console.log("Task already exists. Skipping creation.");
+      return;
+    }
+  
+    const postSurveyData = {
+      id: taskId,
+      dueDate,
+      taskType: 'postsurvey',
+      completed: false,
+      navigateTo: 'PostSurvey',
+    };
+  
+    await setDoc(taskDocRef, postSurveyData);
+    console.log("Post-Survey task created with ID:", taskId);
+  }
+  
+
   async function getReadingSchedule() {
     const districtId = await getDistrict();
 
@@ -249,6 +297,7 @@ export function ToDoScreen(props: ToDoPageProps): React.JSX.Element {
         if (userId) {
           await Promise.all([
             writePreSurvey(userId),
+            writePostSurvey(userId),
             getReadingSchedule(),
             getTasks(userId)
           ]);

@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontLoader from '../components/FontLoader';
 
 
+
 import {
   getDoc,
   getFirestore,
@@ -130,6 +131,9 @@ export function BookTriviaQuizPage(
   const key = `question_${props.route.params.book.title}_${props.route.params.chapter.chapterNum}`;
   const [question, setQuestion] = useState(0);
   const [questionSet, setQuestionSet] = useState({});
+  const [answer, setAnswer] = useState(0);
+  const [answerSet, setAnswerSet] = useState({});
+
   const context = useAuth();
   const userId = context.user.uid;
   const firestore = getFirestore();
@@ -213,9 +217,12 @@ export function BookTriviaQuizPage(
       //   }
       // });
       setQuestionSet(props.route.params.chapter.questions);
+      setAnswerSet(props.route.params.chapter.answers);
     }
     getQuestionSet();
   }, []);
+
+  
 
   const maxQuestions = Object.keys(questionSet).length;
 
@@ -353,6 +360,7 @@ export function BookTriviaQuizPage(
                   book: props.route.params.book,
                   question: question,
                   questionSet: questionSet,
+                  answerSet: answerSet,
                   chapter: props.route.params.chapter,
                   taskId: props.route.params.taskId,
                 });
@@ -361,6 +369,7 @@ export function BookTriviaQuizPage(
                   book: props.route.params.book,
                   question: 1,
                   questionSet: questionSet,
+                  answerSet: answerSet,
                   chapter: props.route.params.chapter,
                   taskId: props.route.params.taskId,
                 });
